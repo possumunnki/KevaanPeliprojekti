@@ -52,6 +52,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
     private float deltaTime;
     private float stateTime;
     private Player player;
+    private LightDoll lightDoll;
     private Box2DDebugRenderer debugRenderer;
 
 
@@ -75,7 +76,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         img = new Texture("badlogic.jpg");
         debugRenderer = new Box2DDebugRenderer();
         player = new Player(world);
-
+        lightDoll = new LightDoll(player);
 
         tiledMap = new TmxMapLoader().load("map.tmx");
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
@@ -108,6 +109,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         controller1.moveTouchPad();
         player.movePlayer(controller1.getDirection());
         player.movePlayer();
+        lightDoll.followPlayer(player);
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += deltaTime;
 
@@ -120,7 +122,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         batch.begin();
         // doHeavyStuff();
         player.draw(batch, stateTime);
-        // controller1.draw(batch);
+        lightDoll.draw(batch);
         batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());

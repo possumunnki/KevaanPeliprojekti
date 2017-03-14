@@ -144,4 +144,8 @@ public class Player {
         return kirbieBody;
     }
 
+    public Sprite getPlayerSprite() {
+        return playerSprite;
+    }
+
 }
