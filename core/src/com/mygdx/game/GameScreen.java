@@ -55,6 +55,11 @@ public class GameScreen implements Screen, Input.TextInputListener {
     private LightDoll lightDoll;
     private Box2DDebugRenderer debugRenderer;
 
+    /**
+     * Debug renderer setting, set false to disable debug render
+     */
+    private boolean isDebugOn = true;
+
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
@@ -118,7 +123,11 @@ public class GameScreen implements Screen, Input.TextInputListener {
         camera.update();
         tiledMapRenderer.render();
 
-        // debugRenderer.render(world,camera.combined);
+        // uses debug renderer if boolean value is true
+        if(isDebugOn) {
+            debugRenderer.render(world,camera.combined);
+        }
+
         batch.begin();
         // doHeavyStuff();
         player.draw(batch, stateTime);
