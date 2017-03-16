@@ -10,12 +10,14 @@ import com.badlogic.gdx.physics.box2d.Body;
  * Created by possumunnki on 14.3.2017.
  */
 
+
+
 public class LightDoll {
     private Texture lightDollTexture;
     private Sprite lightDollSprite;
     private final float DISTANCE_X = 0.5f;
     private final float DISTANCE_Y = 0.5f;
-    private final float FLOATING_SPEED = 0.001f;
+    private final float FLOATING_SPEED = 0.002f;
     private final boolean UP = true;
     private final boolean DOWN = false;
     private boolean floatDirection = DOWN;
@@ -58,15 +60,15 @@ public class LightDoll {
         if (floatDirection == UP) {
             floatDeph += FLOATING_SPEED;
             lightDollSprite.setY(dollDefPosY + floatDeph);
-            if (dollDefPosY - lightDollSprite.getY() > 0f) {
+            if (lightDollSprite.getY() - dollDefPosY  > 0f) {
                 floatDirection = DOWN;
             }
         }
 
         if(floatDirection == DOWN) {
             floatDeph -= FLOATING_SPEED;
-            lightDollSprite.setY(lightDollSprite.getY() - FLOATING_SPEED);
-            if(dollDefPosY - lightDollSprite.getY() < - 0.3f) {
+            lightDollSprite.setY(dollDefPosY + floatDeph);
+            if(lightDollSprite.getY() - dollDefPosY  < - 0.2f) {
                 floatDirection = UP;
             }
     }

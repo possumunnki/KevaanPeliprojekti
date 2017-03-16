@@ -76,33 +76,20 @@ public class Player {
         }
     }
 
-    public void movePlayer(int direction) {
+    public void movePlayer(float knobPercentX, float knobPercentY) {
 
 
-        if (direction == MyGdxGame.RIGHT) {
+
             // kirbieBody.applyForceToCenter(new Vector2(2.5f, 0f), true);
-            kirbieBody.setLinearVelocity(MAXSPEED, kirbieBody.getLinearVelocity().y);
-            if (kirbieBody.getLinearVelocity().x > 7.5f) {
-                kirbieBody.setLinearVelocity(7.5f, kirbieBody.getLinearVelocity().y);
-            }
-        }
-        if (direction == MyGdxGame.LEFT) {
+            kirbieBody.setLinearVelocity(MAXSPEED * knobPercentX, kirbieBody.getLinearVelocity().y);
+
             // kirbieBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
-            kirbieBody.setLinearVelocity(- MAXSPEED, kirbieBody.getLinearVelocity().y);
-            if(kirbieBody.getLinearVelocity().x < -7.5f) {
-                kirbieBody.setLinearVelocity(- 7.5f,kirbieBody.getLinearVelocity().y);
-            }
-
-        }
-
-        if(Gdx.input.isTouched() && direction == MyGdxGame.STOP) {
-            kirbieBody.applyForceToCenter(new Vector2(0f, 25.0f), true);
-        }
 
 
-        if (direction == MyGdxGame.STOP) {
 
-        }
+            kirbieBody.applyForceToCenter(new Vector2(0f, 20f * knobPercentY), true);
+
+
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             jump();

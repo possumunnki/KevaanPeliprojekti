@@ -112,7 +112,8 @@ public class GameScreen implements Screen, Input.TextInputListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         controller1.moveTouchPad();
-        player.movePlayer(controller1.getDirection());
+        player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
+                          controller1.getTouchpad().getKnobPercentY());
         player.movePlayer();
         lightDoll.followPlayer(player);
         deltaTime = Gdx.graphics.getDeltaTime();
