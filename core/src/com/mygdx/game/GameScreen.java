@@ -40,8 +40,8 @@ public class GameScreen implements Screen, Input.TextInputListener {
      */
     private static final int RAYS_PER_BALL = 128;
     private static final int BALLSNUM = 5;
-    private static final float LIGHT_DISTANCE = 3f;
-    private static final float RADIUS = 1f;
+    private static final float LIGHT_DISTANCE = 4.5f;
+    private static final float RADIUS = 0.25f;
     private RayHandler rayHandler;
     private ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
     private float sunDirection = -90f;
@@ -83,7 +83,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = true;
+    private boolean isDebugOn = false;
 
 
     private TiledMapRenderer tiledMapRenderer;
@@ -96,7 +96,6 @@ public class GameScreen implements Screen, Input.TextInputListener {
     public GameScreen(MyGdxGame host) {
         this.host = host;
         batch = host.getSpriteBatch();
-
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
                 host.SCREEN_WIDTH,
@@ -107,7 +106,6 @@ public class GameScreen implements Screen, Input.TextInputListener {
         player = new Player(world);
         lightDoll = new LightDoll(player);
 
-        
         /**
          * BOX2D LIGHT-RELATED BEGIN
          */
@@ -115,7 +113,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         RayHandler.useDiffuseLight(true);
         rayHandler = new RayHandler(world);
         // Ambient light-setting, (RED, GREEN, BLUE, ALPHA)
-        rayHandler.setAmbientLight(0.1f, 0.1f, 0.3f, 0.5f);
+        rayHandler.setAmbientLight(0.01f, 0.14f, 0.24f, 0.5f);
         rayHandler.setBlurNum(3);
         initPointLights();
         /**
@@ -191,7 +189,26 @@ public class GameScreen implements Screen, Input.TextInputListener {
     }
 
     /**
-     * BOX2D LIGHT-RELATED
+     * Box2Dlights light-adding method
+     */
+    void initPointLights() {
+        clearLights();
+        for (int i = 0; i < BALLSNUM; i++) {
+
+            PointLight DollLight = new PointLight(
+                    rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 0f, 0f);
+            DollLight.attachToBody(lightDoll.getLightDollBody());
+            DollLight.setColor(
+                    0.75f,
+                    0.5f,
+                    0.1f,
+                    0.7f);
+            lights.add(DollLight);
+        }
+    }
+
+    /**
+     * BOX2D LIGHT-REMOVAL
      */
     // Template for light-removal method
     void clearLights() {
@@ -200,25 +217,6 @@ public class GameScreen implements Screen, Input.TextInputListener {
                 light.remove();
             }
             lights.clear();
-        }
-    }
-
-    /**
-     * BOX2D LIGHT-RELATED
-     */
-    // Template for lights.add method
-    void initPointLights() {
-        clearLights();
-        for (int i = 0; i < BALLSNUM; i++) {
-            PointLight light = new PointLight(
-                    rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 0f, 0f);
-            light.attachToBody(player.getPlayerBody());
-            light.setColor(
-                    0.7f,
-                    0.7f,
-                    0.7f,
-                    1f);
-            lights.add(light);
         }
     }
 
@@ -277,10 +275,6 @@ public class GameScreen implements Screen, Input.TextInputListener {
         player.dispose();
         controller1.dispose();
         batch.dispose();
-
-        /**
-         * BOX2D LIGHT-RELATED
-         */
         rayHandler.dispose();
     }
 
@@ -294,7 +288,6 @@ public class GameScreen implements Screen, Input.TextInputListener {
 
     }
 
-
     private void moveCamera() {
 
         if (player.getPlayerBody().getPosition().x < MyGdxGame.SCREEN_WIDTH / 2) {
@@ -304,8 +297,6 @@ public class GameScreen implements Screen, Input.TextInputListener {
         } else {
             camera.position.x = player.getPlayerBody().getPosition().x;
         }
-
-
 
         if(player.getPlayerBody().getPosition().y < MyGdxGame.SCREEN_HEIGHT / 2) {
             camera.position.y = MyGdxGame.SCREEN_HEIGHT / 2;

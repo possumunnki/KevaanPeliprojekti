@@ -18,7 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 
 public class Player {
-    World world;
+    private World world;
     private Texture kirbieGif;
     private Animation<TextureRegion> kirbieAnimation;
     private TextureRegion kirbieCurrentFrame;
@@ -108,7 +108,9 @@ public class Player {
         playerFixtureDef.density = 1;
 
         // How bouncy object? Very bouncy [0,1]
-        playerFixtureDef.restitution = 0.8f;
+
+        // ei niin bouncy :D
+        playerFixtureDef.restitution = 0.3f;
 
         // How slipper object? [0,1]
         playerFixtureDef.friction = 0.5f;
