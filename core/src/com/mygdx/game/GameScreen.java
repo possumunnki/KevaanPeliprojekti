@@ -35,20 +35,6 @@ import box2dLight.RayHandler;
 
 public class GameScreen implements Screen, Input.TextInputListener {
 
-    /**
-     * BOX2D LIGHT-RELATED BEGIN
-     */
-    private static final int RAYS_PER_BALL = 128;
-    private static final int BALLSNUM = 5;
-    private static final float LIGHT_DISTANCE = 4.5f;
-    private static final float RADIUS = 0.25f;
-    private RayHandler rayHandler;
-    private ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
-    private float sunDirection = -90f;
-    /**
-     * BOX2D LIGHT-RELATED END
-     */
-
 
     /**
      * Map size is 70 x 60 tiles.
@@ -90,7 +76,9 @@ public class GameScreen implements Screen, Input.TextInputListener {
     private TiledMap tiledMap;
 
     private Stage stage;
-    Controller1 controller1;
+    private Controller1 controller1;
+
+    private LightSetup lightSetup;
 
 
     public GameScreen(MyGdxGame host) {
@@ -105,20 +93,8 @@ public class GameScreen implements Screen, Input.TextInputListener {
         debugRenderer = new Box2DDebugRenderer();
         player = new Player(world);
         lightDoll = new LightDoll(player);
-
-        /**
-         * BOX2D LIGHT-RELATED BEGIN
-         */
-        RayHandler.setGammaCorrection(true);
-        RayHandler.useDiffuseLight(true);
-        rayHandler = new RayHandler(world);
-        // Ambient light-setting, (RED, GREEN, BLUE, ALPHA)
-        rayHandler.setAmbientLight(0.01f, 0.14f, 0.24f, 0.5f);
-        rayHandler.setBlurNum(3);
-        initPointLights();
-        /**
-         * BOX2D LIGHT-RELATED END
-         */
+        // New light setup program -- All light code moved to LightSetup class
+        lightSetup = new LightSetup(world, lightDoll);
 
         tiledMap = new TmxMapLoader().load("map.tmx");
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
@@ -175,9 +151,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         /**
          * BOX2D LIGHT-RELATED BEGIN
          */
-        rayHandler.setCombinedMatrix(camera);
-        if (stepped) rayHandler.update();
-        rayHandler.render();
+        lightSetup.render(camera, stepped);
         /**
          * BOX2D LIGHT-RELATED END
          */
@@ -188,37 +162,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         doPhysicsStep(deltaTime);
     }
 
-    /**
-     * Box2Dlights light-adding method
-     */
-    void initPointLights() {
-        clearLights();
-        for (int i = 0; i < BALLSNUM; i++) {
 
-            PointLight DollLight = new PointLight(
-                    rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 0f, 0f);
-            DollLight.attachToBody(lightDoll.getLightDollBody());
-            DollLight.setColor(
-                    0.75f,
-                    0.5f,
-                    0.1f,
-                    0.7f);
-            lights.add(DollLight);
-        }
-    }
-
-    /**
-     * BOX2D LIGHT-REMOVAL
-     */
-    // Template for light-removal method
-    void clearLights() {
-        if (lights.size() > 0) {
-            for (Light light : lights) {
-                light.remove();
-            }
-            lights.clear();
-        }
-    }
 
     private double accumulator = 0;
     private float TIME_STEP = 1 / 60f;
@@ -275,7 +219,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         player.dispose();
         controller1.dispose();
         batch.dispose();
-        rayHandler.dispose();
+        lightSetup.dispose();
     }
 
     @Override
