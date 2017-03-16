@@ -107,6 +107,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         player = new Player(world);
         lightDoll = new LightDoll(player);
 
+        
         /**
          * BOX2D LIGHT-RELATED BEGIN
          */
