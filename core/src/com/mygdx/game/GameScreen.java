@@ -16,6 +16,17 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import java.util.ArrayList;
+
+/**
+ * BOX2D LIGHT-RELATED
+ */
+import box2dLight.ChainLight;
+import box2dLight.ConeLight;
+import box2dLight.DirectionalLight;
+import box2dLight.Light;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 
 
 /**
@@ -23,6 +34,21 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
  */
 
 public class GameScreen implements Screen, Input.TextInputListener {
+
+    /**
+     * BOX2D LIGHT-RELATED BEGIN
+     */
+    private static final int RAYS_PER_BALL = 128;
+    private static final int BALLSNUM = 5;
+    private static final float LIGHT_DISTANCE = 3f;
+    private static final float RADIUS = 1f;
+    private RayHandler rayHandler;
+    private ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
+    private float sunDirection = -90f;
+    /**
+     * BOX2D LIGHT-RELATED END
+     */
+
 
     /**
      * Map size is 70 x 60 tiles.
@@ -47,13 +73,17 @@ public class GameScreen implements Screen, Input.TextInputListener {
     private MyGdxGame host;
     private SpriteBatch batch;
     private World world;
-    Texture img;
-    OrthographicCamera camera;
+    private OrthographicCamera camera;
     private float deltaTime;
     private float stateTime;
     private Player player;
     private LightDoll lightDoll;
     private Box2DDebugRenderer debugRenderer;
+
+    /**
+     * Debug renderer setting, set false to disable debug render
+     */
+    private boolean isDebugOn = true;
 
 
     private TiledMapRenderer tiledMapRenderer;
@@ -73,10 +103,23 @@ public class GameScreen implements Screen, Input.TextInputListener {
                 host.SCREEN_HEIGHT);
 
         world = new World(new Vector2(0, -9.8f), true);
-        img = new Texture("badlogic.jpg");
         debugRenderer = new Box2DDebugRenderer();
         player = new Player(world);
         lightDoll = new LightDoll(player);
+
+        /**
+         * BOX2D LIGHT-RELATED BEGIN
+         */
+        RayHandler.setGammaCorrection(true);
+        RayHandler.useDiffuseLight(true);
+        rayHandler = new RayHandler(world);
+        // Ambient light-setting, (RED, GREEN, BLUE, ALPHA)
+        rayHandler.setAmbientLight(0.1f, 0.1f, 0.3f, 0.5f);
+        rayHandler.setBlurNum(3);
+        initPointLights();
+        /**
+         * BOX2D LIGHT-RELATED END
+         */
 
         tiledMap = new TmxMapLoader().load("map.tmx");
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
@@ -107,7 +150,8 @@ public class GameScreen implements Screen, Input.TextInputListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         controller1.moveTouchPad();
-        player.movePlayer(controller1.getDirection());
+        player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
+                          controller1.getTouchpad().getKnobPercentY());
         player.movePlayer();
         lightDoll.followPlayer(player);
         deltaTime = Gdx.graphics.getDeltaTime();
@@ -118,12 +162,26 @@ public class GameScreen implements Screen, Input.TextInputListener {
         camera.update();
         tiledMapRenderer.render();
 
-        // debugRenderer.render(world,camera.combined);
+        // uses debug renderer if boolean value is true
+        if(isDebugOn) {
+            debugRenderer.render(world,camera.combined);
+        }
+
         batch.begin();
         // doHeavyStuff();
         player.draw(batch, stateTime);
         lightDoll.draw(batch);
         batch.end();
+
+        /**
+         * BOX2D LIGHT-RELATED BEGIN
+         */
+        rayHandler.setCombinedMatrix(camera);
+        if (stepped) rayHandler.update();
+        rayHandler.render();
+        /**
+         * BOX2D LIGHT-RELATED END
+         */
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
@@ -131,8 +189,41 @@ public class GameScreen implements Screen, Input.TextInputListener {
         doPhysicsStep(deltaTime);
     }
 
+    /**
+     * BOX2D LIGHT-RELATED
+     */
+    // Template for light-removal method
+    void clearLights() {
+        if (lights.size() > 0) {
+            for (Light light : lights) {
+                light.remove();
+            }
+            lights.clear();
+        }
+    }
+
+    /**
+     * BOX2D LIGHT-RELATED
+     */
+    // Template for lights.add method
+    void initPointLights() {
+        clearLights();
+        for (int i = 0; i < BALLSNUM; i++) {
+            PointLight light = new PointLight(
+                    rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 0f, 0f);
+            light.attachToBody(player.getPlayerBody());
+            light.setColor(
+                    0.7f,
+                    0.7f,
+                    0.7f,
+                    1f);
+            lights.add(light);
+        }
+    }
+
     private double accumulator = 0;
     private float TIME_STEP = 1 / 60f;
+    private boolean stepped;
 
     private void doPhysicsStep(float deltaTime) {
         float frameTime = deltaTime;
@@ -144,10 +235,12 @@ public class GameScreen implements Screen, Input.TextInputListener {
 
         accumulator += frameTime;
 
+        stepped = false;
         while (accumulator >= TIME_STEP) {
             // It's fixed time step!
             world.step(TIME_STEP, 8, 3);
             accumulator -= TIME_STEP;
+            stepped = true;
         }
     }
 
@@ -183,6 +276,11 @@ public class GameScreen implements Screen, Input.TextInputListener {
         player.dispose();
         controller1.dispose();
         batch.dispose();
+
+        /**
+         * BOX2D LIGHT-RELATED
+         */
+        rayHandler.dispose();
     }
 
     @Override

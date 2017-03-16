@@ -5,6 +5,12 @@ sourceCompatibility = 1.6
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
+/**
+ * Required modification to dependencies for box2dlights-library.
+ */
+dependencies {
+    compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
+}
 
 eclipse.project {
     name = appName + "-core"
