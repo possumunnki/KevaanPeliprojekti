@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.Body;
  */
 
 
-
+//
 public class LightDoll {
     private Texture lightDollTexture;
     private Sprite lightDollSprite;
