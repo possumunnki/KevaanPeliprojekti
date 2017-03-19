@@ -38,6 +38,7 @@ public class LightDoll {
 
         lightDollBody = player.getWorld().createBody(Utilities.getDefinitionOfBody());
         lightDollBody.createFixture(getFixtureDefinition());
+        lightDollBody.setUserData("lightDoll");
 
     }
 

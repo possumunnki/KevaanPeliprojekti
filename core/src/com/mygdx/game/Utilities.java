@@ -96,7 +96,7 @@ public class Utilities {
 
         Body wall = world.createBody(myBodyDef);
 
-        wall.setUserData(userData);
+        wall.setUserData("wall");
         // Create shape
         PolygonShape groundBox = new PolygonShape();
 

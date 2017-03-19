@@ -2,17 +2,24 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -90,10 +97,14 @@ public class GameScreen implements Screen, Input.TextInputListener {
     private TiledMap tiledMap;
 
     private Stage stage;
-    Controller1 controller1;
+    private Controller1 controller1;
+
+    private InputMultiplexer inputMultiplexer;
+    private ScreenController screenController;
 
 
     public GameScreen(MyGdxGame host) {
+
         this.host = host;
         batch = host.getSpriteBatch();
 
@@ -126,12 +137,24 @@ public class GameScreen implements Screen, Input.TextInputListener {
         Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
         Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
 
+
+
         controller1 = new Controller1(MyGdxGame.SCREEN_WIDTH / 10, MyGdxGame.SCREEN_HEIGHT / 5);
 
         //Create a Stage and add TouchPad
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
         stage.addActor(controller1.getTouchpad());
-        Gdx.input.setInputProcessor(stage);
+
+        // allows to set multiple imputprocessor
+        inputMultiplexer = new InputMultiplexer();
+        // adds touchpad
+        inputMultiplexer.addProcessor(stage);
+        screenController = new ScreenController();
+        // adds gesture detector
+        inputMultiplexer.addProcessor(screenController.getGestureDetector());
+
+        Gdx.input.setInputProcessor(inputMultiplexer);
+
     }
 
     public World getWorld() {
@@ -156,6 +179,8 @@ public class GameScreen implements Screen, Input.TextInputListener {
         lightDoll.followPlayer(player);
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += deltaTime;
+
+        screenController.setTouchPadTouched(controller1.getIsTouched());
 
         tiledMapRenderer.setView(camera);
         moveCamera();
@@ -187,6 +212,56 @@ public class GameScreen implements Screen, Input.TextInputListener {
         stage.draw();
 
         doPhysicsStep(deltaTime);
+
+        world.setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+                /*String userDataA = (String) (contact.getFixtureA().getBody().getUserData());
+                String userDataB = (String) (contact.getFixtureB().getBody().getUserData());
+
+                if(userDataA.equals("collectable")) {
+                    contact.setEnabled(false);
+                    removalBodies.add(contact.getFixtureA().getBody());
+                    clearCollectable();
+                }
+                if(userDataB.equals("collectable")) {
+                    contact.setEnabled(false);
+                    removalBodies.add(contact.getFixtureB().getBody());
+                    clearCollectable();
+                }
+                */
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+                Body body1 = contact.getFixtureA().getBody();
+                Body body2 = contact.getFixtureB().getBody();
+
+
+                if (body1.getUserData() != null) {
+                    if (body1.getUserData().equals("wall")) {
+                        //Gdx.app.log("collision1", "Dump");
+                        player.setOnTheGround();
+                    }
+                } else if (body2.getUserData() != null) {
+                    if (body2.getUserData().equals("wall")) {
+                        //jump = false;
+                        //doubleJump = false;
+                        //Gdx.app.log("collision2", "Dump");
+                        player.setOnTheGround();
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -320,4 +395,6 @@ public class GameScreen implements Screen, Input.TextInputListener {
 
         camera.update();
     }
+
+
 }

@@ -57,7 +57,7 @@ public class Controller1 extends Actor{
         //touchpad.setSize();
         setWidth(touchKnobTexture.getWidth() / 100f);
         setHeight(touchKnobTexture.getHeight() / 100f);
-        setPosition(positionX,positionY);
+        touchpad.setPosition(positionX,positionY);
 
         //Create block sprite
         /*blockTexture = new Texture("touchKnob.png");
@@ -108,6 +108,10 @@ public class Controller1 extends Actor{
 
     public Touchpad getTouchpad() {
         return touchpad;
+    }
+
+    public boolean getIsTouched() {
+        return touchpad.isTouched();
     }
 
     public void dispose() {

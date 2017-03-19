@@ -28,7 +28,6 @@ public class Player {
     private float radius;
     private boolean onTheGround = true;
     private final float MAXSPEED = 5.0f;
-
     public Player(World world) {
         this.world = world;
 
@@ -41,6 +40,7 @@ public class Player {
 
         kirbieBody = world.createBody(Utilities.getDefinitionOfBody());
         kirbieBody.createFixture(getFixtureDefinition());
+        kirbieBody.setUserData("player");
 
         kirbieGif = new Texture("kirbie2.png");
         kirbieAnimation = new Animation<TextureRegion>(1/6f,
@@ -84,10 +84,10 @@ public class Player {
             kirbieBody.setLinearVelocity(MAXSPEED * knobPercentX, kirbieBody.getLinearVelocity().y);
 
             // kirbieBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
+        if(knobPercentY > 0.3f) {
+            jump();
+        }
 
-
-
-            kirbieBody.applyForceToCenter(new Vector2(0f, 20f * knobPercentY), true);
 
 
 
@@ -98,7 +98,8 @@ public class Player {
 
     public void jump() {
         if (onTheGround) {
-            kirbieBody.applyLinearImpulse(new Vector2(0f, 0.5f), kirbieBody.getWorldCenter(), true);
+            kirbieBody.applyLinearImpulse(new Vector2(0f, 2.0f), kirbieBody.getWorldCenter(), true);
+            onTheGround = false;
         }
     }
     public FixtureDef getFixtureDefinition() {
@@ -108,7 +109,7 @@ public class Player {
         playerFixtureDef.density = 1;
 
         // How bouncy object? Very bouncy [0,1]
-        playerFixtureDef.restitution = 0.8f;
+        playerFixtureDef.restitution = 0.0f;
 
         // How slipper object? [0,1]
         playerFixtureDef.friction = 0.5f;
@@ -125,6 +126,10 @@ public class Player {
     public void dispose() {
         kirbieTexture.dispose();
         kirbieGif.dispose();
+    }
+
+    public void setOnTheGround() {
+        this.onTheGround = true;
     }
 
     public World getWorld() {
