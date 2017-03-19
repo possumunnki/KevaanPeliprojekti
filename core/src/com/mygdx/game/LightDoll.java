@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -23,6 +24,7 @@ public class LightDoll {
     private final boolean UP = true;
     private final boolean DOWN = false;
     private boolean floatDirection = DOWN;
+    private Vector2 dollLocation;
 
     //body for light doll
     private Body lightDollBody;
@@ -30,12 +32,13 @@ public class LightDoll {
     public LightDoll(Player player) {
         lightDollTexture = new Texture("badlogic.jpg");
         lightDollSprite = new Sprite(lightDollTexture);
+
         lightDollSprite.setSize(lightDollTexture.getWidth() / 1000f, lightDollTexture.getHeight() / 1000f);
         dollDefPosY = player.getPlayerBody().getPosition().y +
                 player.getPlayerSprite().getHeight() +
                 lightDollSprite.getHeight() + DISTANCE_Y;
         lightDollSprite.setY(dollDefPosY);
-
+        dollLocation = new Vector2(0, 0);
         lightDollBody = player.getWorld().createBody(Utilities.getDefinitionOfBody());
         lightDollBody.createFixture(getFixtureDefinition());
         lightDollBody.setUserData("lightDoll");
@@ -46,8 +49,8 @@ public class LightDoll {
         lightDollSprite.draw(sb);
     }
 
-    private float dollDefPosX; // doll's defalt x cordination
-    private float dollDefPosY; // doll's defalt y cordination
+    private float dollDefPosX; // doll's default x coordinate
+    private float dollDefPosY; // doll's default y coordinate
 
     public FixtureDef getFixtureDefinition() {
         FixtureDef dollFixtureDef = new FixtureDef();
@@ -56,14 +59,14 @@ public class LightDoll {
         dollFixtureDef.density = 0.1f;
 
         // How bouncy object? Very bouncy [0,1]
-        dollFixtureDef.restitution = 0.8f;
+        dollFixtureDef.restitution = 0.1f;
 
         // How slipper object? [0,1]
-        dollFixtureDef.friction = 0.5f;
+        dollFixtureDef.friction = 0.1f;
 
         // Create circle shape.
         CircleShape circleshape = new CircleShape();
-        circleshape.setRadius(0.5f);
+        circleshape.setRadius(0.15f);
 
         // Add the shape to the fixture
         dollFixtureDef.shape = circleshape;
@@ -82,6 +85,12 @@ public class LightDoll {
         // lightDollSprite.setPosition(dollDefPosX, dollDefPosY);
         lightDollSprite.setX(dollDefPosX);
         floatDoll(dollDefPosY);
+
+        dollLocation.x = lightDollSprite.getX();
+        dollLocation.y = lightDollSprite.getY();
+
+        // Set body position
+        lightDollBody.setTransform(dollLocation, 0);
     }
     private float floatDeph = 0;
 
