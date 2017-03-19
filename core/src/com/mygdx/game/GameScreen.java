@@ -40,7 +40,7 @@ import box2dLight.RayHandler;
  * Created by possumunnki on 7.3.2017.
  */
 
-public class GameScreen implements Screen, Input.TextInputListener {
+public class GameScreen implements Screen, Input.TextInputListener, GestureDetector.GestureListener {
 
     /**
      * BOX2D LIGHT-RELATED BEGIN
@@ -116,7 +116,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         world = new World(new Vector2(0, -9.8f), true);
         debugRenderer = new Box2DDebugRenderer();
         player = new Player(world);
-        lightDoll = new LightDoll(player);
+        lightDoll = new LightDoll(player, world);
 
         /**
          * BOX2D LIGHT-RELATED BEGIN
@@ -148,10 +148,11 @@ public class GameScreen implements Screen, Input.TextInputListener {
         // allows to set multiple imputprocessor
         inputMultiplexer = new InputMultiplexer();
         // adds touchpad
+
+        inputMultiplexer.addProcessor(new GestureDetector(this));
         inputMultiplexer.addProcessor(stage);
-        screenController = new ScreenController();
         // adds gesture detector
-        inputMultiplexer.addProcessor(screenController.getGestureDetector());
+
 
         Gdx.input.setInputProcessor(inputMultiplexer);
 
@@ -176,12 +177,10 @@ public class GameScreen implements Screen, Input.TextInputListener {
         player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
                           controller1.getTouchpad().getKnobPercentY());
         player.movePlayer();
-        lightDoll.followPlayer(player);
+        lightDoll.moveLightDoll(player);
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += deltaTime;
-
-        screenController.setTouchPadTouched(controller1.getIsTouched());
-
+        lightDoll.setDollDefPos(player);
         tiledMapRenderer.setView(camera);
         moveCamera();
         camera.update();
@@ -286,7 +285,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         for (int i = 0; i < BALLSNUM; i++) {
             PointLight light = new PointLight(
                     rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 0f, 0f);
-            light.attachToBody(player.getPlayerBody());
+            light.attachToBody(lightDoll.getLightDollBody());
             light.setColor(
                     0.7f,
                     0.7f,
@@ -397,4 +396,50 @@ public class GameScreen implements Screen, Input.TextInputListener {
     }
 
 
+    @Override
+    public boolean touchDown(float x, float y, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean tap(float x, float y, int count, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean longPress(float x, float y) {
+        return false;
+    }
+
+    @Override
+    public boolean fling(float velocityX, float velocityY, int button) {
+
+        lightDoll.throwLightDoll(velocityX, velocityY);
+        return false;
+    }
+
+    @Override
+    public boolean pan(float x, float y, float deltaX, float deltaY) {
+        return false;
+    }
+
+    @Override
+    public boolean panStop(float x, float y, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean zoom(float initialDistance, float distance) {
+        return false;
+    }
+
+    @Override
+    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+        return false;
+    }
+
+    @Override
+    public void pinchStop() {
+
+    }
 }
