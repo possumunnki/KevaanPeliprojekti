@@ -35,8 +35,8 @@ public class ScreenController implements GestureDetector.GestureListener {
     @Override
     public boolean fling(float velocityX, float velocityY, int button) {
         if(!touchPadTouched) {
-            Gdx.app.log("VelocityX ScreenController", "" + velocityX);
-            Gdx.app.log("VelocityY ScreenController", "" + velocityY);
+            //Gdx.app.log("VelocityX ScreenController", "" + velocityX);
+            //Gdx.app.log("VelocityY ScreenController", "" + velocityY);
         }
 
         return false;
