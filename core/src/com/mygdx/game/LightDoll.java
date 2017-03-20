@@ -99,7 +99,7 @@ public class LightDoll {
             deltaX = lightDollSprite.getX() - dollDefPosX;
             deltaY = lightDollSprite.getY() - dollDefPosY;
             lightDollSprite.setPosition(lightDollSprite.getX() - deltaX / 20,
-                                        lightDollSprite.getY() - deltaY / 20);
+                    lightDollSprite.getY() - deltaY / 20);
             throwStep++;
             if(lightDollSprite.getX() +- 0.01f < dollDefPosX  &&
                     lightDollSprite.getY() +- 0.01f < dollDefPosY ) {
@@ -112,10 +112,10 @@ public class LightDoll {
             deltaX = lightDollSprite.getX() - targetPointX;
             deltaY = lightDollSprite.getY() - targetPointY;
             lightDollSprite.setPosition(lightDollSprite.getX() - deltaX / 20,
-                                        lightDollSprite.getY() - deltaY / 20);
+                    lightDollSprite.getY() - deltaY / 20);
             throwStep++;
             if(lightDollSprite.getX() > targetPointX +- 0.01f &&
-               lightDollSprite.getY() > targetPointY +- 0.01f) {
+                    lightDollSprite.getY() > targetPointY +- 0.01f) {
                 comingBack = true;
                 throwStep = 0;
             }

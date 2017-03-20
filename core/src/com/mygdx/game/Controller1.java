@@ -102,7 +102,7 @@ public class Controller1 extends Actor{
     }
 
     public int getDirection() {
-       return direction;
+        return direction;
     }
 
 

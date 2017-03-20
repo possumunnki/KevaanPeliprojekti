@@ -80,10 +80,10 @@ public class Player {
 
 
 
-            // kirbieBody.applyForceToCenter(new Vector2(2.5f, 0f), true);
-            kirbieBody.setLinearVelocity(MAXSPEED * knobPercentX, kirbieBody.getLinearVelocity().y);
+        // kirbieBody.applyForceToCenter(new Vector2(2.5f, 0f), true);
+        kirbieBody.setLinearVelocity(MAXSPEED * knobPercentX, kirbieBody.getLinearVelocity().y);
 
-            // kirbieBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
+        // kirbieBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
         if(knobPercentY > 0.3f) {
             jump();
         }
