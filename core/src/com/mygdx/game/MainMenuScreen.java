@@ -22,7 +22,7 @@ public class MainMenuScreen implements Screen {
     private OrthographicCamera camera;
     private Stage gameStage;
     private FontActor start;
-
+    private Background menuBG;
 
     public MainMenuScreen(MyGdxGame host) {
 
@@ -37,6 +37,11 @@ public class MainMenuScreen implements Screen {
         gameStage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
         // creates "START" text
         start = new FontActor("START", host.SCREEN_WIDTH * 100f / 2, host.SCREEN_HEIGHT * 100f / 2);
+
+        // Creates main menu background
+        menuBG = new Background();
+        gameStage.addActor(menuBG);
+
         gameStage.addActor(start);
 
 
@@ -52,12 +57,8 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         // batch.setProjectionMatrix(camera.combined);
 
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // batch.begin();
-
-        // batch.end();
 
         gameStage.act(Gdx.graphics.getDeltaTime());
         gameStage.draw();
@@ -93,6 +94,7 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
         batch.dispose();
         start.dispose();
+        menuBG.dispose();
         Gdx.app.log("MainMenu", "disposed");
 
     }
