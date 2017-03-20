@@ -3,13 +3,11 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -25,25 +23,12 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import java.util.ArrayList;
-
-/**
- * BOX2D LIGHT-RELATED
- */
-import box2dLight.ChainLight;
-import box2dLight.ConeLight;
-import box2dLight.DirectionalLight;
-import box2dLight.Light;
-import box2dLight.PointLight;
-import box2dLight.RayHandler;
-
 
 /**
  * Created by possumunnki on 7.3.2017.
  */
 
-public class GameScreen implements Screen, Input.TextInputListener {
-
+public class GameScreen implements Screen, Input.TextInputListener, GestureDetector.GestureListener {
 
     /**
      * Map size is 70 x 60 tiles.
@@ -78,7 +63,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = false;
+    private boolean isDebugOn = true;
 
 
     private TiledMapRenderer tiledMapRenderer;
@@ -87,13 +72,17 @@ public class GameScreen implements Screen, Input.TextInputListener {
     private Stage stage;
     private Controller1 controller1;
 
-    private InputMultiplexer inputMultiplexer;
-    private ScreenController screenController;
     private LightSetup lightSetup;
 
+    private InputMultiplexer inputMultiplexer;
+    private ScreenController screenController;
+
+
     public GameScreen(MyGdxGame host) {
+
         this.host = host;
         batch = host.getSpriteBatch();
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
                 host.SCREEN_WIDTH,
@@ -103,7 +92,6 @@ public class GameScreen implements Screen, Input.TextInputListener {
         debugRenderer = new Box2DDebugRenderer();
         player = new Player(world);
         lightDoll = new LightDoll(player, world);
-        // New light setup program -- All light code moved to LightSetup class
         lightSetup = new LightSetup(world, lightDoll, player);
 
         tiledMap = new TmxMapLoader().load("map.tmx");
@@ -119,7 +107,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
         stage.addActor(controller1.getTouchpad());
 
-        // allows to set multiple imputprocessor
+        // allows to set multiple inputprocessor
         inputMultiplexer = new InputMultiplexer();
         // adds touchpad
 
@@ -149,7 +137,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
 
         controller1.moveTouchPad();
         player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
-                          controller1.getTouchpad().getKnobPercentY());
+                controller1.getTouchpad().getKnobPercentY());
         player.movePlayer();
         lightDoll.moveLightDoll(player);
         deltaTime = Gdx.graphics.getDeltaTime();
@@ -235,38 +223,6 @@ public class GameScreen implements Screen, Input.TextInputListener {
         });
     }
 
-    /**
-     * BOX2D LIGHT-RELATED
-     */
-    // Template for light-removal method
-    void clearLights() {
-        if (lights.size() > 0) {
-            for (Light light : lights) {
-                light.remove();
-            }
-            lights.clear();
-        }
-    }
-
-    /**
-     * BOX2D LIGHT-RELATED
-     */
-    // Template for lights.add method
-    void initPointLights() {
-        clearLights();
-        for (int i = 0; i < BALLSNUM; i++) {
-            PointLight light = new PointLight(
-                    rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 0f, 0f);
-            light.attachToBody(lightDoll.getLightDollBody());
-            light.setColor(
-                    0.7f,
-                    0.7f,
-                    0.7f,
-                    1f);
-            lights.add(light);
-        }
-    }
-
     private double accumulator = 0;
     private float TIME_STEP = 1 / 60f;
     private boolean stepped;
@@ -322,6 +278,10 @@ public class GameScreen implements Screen, Input.TextInputListener {
         player.dispose();
         controller1.dispose();
         batch.dispose();
+
+        /**
+         * BOX2D LIGHT-RELATED
+         */
         lightSetup.dispose();
     }
 
@@ -334,6 +294,7 @@ public class GameScreen implements Screen, Input.TextInputListener {
     public void canceled() {
 
     }
+
 
     private void moveCamera() {
 
