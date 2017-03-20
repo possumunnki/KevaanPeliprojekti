@@ -18,7 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 
 public class Player {
-    World world;
+    private World world;
     private Texture kirbieGif;
     private Animation<TextureRegion> kirbieAnimation;
     private TextureRegion kirbieCurrentFrame;

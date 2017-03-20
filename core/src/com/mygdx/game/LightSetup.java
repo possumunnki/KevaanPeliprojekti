@@ -4,10 +4,7 @@ package com.mygdx.game;
  * Created by Juz3 on 16.3.2017.
  */
 
-/**
- * BOX2D LIGHT-RELATED
- */
-import com.badlogic.gdx.graphics.Camera;
+
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -23,20 +20,23 @@ import box2dLight.RayHandler;
 public class LightSetup {
 
     /**
-     * BOX2D LIGHT-RELATED BEGIN
+     * Box2dLights-related setup class
      */
-    private static final int RAYS_PER_BALL = 128;
+
+    // determines how many rays the point light will emit,
+    // bigger value = smoother effect
+    private static final int RAYS_PER_BALL = 256;
     private static final int BALLSNUM = 5;
 
     // The distance that light will travel
-    private float LIGHT_DISTANCE = 5.0f;
+    private float LIGHT_DISTANCE = 4.5f;
     private float RADIUS = 0.25f;
     private RayHandler rayHandler;
     private ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
+
+    // for directional (sun)light
     private float sunDirection = -90f;
-    /**
-     * BOX2D LIGHT-RELATED END
-     */
+
 
     public LightSetup(World world, LightDoll doll, Player player) {
 
@@ -46,7 +46,7 @@ public class LightSetup {
         rayHandler = new RayHandler(world);
 
         // Ambient light-setting, (RED, GREEN, BLUE, ALPHA)
-        rayHandler.setAmbientLight(0.01f, 0.14f, 0.24f, 0.5f);
+        rayHandler.setAmbientLight(0.06f, 0.22f, 0.35f, 0.55f);
         rayHandler.setBlurNum(3);
 
         initPointLights(doll, player);
@@ -71,10 +71,10 @@ public class LightSetup {
                     rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 0f, 0f);
             DollLight.attachToBody(lightDoll.getLightDollBody());
             DollLight.setColor(
-                    0.75f,
-                    0.5f,
-                    0.1f,
-                    0.3f);
+                    0.6f,
+                    0.45f,
+                    0.08f,
+                    0.15f);
             lights.add(DollLight);
 
 
@@ -90,7 +90,6 @@ public class LightSetup {
                     0.7f);
             lights.add(testRoomLight);
              */
-
         }
     }
 

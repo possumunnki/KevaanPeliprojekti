@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -33,8 +32,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Map size is 70 x 60 tiles.
      */
-    private final int TILES_AMOUNT_WIDTH = 70;
-    private final int TILES_AMOUNT_HEIGHT = 60;
+    private final int TILES_AMOUNT_WIDTH = 160;
+    private final int TILES_AMOUNT_HEIGHT = 64;
 
     /**
      * One tile is 32.
@@ -63,7 +62,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = true;
+    private boolean isDebugOn = false;
 
 
     private TiledMapRenderer tiledMapRenderer;
@@ -94,7 +93,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         lightDoll = new LightDoll(player, world);
         lightSetup = new LightSetup(world, lightDoll, player);
 
-        tiledMap = new TmxMapLoader().load("map.tmx");
+        tiledMap = new TmxMapLoader().load("testMap_1.tmx");
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
         Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
         Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
