@@ -27,8 +27,10 @@ public class LightSetup {
      */
     private static final int RAYS_PER_BALL = 128;
     private static final int BALLSNUM = 5;
-    private static final float LIGHT_DISTANCE = 4.5f;
-    private static final float RADIUS = 0.25f;
+
+    // The distance that light will travel
+    private float LIGHT_DISTANCE = 5.0f;
+    private float RADIUS = 0.25f;
     private RayHandler rayHandler;
     private ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
     private float sunDirection = -90f;
@@ -36,40 +38,34 @@ public class LightSetup {
      * BOX2D LIGHT-RELATED END
      */
 
-    public LightSetup(World world, LightDoll doll) {
+    public LightSetup(World world, LightDoll doll, Player player) {
 
-        /**
-         * BOX2D LIGHT-RELATED BEGIN
-         */
         RayHandler.setGammaCorrection(true);
         RayHandler.useDiffuseLight(true);
+
         rayHandler = new RayHandler(world);
 
         // Ambient light-setting, (RED, GREEN, BLUE, ALPHA)
         rayHandler.setAmbientLight(0.01f, 0.14f, 0.24f, 0.5f);
         rayHandler.setBlurNum(3);
-        initPointLights(doll);
-        /**
-         * BOX2D LIGHT-RELATED END
-         */
 
+        initPointLights(doll, player);
     }
 
     public void render(OrthographicCamera cam, boolean stepped) {
 
         rayHandler.setCombinedMatrix(cam);
-        if (stepped) {
-            rayHandler.update();
-            rayHandler.render();
-        }
+        rayHandler.update();
+        rayHandler.render();
     }
 
     /**
      * Box2Dlights light-adding method
      */
-    void initPointLights(LightDoll lightDoll) {
+    private void initPointLights(LightDoll lightDoll, Player player) {
         clearLights();
         for (int i = 0; i < BALLSNUM; i++) {
+
 
             PointLight DollLight = new PointLight(
                     rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 0f, 0f);
@@ -78,16 +74,31 @@ public class LightSetup {
                     0.75f,
                     0.5f,
                     0.1f,
-                    0.7f);
+                    0.3f);
             lights.add(DollLight);
+
+
+            // Test for different type of light
+            /**
+            ConeLight testRoomLight = new ConeLight(
+                    rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 6, 1, 90, 180);
+            testRoomLight.attachToBody(player.getPlayerBody());
+            testRoomLight.setColor(
+                    0.15f,
+                    0.3f,
+                    0.19f,
+                    0.7f);
+            lights.add(testRoomLight);
+             */
+
         }
     }
 
     /**
-     * BOX2D LIGHT-REMOVAL
+     * Box2Dlights light-removal method
      */
     // Template for light-removal method
-    void clearLights() {
+    private void clearLights() {
         if (lights.size() > 0) {
             for (Light light : lights) {
                 light.remove();

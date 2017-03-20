@@ -3,11 +3,13 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -40,21 +42,7 @@ import box2dLight.RayHandler;
  * Created by possumunnki on 7.3.2017.
  */
 
-public class GameScreen implements Screen, Input.TextInputListener, GestureDetector.GestureListener {
-
-    /**
-     * BOX2D LIGHT-RELATED BEGIN
-     */
-    private static final int RAYS_PER_BALL = 128;
-    private static final int BALLSNUM = 5;
-    private static final float LIGHT_DISTANCE = 3f;
-    private static final float RADIUS = 1f;
-    private RayHandler rayHandler;
-    private ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
-    private float sunDirection = -90f;
-    /**
-     * BOX2D LIGHT-RELATED END
-     */
+public class GameScreen implements Screen, Input.TextInputListener {
 
 
     /**
@@ -90,7 +78,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = true;
+    private boolean isDebugOn = false;
 
 
     private TiledMapRenderer tiledMapRenderer;
@@ -101,13 +89,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private InputMultiplexer inputMultiplexer;
     private ScreenController screenController;
-
+    private LightSetup lightSetup;
 
     public GameScreen(MyGdxGame host) {
-
         this.host = host;
         batch = host.getSpriteBatch();
-
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
                 host.SCREEN_WIDTH,
@@ -117,20 +103,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         debugRenderer = new Box2DDebugRenderer();
         player = new Player(world);
         lightDoll = new LightDoll(player, world);
-
-        /**
-         * BOX2D LIGHT-RELATED BEGIN
-         */
-        RayHandler.setGammaCorrection(true);
-        RayHandler.useDiffuseLight(true);
-        rayHandler = new RayHandler(world);
-        // Ambient light-setting, (RED, GREEN, BLUE, ALPHA)
-        rayHandler.setAmbientLight(0.1f, 0.1f, 0.3f, 0.5f);
-        rayHandler.setBlurNum(3);
-        initPointLights();
-        /**
-         * BOX2D LIGHT-RELATED END
-         */
+        // New light setup program -- All light code moved to LightSetup class
+        lightSetup = new LightSetup(world, lightDoll, player);
 
         tiledMap = new TmxMapLoader().load("map.tmx");
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
@@ -200,9 +174,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         /**
          * BOX2D LIGHT-RELATED BEGIN
          */
-        rayHandler.setCombinedMatrix(camera);
-        if (stepped) rayHandler.update();
-        rayHandler.render();
+        lightSetup.render(camera, stepped);
         /**
          * BOX2D LIGHT-RELATED END
          */
@@ -350,11 +322,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         player.dispose();
         controller1.dispose();
         batch.dispose();
-
-        /**
-         * BOX2D LIGHT-RELATED
-         */
-        rayHandler.dispose();
+        lightSetup.dispose();
     }
 
     @Override
@@ -366,7 +334,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     public void canceled() {
 
     }
-
 
     private void moveCamera() {
 
