@@ -62,7 +62,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = false;
+    private boolean isDebugOn = true;
 
 
     private TiledMapRenderer tiledMapRenderer;
@@ -74,7 +74,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private LightSetup lightSetup;
 
     private InputMultiplexer inputMultiplexer;
-    private ScreenController screenController;
+
 
 
     public GameScreen(MyGdxGame host) {
@@ -96,7 +96,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         tiledMap = new TmxMapLoader().load("testMap_1.tmx");
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
         Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
-        Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
+        //Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
+        Utilities.transformWallsToBodies("wall2-rectangles", "wall", tiledMap, world);
+        Utilities.transformWallsToBodies("ground-rectangles", "ground", tiledMap, world);
 
 
 
@@ -205,17 +207,28 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 Body body2 = contact.getFixtureB().getBody();
 
 
-                if (body1.getUserData() != null) {
-                    if (body1.getUserData().equals("wall")) {
-                        //Gdx.app.log("collision1", "Dump");
-                        player.setOnTheGround();
+                if (body1.getUserData() != null ) {
+
+                    if (body1.getUserData().equals("player")) {
+                        Gdx.app.log("collision1.1", "Dump");
+                        if( body2.getUserData().equals("ground")) {
+                            Gdx.app.log("collision1.2", "Dump");
+                            player.setOnTheGround();
+                        }
+
+
                     }
                 } else if (body2.getUserData() != null) {
-                    if (body2.getUserData().equals("wall")) {
-                        //jump = false;
-                        //doubleJump = false;
-                        //Gdx.app.log("collision2", "Dump");
-                        player.setOnTheGround();
+
+                    if (body2.getUserData().equals("player")) {
+                        Gdx.app.log("collision2.1", "Dump");
+                        if(body1.getUserData().equals("ground")) {
+                            //jump = false;
+                            //doubleJump = false;
+                            Gdx.app.log("collision2.2", "Dump");
+                            player.setOnTheGround();
+                        }
+
                     }
                 }
             }

@@ -45,7 +45,7 @@ public class Utilities {
         // Body Definition
         BodyDef myBodyDef = new BodyDef();
         // It's a body that moves
-        myBodyDef.type = BodyDef.BodyType. DynamicBody ;
+        myBodyDef.type = BodyDef.BodyType.DynamicBody;
         // Initial position is centered up
         // This position is the CENTER of the shape!
         myBodyDef.position.set( MyGdxGame.SCREEN_WIDTH / 2,
@@ -96,7 +96,7 @@ public class Utilities {
 
         Body wall = world.createBody(myBodyDef);
 
-        wall.setUserData("wall");
+        wall.setUserData(userData);
         // Create shape
         PolygonShape groundBox = new PolygonShape();
 
