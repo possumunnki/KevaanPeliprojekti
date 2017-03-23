@@ -22,6 +22,14 @@ public class Player {
     private Texture kirbieGif;
     private Animation<TextureRegion> kirbieAnimation;
     private TextureRegion kirbieCurrentFrame;
+
+    // Walk animation sprite sheet.png
+    private Texture walkTexture;
+    private Animation<TextureRegion> mummoWalkAnim;
+    private TextureRegion mummoWalkCurrentFrame;
+
+    private boolean isWalking = false;
+
     private Sprite playerSprite;
     private Texture mummoTexture;
     private Body playerBody;
@@ -47,7 +55,6 @@ public class Player {
         playerSprite.setSize(PLAYER_WIDTH,
                 PLAYER_HEIGHT);
 
-
         playerBody = world.createBody(Utilities.getDefinitionOfBody());
         playerBody.createFixture(getFixtureDefinition());
         playerBody.setUserData("player");
@@ -58,31 +65,30 @@ public class Player {
         kirbieAnimation = new Animation<TextureRegion>(1/6f,
                 Utilities.transformToFrames(kirbieGif, 6, 1));
 
+        walkTexture = new Texture("mummoWalk.png");
+        mummoWalkAnim = new Animation<TextureRegion>(1/5f,
+                Utilities.transformToFrames(walkTexture, 5, 1));
 
     }
 
 
     public void draw(SpriteBatch sb, float stateTime) {
         kirbieCurrentFrame = kirbieAnimation.getKeyFrame(stateTime, true);
-        playerSprite.draw(sb);
-        /*sb.draw(mummoTexture,
-                playerBody.getPosition().x - playerSprite.getWidth() / 2,
-                playerBody.getPosition().y - playerSprite.getHeight() / 2,
-                0.5f,
-                1f);
-*/
-        /**
-         * Original kirbie animation by possumunnki, commented by jk to test mummo texture
-         *
-         * Just need to insert new walk animation assets for mummo.
 
-        sb.draw(kirbieCurrentFrame,
-                playerBody.getPosition().x - playerSprite.getWidth(),
-                playerBody.getPosition().y - playerSprite.getHeight(),
-                1,
-                1);
+        mummoWalkCurrentFrame = mummoWalkAnim.getKeyFrame(stateTime, true);
+
+        /**
+         * Mummo walk animation
          */
-        //sb.draw(ballTexture, playerSprite.getX(), playerSprite.getY());
+        if(isWalking) {
+            sb.draw(mummoWalkCurrentFrame,
+                    playerBody.getPosition().x - playerSprite.getWidth() / 2,
+                    playerBody.getPosition().y - playerSprite.getHeight() / 2,
+                    0.5f,
+                    1f);
+        } else {
+            playerSprite.draw(sb);
+        }
     }
 
     public void movePlayer() {
@@ -107,8 +113,13 @@ public class Player {
             // playerBody.applyForceToCenter(new Vector2(2.5f, 0f), true);
         if(knobPercentX > 0) {
             changeDirection(RIGHT);
+            isWalking = true;
+
         } else if(knobPercentX < 0) {
             changeDirection(LEFT);
+            isWalking = true;
+        } else {
+            isWalking = false;
         }
 
         playerBody.setLinearVelocity(MAXSPEED * knobPercentX, playerBody.getLinearVelocity().y);
@@ -154,6 +165,7 @@ public class Player {
     public void dispose() {
         mummoTexture.dispose();
         kirbieGif.dispose();
+        walkTexture.dispose();
 
     }
 
