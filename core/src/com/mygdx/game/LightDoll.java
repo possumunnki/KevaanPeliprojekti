@@ -41,7 +41,7 @@ public class LightDoll {
 
 
     public LightDoll(Player player, World world) {
-        lightDollTexture = new Texture("badlogic.jpg");
+        lightDollTexture = new Texture("lightdoll-1.png");
         lightDollSprite = new Sprite(lightDollTexture);
 
         lightDollSprite.setSize(lightDollTexture.getWidth() / 1000f, lightDollTexture.getHeight() / 1000f);

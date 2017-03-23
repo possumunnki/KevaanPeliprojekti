@@ -210,9 +210,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 if (body1.getUserData() != null ) {
 
                     if (body1.getUserData().equals("player")) {
-                        Gdx.app.log("collision1.1", "Dump");
+                        //Gdx.app.log("collision1.1", "Dump");
                         if( body2.getUserData().equals("ground")) {
-                            Gdx.app.log("collision1.2", "Dump");
+                            //Gdx.app.log("collision1.2", "Dump");
                             player.setOnTheGround();
                         }
 

@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
  */
 
 public class Controller1 extends Actor{
-    private Texture padTexture;
 
     private int direction;
     private final float radius = 0.5f;
@@ -51,6 +50,7 @@ public class Controller1 extends Actor{
         touchpadStyle.background = touchBackground;
         touchpadStyle.knob = touchKnob;
         //Create new TouchPad with the created style
+        // touchpad(float deadzoneRadius, Skin skin)
         touchpad = new Touchpad(10 / 100f, touchpadStyle);
         //setBounds(x,y,width,height)
         touchpad.setBounds(positionX, positionY, 200, 200);
