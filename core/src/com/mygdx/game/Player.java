@@ -25,13 +25,18 @@ public class Player {
     private Sprite playerSprite;
     private Texture mummoTexture;
     private Body playerBody;
-    private float radius;
     private final float PLAYER_WIDTH = 0.5f;
     private final float PLAYER_HEIGHT = 1f;
     private boolean onTheGround = true;
     private final float MAXSPEED = 5.0f;
     private final float JUMP_VELOSITY = 4.0f;
     private boolean isFixed = true;
+
+
+    private final boolean RIGHT = true;
+    private final boolean LEFT = false;
+    private boolean playerDirection = RIGHT;
+
     public Player(World world) {
         this.world = world;
 
@@ -59,13 +64,13 @@ public class Player {
 
     public void draw(SpriteBatch sb, float stateTime) {
         kirbieCurrentFrame = kirbieAnimation.getKeyFrame(stateTime, true);
-
-        sb.draw(mummoTexture,
+        playerSprite.draw(sb);
+        /*sb.draw(mummoTexture,
                 playerBody.getPosition().x - playerSprite.getWidth() / 2,
                 playerBody.getPosition().y - playerSprite.getHeight() / 2,
                 0.5f,
                 1f);
-
+*/
         /**
          * Original kirbie animation by possumunnki, commented by jk to test mummo texture
          *
@@ -92,26 +97,28 @@ public class Player {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             jump();
         }
+
+        setPlayerSpritePosition();
     }
 
     public void movePlayer(float knobPercentX, float knobPercentY) {
 
 
-
             // playerBody.applyForceToCenter(new Vector2(2.5f, 0f), true);
-            playerBody.setLinearVelocity(MAXSPEED * knobPercentX, playerBody.getLinearVelocity().y);
+        if(knobPercentX > 0) {
+            changeDirection(RIGHT);
+        } else if(knobPercentX < 0) {
+            changeDirection(LEFT);
+        }
+
+        playerBody.setLinearVelocity(MAXSPEED * knobPercentX, playerBody.getLinearVelocity().y);
 
             // playerBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
         if(knobPercentY > 0.3f) {
             jump();
         }
 
-
-
-
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            jump();
-        }
+        setPlayerSpritePosition();
     }
 
     public void jump() {
@@ -137,6 +144,7 @@ public class Player {
         //circleshape.setRadius(0.5f);
         playerBox.setAsBox( PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
 
+
         // Add the shape to the fixture
         playerFixtureDef.shape = playerBox;
 
@@ -146,6 +154,19 @@ public class Player {
     public void dispose() {
         mummoTexture.dispose();
         kirbieGif.dispose();
+
+    }
+
+    public void setPlayerSpritePosition() {
+        playerSprite.setPosition(playerBody.getPosition().x - playerSprite.getWidth() / 2,
+                playerBody.getPosition().y - playerSprite.getHeight() / 2);
+    }
+
+    public void changeDirection(boolean direction) {
+        if(direction != playerDirection) {
+            playerDirection = direction;
+            playerSprite.flip(true, false);
+        }
     }
 
     public void setOnTheGround() {

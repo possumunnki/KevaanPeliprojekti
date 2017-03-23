@@ -129,10 +129,8 @@ public class LightDoll {
     public void setDollDefPos(Player player) {
         // sets lightDoll's position
         dollDefPosX = player.getPlayerBody().getPosition().x -
-                player.getPlayerSprite().getWidth() -
                 lightDollSprite.getWidth() - DISTANCE_X;
         dollDefPosY = player.getPlayerBody().getPosition().y +
-                player.getPlayerSprite().getHeight() +
                 lightDollSprite.getHeight() + DISTANCE_Y;
 
     }

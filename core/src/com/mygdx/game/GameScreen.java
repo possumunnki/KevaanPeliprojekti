@@ -12,7 +12,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -58,7 +60,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Player player;
     private LightDoll lightDoll;
     private Box2DDebugRenderer debugRenderer;
-
+    private Rectangle screenRectangle;
+    private Vector3 touchPos;
     /**
      * Debug renderer setting, set false to disable debug render
      */
@@ -111,11 +114,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // allows to set multiple inputprocessor
         inputMultiplexer = new InputMultiplexer();
         // adds touchpad
+        setUpTouchArea();
 
         inputMultiplexer.addProcessor(new GestureDetector(this));
         inputMultiplexer.addProcessor(stage);
         // adds gesture detector
-
 
         Gdx.input.setInputProcessor(inputMultiplexer);
 
@@ -335,9 +338,32 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         camera.update();
     }
 
+    private void setUpTouchArea() {
+        touchPos = new Vector3();
+        screenRectangle = new Rectangle(camera.viewportWidth / 2,
+                0,
+                camera.viewportWidth / 2,
+                camera.viewportHeight);
+
+    }
+
+    private boolean screenRectangleTouched(float x, float y) {
+        return screenRectangle.contains(x,y);
+    }
+
+    private void screenToWorldCoordinates(float x, float y) {
+        camera.unproject(touchPos.set(x,y,0));
+    }
 
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
+        screenToWorldCoordinates(touchPos.x,touchPos.y);
+        Gdx.app.log("X", "" + x);
+        Gdx.app.log("Y", "" + y);
+        if (screenRectangleTouched(touchPos.x, touchPos.y)) {
+            Gdx.app.log("touchDown", "touched");
+        }
+
         return false;
     }
 
