@@ -61,9 +61,6 @@ public class Player {
 
         playerBody.setFixedRotation(isFixed);
 
-        kirbieGif = new Texture("kirbie2.png");
-        kirbieAnimation = new Animation<TextureRegion>(1/6f,
-                Utilities.transformToFrames(kirbieGif, 6, 1));
 
         walkTexture = new Texture("mummoWalk.png");
         mummoWalkAnim = new Animation<TextureRegion>(1/5f,
@@ -73,7 +70,6 @@ public class Player {
 
 
     public void draw(SpriteBatch sb, float stateTime) {
-        kirbieCurrentFrame = kirbieAnimation.getKeyFrame(stateTime, true);
 
         mummoWalkCurrentFrame = mummoWalkAnim.getKeyFrame(stateTime, true);
 
@@ -178,6 +174,7 @@ public class Player {
         if(direction != playerDirection) {
             playerDirection = direction;
             playerSprite.flip(true, false);
+            Utilities.flip(mummoWalkAnim);
         }
     }
 

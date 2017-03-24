@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObjects;
@@ -113,5 +114,12 @@ public class Utilities {
         rectangle.width  = r.width * scale;
         rectangle.height = r.height * scale;
         return rectangle;
+    }
+
+    public static void flip(Animation<TextureRegion> animation) {
+        TextureRegion[] regions = animation.getKeyFrames();
+        for(TextureRegion r : regions) {
+            r.flip(true, false);
+        }
     }
 }
