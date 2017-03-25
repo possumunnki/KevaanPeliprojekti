@@ -25,7 +25,7 @@ public class LightSetup {
 
     // determines how many rays the point light will emit,
     // bigger value = smoother effect
-    private static final int RAYS_PER_BALL = 256;
+    private static final int RAYS_PER_BALL = 128;
     private static final int BALLSNUM = 5;
 
     // The distance that light will travel

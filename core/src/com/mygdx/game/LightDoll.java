@@ -203,4 +203,8 @@ public class LightDoll {
         return lightDollBody;
     }
 
+    public void dispose() {
+        lightDollTexture.dispose();
+    }
+
 }

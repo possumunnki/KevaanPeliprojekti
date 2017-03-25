@@ -66,7 +66,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = false;
+    private boolean isDebugOn = true;
 
 
     private TiledMapRenderer tiledMapRenderer;
@@ -79,7 +79,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private InputMultiplexer inputMultiplexer;
 
-
+    private BodyHandler bodyHandler;
 
     public GameScreen(MyGdxGame host) {
 
@@ -92,6 +92,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 host.SCREEN_HEIGHT);
 
         world = new World(new Vector2(0, -9.8f), true);
+        bodyHandler = new BodyHandler(world, host);
         debugRenderer = new Box2DDebugRenderer();
         player = new Player(world);
         lightDoll = new LightDoll(player, world);
@@ -102,7 +103,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             tiledMap = new TmxMapLoader().load("stage_2.tmx");
         }
         Gdx.app.log("Stage: ","" + host.getCurrentStage());
-
 
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
 
@@ -159,6 +159,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         camera.update();
         tiledMapRenderer.render();
 
+        world.getBodies(bodyHandler.getBodies());
+
         // uses debug renderer if boolean value is true
         if(isDebugOn) {
             debugRenderer.render(world,camera.combined);
@@ -170,6 +172,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // doHeavyStuff();
         player.draw(batch, stateTime);
         lightDoll.draw(batch);
+        bodyHandler.drawAllBodies(batch);
         batch.end();
 
         /**
@@ -263,6 +266,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 }
             }
         });
+        bodyHandler.clearBodies(world);
 
         if(goal == true) {
             host.setCurrentStage(2);
@@ -327,6 +331,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         controller1.dispose();
         stage.dispose();
 
+        lightDoll.dispose();
+        bodyHandler.dispose();
         /**
          * BOX2D LIGHT-RELATED
          */
