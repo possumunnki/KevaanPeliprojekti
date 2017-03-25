@@ -10,24 +10,47 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Background extends Actor {
 
-    private Texture bg;
+    private Texture mainmenuBG;
+    //private Texture mapBG;
+
+    private boolean mainMenu;
+    private boolean mapMenu;
 
     public Background(String select) {
 
+        mainmenuBG = new Texture("menuBG.png");
+        //mapBG = new Texture("mapScreenBG.png");
+
         if(select.equalsIgnoreCase("backGround")) {
-            bg = new Texture("menuBG.png");
-        } else if(select.equalsIgnoreCase("mapScreenBG")) {
-            bg = new Texture("mapScreenBG.png");
+            mainMenu = true;
+            mapMenu = false;
+            setWidth(mainmenuBG.getWidth());
+            setHeight(mainmenuBG.getHeight());
+        }
+        /**
+        else if(select.equalsIgnoreCase("mapScreenBG")) {
+            mapMenu = true;
+            mainMenu = false;
+            setWidth(mapBG.getWidth());
+            setHeight(mapBG.getHeight());
         } // INSERT HERE OTHER BACKGROUNDS
+         */
 
-
-        setWidth(bg.getWidth());
-        setHeight(bg.getHeight());
+        //setWidth(mainmenuBG.getWidth());
+        //setHeight(mainmenuBG.getHeight());
     }
 
     @Override
     public void draw(Batch batch, float alpha) {
-        batch.draw(bg, getX(), getY(), getWidth(), getHeight());
+        if(mainMenu) {
+            batch.draw(mainmenuBG, getX(), getY(), getWidth(), getHeight());
+        }
+        /**
+        else if(mapMenu) {
+            batch.draw(mapBG, getX(), getY(), getWidth(), getHeight());
+        }
+         */
+
     }
 
     @Override
@@ -36,6 +59,13 @@ public class Background extends Actor {
     }
 
     public void dispose() {
-        bg.dispose();
+        if(mainMenu) {
+            mainmenuBG.dispose();
+        }
+        /**
+        else if(mapMenu) {
+            mapBG.dispose();
+        }
+         */
     }
 }

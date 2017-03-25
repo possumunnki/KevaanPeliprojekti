@@ -44,7 +44,6 @@ public class MainMenuScreen implements Screen {
         mainMenuStage.addActor(start);
 
         Gdx.input.setInputProcessor(mainMenuStage);
-
     }
 
     @Override
@@ -59,7 +58,6 @@ public class MainMenuScreen implements Screen {
 
         mainMenuStage.act(Gdx.graphics.getDeltaTime());
         mainMenuStage.draw();
-
 
         if (start.getTouch()) {
             host.setScreen(new MapScreen(host));
@@ -92,7 +90,5 @@ public class MainMenuScreen implements Screen {
         menuBG.dispose();
         mainMenuStage.dispose();
         Gdx.app.log("MainMenu", "disposed");
-
     }
-
 }

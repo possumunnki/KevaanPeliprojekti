@@ -21,11 +21,15 @@ public class MapScreen implements Screen {
     private FontActor returnToMainManu;
     private Stage stage;
 
-    private Background mapScreenBG;
+    private Texture backGroundTexture;
+
+    //private Background mapScreenBG;
 
     public MapScreen(MyGdxGame host) {
         this.host = host;
         batch = host.getSpriteBatch();
+
+        backGroundTexture = new Texture("mapBG.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
@@ -41,9 +45,9 @@ public class MapScreen implements Screen {
 
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
 
-        mapScreenBG = new Background("mapScreenBG");
+        //mapScreenBG = new Background("mapScreenBG");
 
-        stage.addActor(mapScreenBG);
+        //stage.addActor(mapScreenBG);
         stage.addActor(nextStage);
         stage.addActor(returnToMainManu);
         Gdx.input.setInputProcessor(stage);
@@ -58,6 +62,13 @@ public class MapScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.begin();
+        batch.draw(backGroundTexture, 0, 0,
+                backGroundTexture.getWidth(),
+                backGroundTexture.getHeight());
+
+        batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
@@ -91,7 +102,8 @@ public class MapScreen implements Screen {
 
     @Override
     public void dispose() {
-        mapScreenBG.dispose();
+        backGroundTexture.dispose();
+        //mapScreenBG.dispose();
         nextStage.dispose();
     }
 }
