@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,10 +17,11 @@ public class MapScreen implements Screen {
     private MyGdxGame host;
     private SpriteBatch batch;
     private OrthographicCamera camera;
-    private Texture backGroundTexture;
     private FontActor nextStage;
     private FontActor returnToMainManu;
     private Stage stage;
+
+    private Background mapScreenBG;
 
     public MapScreen(MyGdxGame host) {
         this.host = host;
@@ -40,11 +40,13 @@ public class MapScreen implements Screen {
         returnToMainManu.setFontScale(0.5f);
 
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
+
+        mapScreenBG = new Background("mapScreenBG");
+
+        stage.addActor(mapScreenBG);
         stage.addActor(nextStage);
         stage.addActor(returnToMainManu);
         Gdx.input.setInputProcessor(stage);
-
-        backGroundTexture = new Texture("MapScreenBG.png");
     }
 
     @Override
@@ -57,17 +59,8 @@ public class MapScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
-        batch.begin();
-        batch.draw(backGroundTexture, 0, 0,
-                    backGroundTexture.getWidth(),
-                    backGroundTexture.getHeight());
-
-        batch.end();
-
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-
 
         if (nextStage.getTouch()) {
             host.setScreen(new GameScreen(host));
@@ -98,7 +91,7 @@ public class MapScreen implements Screen {
 
     @Override
     public void dispose() {
-        backGroundTexture.dispose();
+        mapScreenBG.dispose();
         nextStage.dispose();
     }
 }

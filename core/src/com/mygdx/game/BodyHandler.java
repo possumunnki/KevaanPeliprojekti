@@ -151,6 +151,9 @@ public class BodyHandler {
                     .radius*2), 0);
         }
 
+        /**
+         * Array list for bodies which are to be destroyed
+         */
         Array<Body> bodiesToBeDestroyed = new Array<Body>();
 
         // Iterate all voodooDolls

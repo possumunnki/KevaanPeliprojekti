@@ -68,7 +68,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
      */
     private boolean isDebugOn = true;
 
-
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
 
@@ -268,7 +267,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         });
         bodyHandler.clearBodies(world);
 
-        if(goal == true) {
+        if(goal) {
             host.setCurrentStage(2);
             doHeavyStuff();
             host.setScreen(new MapScreen(host));

@@ -170,7 +170,7 @@ public class LightDoll {
 
     public void throwLightDoll(float velocityX, float velocityY) {
 
-        if(throwMode == false) {
+        if(!throwMode) {
             Gdx.app.log("VelocityY ", "" + velocityY);
             throwMode = true;
             if(velocityX > 2500f) {

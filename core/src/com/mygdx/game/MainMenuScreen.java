@@ -20,7 +20,7 @@ public class MainMenuScreen implements Screen {
     private MyGdxGame host;
     private SpriteBatch batch;
     private OrthographicCamera camera;
-    private Stage gameStage;
+    private Stage mainMenuStage;
     private FontActor start;
     private Background menuBG;
 
@@ -34,16 +34,16 @@ public class MainMenuScreen implements Screen {
                 MyGdxGame.SCREEN_WIDTH * 100f,
                 MyGdxGame.SCREEN_HEIGHT * 100f);
 
-        gameStage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
+        mainMenuStage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
         // creates "START" text
         start = new FontActor("START", host.SCREEN_WIDTH * 100f / 2, host.SCREEN_HEIGHT * 100f / 2);
 
         // Creates main menu background
-        menuBG = new Background();
-        gameStage.addActor(menuBG);
-        gameStage.addActor(start);
+        menuBG = new Background("background");
+        mainMenuStage.addActor(menuBG);
+        mainMenuStage.addActor(start);
 
-        Gdx.input.setInputProcessor(gameStage);
+        Gdx.input.setInputProcessor(mainMenuStage);
 
     }
 
@@ -54,13 +54,11 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // batch.setProjectionMatrix(camera.combined);
-
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        gameStage.act(Gdx.graphics.getDeltaTime());
-        gameStage.draw();
+        mainMenuStage.act(Gdx.graphics.getDeltaTime());
+        mainMenuStage.draw();
 
 
         if (start.getTouch()) {
@@ -92,7 +90,7 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
         start.dispose();
         menuBG.dispose();
-        gameStage.dispose();
+        mainMenuStage.dispose();
         Gdx.app.log("MainMenu", "disposed");
 
     }
