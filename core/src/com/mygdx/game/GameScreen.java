@@ -62,6 +62,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Box2DDebugRenderer debugRenderer;
     private Rectangle screenRectangle;
     private Vector3 touchPos;
+    private boolean goal;
     /**
      * Debug renderer setting, set false to disable debug render
      */
@@ -95,14 +96,20 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         player = new Player(world);
         lightDoll = new LightDoll(player, world);
         lightSetup = new LightSetup(world, lightDoll, player);
+        if(host.getCurrentStage() == 1) {
+            tiledMap = new TmxMapLoader().load("testMap_1.tmx");
+        } else if(host.getCurrentStage() == 2) {
+            tiledMap = new TmxMapLoader().load("stage_2.tmx");
+        }
+        Gdx.app.log("Stage: ","" + host.getCurrentStage());
 
-        tiledMap = new TmxMapLoader().load("testMap_1.tmx");
+
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
-        Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
-        //Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
-        Utilities.transformWallsToBodies("wall2-rectangles", "wall", tiledMap, world);
-        Utilities.transformWallsToBodies("ground-rectangles", "ground", tiledMap, world);
 
+        Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
+        Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
+        Utilities.transformWallsToBodies("ground-rectangles", "ground", tiledMap, world);
+        Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
 
 
         controller1 = new Controller1(MyGdxGame.SCREEN_WIDTH / 10, MyGdxGame.SCREEN_HEIGHT / 5);
@@ -156,6 +163,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if(isDebugOn) {
             debugRenderer.render(world,camera.combined);
         }
+
+
 
         batch.begin();
         // doHeavyStuff();
@@ -211,16 +220,24 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
 
                 if (body1.getUserData() != null ) {
-
+                    // when player touches ground-rectangle
                     if (body1.getUserData().equals("player")) {
                         //Gdx.app.log("collision1.1", "Dump");
                         if( body2.getUserData().equals("ground")) {
                             //Gdx.app.log("collision1.2", "Dump");
                             player.setOnTheGround();
+                        } else if(body2.getUserData().equals("goal")) {
+                            goal = true;
                         }
 
 
                     }
+
+                    // when player touches goal-rectangle
+                    if(body1.getUserData().equals("player")) {
+
+                    }
+
                 } else if (body2.getUserData() != null) {
 
                     if (body2.getUserData().equals("player")) {
@@ -233,9 +250,25 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                         }
 
                     }
+
+                    if (body2.getUserData().equals("player")) {
+                        Gdx.app.log("collision2.1", "Dump");
+                        if(body1.getUserData().equals("goal")) {
+                            Gdx.app.log("collision2.2", "Dump");
+                            goal = true;
+
+                        }
+
+                    }
                 }
             }
         });
+
+        if(goal == true) {
+            host.setCurrentStage(2);
+            doHeavyStuff();
+            host.setScreen(new MapScreen(host));
+        }
     }
 
     private double accumulator = 0;
@@ -263,7 +296,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     public void doHeavyStuff() {
         try {
-            Thread.sleep(500);
+            Thread.sleep(1000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -285,19 +318,21 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public void hide() {
-
+        this.dispose();
     }
 
     @Override
     public void dispose() {
         player.dispose();
         controller1.dispose();
-        batch.dispose();
+        stage.dispose();
 
         /**
          * BOX2D LIGHT-RELATED
          */
         lightSetup.dispose();
+
+        Gdx.app.log("GameScreen","disposed");
     }
 
     @Override

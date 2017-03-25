@@ -19,9 +19,6 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Player {
     private World world;
-    private Texture kirbieGif;
-    private Animation<TextureRegion> kirbieAnimation;
-    private TextureRegion kirbieCurrentFrame;
 
     // Walk animation sprite sheet.png
     private Texture walkTexture;
@@ -96,6 +93,10 @@ public class Player {
             playerBody.applyForceToCenter(new Vector2(- MAXSPEED, 0f), true);
         }
 
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            playerBody.setLinearVelocity(0, 10f);
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             jump();
         }
@@ -160,7 +161,6 @@ public class Player {
 
     public void dispose() {
         mummoTexture.dispose();
-        kirbieGif.dispose();
         walkTexture.dispose();
 
     }

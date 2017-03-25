@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MyGdxGame extends Game {
@@ -23,6 +24,7 @@ public class MyGdxGame extends Game {
     public static final int DOWN = 3;
 
 
+    private int currentStage;
 	private MainMenuScreen mainMenu;
 
 	public SpriteBatch getSpriteBatch() {
@@ -32,6 +34,8 @@ public class MyGdxGame extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+        currentStage = 1;
+
 		mainMenu = new MainMenuScreen(this);
 		setScreen(mainMenu);
 	}
@@ -44,6 +48,16 @@ public class MyGdxGame extends Game {
 
 	@Override
 	public void dispose () {
-		batch.dispose();
+
+        batch.dispose();
+        Gdx.app.log("MyGdxGame", "disposed");
 	}
+
+    public void setCurrentStage(int stage) {
+        currentStage = stage;
+    }
+
+    public int getCurrentStage() {
+        return currentStage;
+    }
 }

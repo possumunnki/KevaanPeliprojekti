@@ -41,10 +41,10 @@ public class LightDoll {
 
 
     public LightDoll(Player player, World world) {
-        lightDollTexture = new Texture("lightdoll-1.png");
+        lightDollTexture = new Texture("lightdoll-2.png");
         lightDollSprite = new Sprite(lightDollTexture);
 
-        lightDollSprite.setSize(lightDollTexture.getWidth() / 1000f, lightDollTexture.getHeight() / 1000f);
+        lightDollSprite.setSize(lightDollTexture.getWidth() / 100f, lightDollTexture.getHeight() / 100f);
         dollDefPosY = player.getPlayerBody().getPosition().y +
                 player.getPlayerSprite().getHeight() +
                 lightDollSprite.getHeight() + DISTANCE_Y;

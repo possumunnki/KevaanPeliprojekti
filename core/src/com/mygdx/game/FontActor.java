@@ -54,6 +54,9 @@ public class FontActor extends Actor {
     public void dispose() {
         font.dispose();
     }
+    public void setFontScale(float scale) {
+        font.getData().setScale(scale);
+    }
 
     class FontListener extends InputListener {
         public boolean touchDown(InputEvent event,

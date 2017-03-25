@@ -41,10 +41,9 @@ public class MainMenuScreen implements Screen {
         // Creates main menu background
         menuBG = new Background();
         gameStage.addActor(menuBG);
-
         gameStage.addActor(start);
 
-
+        Gdx.input.setInputProcessor(gameStage);
 
     }
 
@@ -62,12 +61,11 @@ public class MainMenuScreen implements Screen {
 
         gameStage.act(Gdx.graphics.getDeltaTime());
         gameStage.draw();
-        Gdx.input.setInputProcessor(gameStage);
+
 
         if (start.getTouch()) {
-            host.setScreen(new GameScreen(host));
+            host.setScreen(new MapScreen(host));
         }
-
     }
 
     @Override
@@ -87,14 +85,14 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
-
+        this.dispose();
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
         start.dispose();
         menuBG.dispose();
+        gameStage.dispose();
         Gdx.app.log("MainMenu", "disposed");
 
     }
