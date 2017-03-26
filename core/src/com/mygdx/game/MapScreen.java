@@ -19,6 +19,8 @@ public class MapScreen implements Screen {
     private OrthographicCamera camera;
     private FontActor nextStage;
     private FontActor returnToMainManu;
+    private PointActor stage1Point;
+    private PointActor stage2Point;
     private Stage stage;
 
     private Texture backGroundTexture;
@@ -43,6 +45,11 @@ public class MapScreen implements Screen {
                                     host.SCREEN_HEIGHT * 1/8 * 100f);
         returnToMainManu.setFontScale(0.5f);
 
+        stage1Point = new PointActor(host.SCREEN_WIDTH  * 1 / 12 * 100f,
+                                     host.SCREEN_HEIGHT * 1 / 6 * 100f);
+        stage2Point = new PointActor(host.SCREEN_WIDTH  * 3 / 12 * 100f,
+                                     host.SCREEN_HEIGHT * 4.5f / 24 * 100f);
+
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
 
         //mapScreenBG = new Background("mapScreenBG");
@@ -50,6 +57,8 @@ public class MapScreen implements Screen {
         //stage.addActor(mapScreenBG);
         stage.addActor(nextStage);
         stage.addActor(returnToMainManu);
+        stage.addActor(stage1Point);
+        stage.addActor(stage2Point);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -63,6 +72,8 @@ public class MapScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
+
         batch.begin();
         batch.draw(backGroundTexture, 0, 0,
                 backGroundTexture.getWidth(),
@@ -72,6 +83,7 @@ public class MapScreen implements Screen {
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
+        configStage();
 
         if (nextStage.getTouch()) {
             host.setScreen(new GameScreen(host));
@@ -105,5 +117,34 @@ public class MapScreen implements Screen {
         backGroundTexture.dispose();
         //mapScreenBG.dispose();
         nextStage.dispose();
+        stage1Point.dispose();
+        stage2Point.dispose();
+    }
+
+    private void configStage() {
+        if(host.getCurrentStage() == 1) {
+            if(stage2Point.getTouch() && host.getStageAvailability(2)) {
+                host.setCurrentStage(2);
+                stage1Point.setTouch(false);
+            } else {
+                stage1Point.setTouch(true);
+                stage2Point.setTouch(false);
+            }
+
+        } else if(host.getCurrentStage() == 2) {
+            if(stage1Point.getTouch() && host.getStageAvailability(1)) {
+                host.setCurrentStage(1);
+                stage2Point.setTouch(false);
+            } else {
+                stage1Point.setTouch(false);
+                stage2Point.setTouch(true);
+            }
+        }
+
+
+
+
+
+
     }
 }

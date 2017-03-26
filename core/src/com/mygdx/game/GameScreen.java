@@ -96,19 +96,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         player = new Player(world);
         lightDoll = new LightDoll(player, world);
         lightSetup = new LightSetup(world, lightDoll, player);
-        if(host.getCurrentStage() == 1) {
-            tiledMap = new TmxMapLoader().load("testMap_1.tmx");
-        } else if(host.getCurrentStage() == 2) {
-            tiledMap = new TmxMapLoader().load("stage_2.tmx");
-        }
-        Gdx.app.log("Stage: ","" + host.getCurrentStage());
 
-        tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
-
-        Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
-        Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
-        Utilities.transformWallsToBodies("ground-rectangles", "ground", tiledMap, world);
-        Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
+        setGameStage();
 
 
         controller1 = new Controller1(MyGdxGame.SCREEN_WIDTH / 10, MyGdxGame.SCREEN_HEIGHT / 5);
@@ -128,6 +117,22 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         Gdx.input.setInputProcessor(inputMultiplexer);
 
+    }
+
+    private void setGameStage() {
+        if(host.getCurrentStage() == 1) {
+            tiledMap = new TmxMapLoader().load("testMap_1.tmx");
+        } else if(host.getCurrentStage() == 2) {
+            tiledMap = new TmxMapLoader().load("stage_2.tmx");
+        }
+        Gdx.app.log("Stage: ","" + host.getCurrentStage());
+
+        tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
+
+        Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
+        Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
+        Utilities.transformWallsToBodies("ground-rectangles", "ground", tiledMap, world);
+        Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
     }
 
     public World getWorld() {
@@ -268,6 +273,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         bodyHandler.clearBodies(world);
 
         if(goal) {
+            host.unlocStage(host.getCurrentStage());
             host.setCurrentStage(2);
             doHeavyStuff();
             host.setScreen(new MapScreen(host));

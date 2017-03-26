@@ -20,11 +20,10 @@ public class MyGdxGame extends Game {
     public static final int STOP = 0;
     public static final int RIGHT = 1;
     public static final int LEFT = 2;
-    public static final int UP = 3;
-    public static final int DOWN = 3;
-
-
+    public static final boolean AVAILABLE = true;
+    public static final boolean NOT_AVAILABLE = false;
     private int currentStage;
+    private boolean[] availableStage;
 	private MainMenuScreen mainMenu;
 
 	public SpriteBatch getSpriteBatch() {
@@ -35,7 +34,7 @@ public class MyGdxGame extends Game {
 	public void create () {
 		batch = new SpriteBatch();
         currentStage = 1;
-
+        availableStage = new boolean[]{AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE};
 		mainMenu = new MainMenuScreen(this);
 		setScreen(mainMenu);
 	}
@@ -59,5 +58,13 @@ public class MyGdxGame extends Game {
 
     public int getCurrentStage() {
         return currentStage;
+    }
+
+    public void unlocStage(int nextStage) {
+        availableStage[nextStage] = AVAILABLE;
+    }
+
+    public boolean getStageAvailability(int stageNumber) {
+        return availableStage[stageNumber -1];
     }
 }
