@@ -21,8 +21,8 @@ public class MapScreen implements Screen {
     private FontActor returnToMainManu;
     private PointActor stage1Point;
     private PointActor stage2Point;
+    private PointActor stage3Point;
     private Stage stage;
-
     private Texture backGroundTexture;
 
     //private Background mapScreenBG;
@@ -49,6 +49,9 @@ public class MapScreen implements Screen {
                                      host.SCREEN_HEIGHT * 1 / 6 * 100f);
         stage2Point = new PointActor(host.SCREEN_WIDTH  * 3 / 12 * 100f,
                                      host.SCREEN_HEIGHT * 4.5f / 24 * 100f);
+        stage3Point = new PointActor(host.SCREEN_WIDTH * 5 / 12 * 100f,
+                                     host.SCREEN_HEIGHT * 3.5f / 12 * 100f);
+
 
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
 
@@ -59,6 +62,7 @@ public class MapScreen implements Screen {
         stage.addActor(returnToMainManu);
         stage.addActor(stage1Point);
         stage.addActor(stage2Point);
+        stage.addActor(stage3Point);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -122,29 +126,44 @@ public class MapScreen implements Screen {
     }
 
     private void configStage() {
-        if(host.getCurrentStage() == 1) {
-            if(stage2Point.getTouch() && host.getStageAvailability(2)) {
+        if (host.getCurrentStage() == 1) {
+            if (stage2Point.getTouch() && host.getStageAvailability(2)) {
                 host.setCurrentStage(2);
+                stage1Point.setTouch(false);
+            } else if (stage3Point.getTouch() && host.getStageAvailability(3)) {
+                host.setCurrentStage(3);
                 stage1Point.setTouch(false);
             } else {
                 stage1Point.setTouch(true);
                 stage2Point.setTouch(false);
+                stage3Point.setTouch(false);
             }
 
-        } else if(host.getCurrentStage() == 2) {
-            if(stage1Point.getTouch() && host.getStageAvailability(1)) {
+        } else if (host.getCurrentStage() == 2) {
+            if (stage1Point.getTouch() && host.getStageAvailability(1)) {
                 host.setCurrentStage(1);
+                stage2Point.setTouch(false);
+            } else if (stage3Point.getTouch() && host.getStageAvailability(3)) {
+                host.setCurrentStage(3);
                 stage2Point.setTouch(false);
             } else {
                 stage1Point.setTouch(false);
                 stage2Point.setTouch(true);
+                stage3Point.setTouch(false);
+            }
+        } else if (host.getCurrentStage() == 3) {
+            if (stage1Point.getTouch() && host.getStageAvailability(1)) {
+                host.setCurrentStage(1);
+                stage3Point.setTouch(false);
+            } else if (stage2Point.getTouch() && host.getStageAvailability(2)) {
+                host.setCurrentStage(2);
+                stage3Point.setTouch(false);
+            } else {
+                stage1Point.setTouch(false);
+                stage2Point.setTouch(false);
+                stage3Point.setTouch(true);
             }
         }
-
-
-
-
-
-
     }
+
 }

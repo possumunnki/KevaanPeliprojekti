@@ -274,7 +274,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         if(goal) {
             host.unlocStage(host.getCurrentStage());
-            host.setCurrentStage(2);
+            host.setCurrentStage(host.getCurrentStage() + 1);
+            Gdx.app.log("Current Stage", "" + host.getCurrentStage());
             doHeavyStuff();
             host.setScreen(new MapScreen(host));
         }
