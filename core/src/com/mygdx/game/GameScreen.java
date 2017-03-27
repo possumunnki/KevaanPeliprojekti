@@ -127,29 +127,22 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             tiledMap = new TmxMapLoader().load("testMap_1.tmx");
             tilesAmountWidth = 160;
             tilesAmountHeight = 64;
-            Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
-            Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
-            Utilities.transformWallsToBodies("ground-rectangles", "ground", tiledMap, world);
-            Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
+
         } else if(host.getCurrentStage() == 2) {
             tiledMap = new TmxMapLoader().load("stage_2.tmx");
             tilesAmountWidth = 64;
             tilesAmountHeight = 32;
-            Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
-            Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
-            Utilities.transformWallsToBodies("ground-rectangles", "ground", tiledMap, world);
-            Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
+
         } else if(host.getCurrentStage() == 3) {
             tiledMap = new TmxMapLoader().load("stage_3.tmx");
             tilesAmountWidth = 64;
             tilesAmountHeight = 32;
 
-            Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
-
-            Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
         }
         Gdx.app.log("Stage: ","" + host.getCurrentStage());
-
+        Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
+        Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
+        Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
 
 
@@ -253,10 +246,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                     // when player touches ground-rectangle
                     if (body1.getUserData().equals("player")) {
                         //Gdx.app.log("collision1.1", "Dump");
-                        if( body2.getUserData().equals("ground")) {
+                        //if( body2.getUserData().equals("ground")) {
                             //Gdx.app.log("collision1.2", "Dump");
 //                            player.setOnTheGround();
-                        } else if(body2.getUserData().equals("goal")) {
+                     //   }
+                        if(body2.getUserData().equals("goal")) {
                             goal = true;
                         }
                     }
@@ -270,12 +264,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
                     if (body2.getUserData().equals("player")) {
                         Gdx.app.log("collision2.1", "Dump");
-                        if(body1.getUserData().equals("ground")) {
+                        /*if(body1.getUserData().equals("ground")) {
                             //jump = false;
                             //doubleJump = false;
                             Gdx.app.log("collision2.2", "Dump");
                             //player.setOnTheGround();
-                        }
+                        }*/
 
                     }
 
@@ -415,7 +409,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     public boolean isPossibleToJump() {
         getPlayerDownPoints(player.getPlayerSprite().getX(),
-                            player.getPlayerSprite().getY() - 0.01f);
+                            player.getPlayerSprite().getY());
 
         if(downLeft && downMiddle) {
             return true;
