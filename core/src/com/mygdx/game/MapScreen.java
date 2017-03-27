@@ -18,7 +18,7 @@ public class MapScreen implements Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private FontActor nextStage;
-    private FontActor returnToMainManu;
+    private FontActor returnToMainMenu;
     private PointActor stage1Point;
     private PointActor stage2Point;
     private PointActor stage3Point;
@@ -40,10 +40,10 @@ public class MapScreen implements Screen {
         nextStage = new FontActor("Next Stage",
                                     host.SCREEN_WIDTH * 6/8 * 100f,
                                     host.SCREEN_HEIGHT * 2/8 * 100f);
-        returnToMainManu = new FontActor("Return to main manu",
+        returnToMainMenu = new FontActor("Return to main menu",
                                     host.SCREEN_WIDTH  * 8/8 * 100f,
                                     host.SCREEN_HEIGHT * 1/8 * 100f);
-        returnToMainManu.setFontScale(0.5f);
+        returnToMainMenu.setFontScale(0.5f);
 
         stage1Point = new PointActor(host.SCREEN_WIDTH  * 1 / 12 * 100f,
                                      host.SCREEN_HEIGHT * 1 / 6 * 100f);
@@ -59,7 +59,7 @@ public class MapScreen implements Screen {
 
         //stage.addActor(mapScreenBG);
         stage.addActor(nextStage);
-        stage.addActor(returnToMainManu);
+        stage.addActor(returnToMainMenu);
         stage.addActor(stage1Point);
         stage.addActor(stage2Point);
         stage.addActor(stage3Point);
@@ -91,7 +91,7 @@ public class MapScreen implements Screen {
 
         if (nextStage.getTouch()) {
             host.setScreen(new GameScreen(host));
-        } else if(returnToMainManu.getTouch()) {
+        } else if(returnToMainMenu.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
         }
     }

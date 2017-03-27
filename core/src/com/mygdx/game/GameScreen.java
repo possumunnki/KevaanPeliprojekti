@@ -285,7 +285,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 }
             }
         });
-        bodyHandler.clearBodies(world);
+        bodyHandler.clearBodies(world, lightDoll);
 
         if(goal) {
             host.unlocStage(host.getCurrentStage());

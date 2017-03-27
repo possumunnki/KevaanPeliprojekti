@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -43,24 +44,24 @@ public class BodyHandler {
 
         voodooTex = new Texture(Gdx.files.internal("voodoo_alpha.png"));
 
-        vdObject = new ObjectData(voodooTex, 0.2f, ObjectData.GameObjectType.VOODOO);
+        vdObject = new ObjectData(voodooTex, 0.2f, 0.2f, ObjectData.GameObjectType.VOODOO);
 
-        voodooBodyTemplate = createBody(5, 5, vdObject.radius, world);
+        voodooBodyTemplate = createBody(1, 1, vdObject.width, vdObject.height, world);
         voodooBodyTemplate.setUserData(vdObject);
 
-        testBody1 = createBody(9, 10, vdObject.radius, world);
+        testBody1 = createBody(9, 10, vdObject.width, vdObject.height, world);
         testBody1.setUserData(vdObject);
 
-        testBody2 = createBody(7, 7, vdObject.radius, world);
+        testBody2 = createBody(7, 7, vdObject.width, vdObject.height, world);
         testBody2.setUserData(vdObject);
 
-        testBody3 = createBody(14, 5, vdObject.radius, world);
+        testBody3 = createBody(14, 5, vdObject.width, vdObject.height, world);
         testBody3.setUserData(vdObject);
     }
 
-    private Body createBody(float x, float y, float radius, World world) {
+    private Body createBody(float x, float y, float width, float height, World world) {
         Body playerBody = world.createBody(getDefinitionOfPlayerBody(x, y));
-        playerBody.createFixture(getFixtureDefinition(radius));
+        playerBody.createFixture(getFixtureDefinition(width, height));
         return playerBody;
     }
 
@@ -78,24 +79,24 @@ public class BodyHandler {
         return vdBodyDef;
     }
 
-    private FixtureDef getFixtureDefinition(float radius) {
+    private FixtureDef getFixtureDefinition(float width, float height) {
         FixtureDef vdFixDef = new FixtureDef();
 
         // Mass per square meter (kg^m2)
         vdFixDef.density = 1;
 
         // How bouncy object? [0,1]
-        vdFixDef.restitution = 0.1f;
+        vdFixDef.restitution = 0.4f;
 
         // How slipper object? [0,1]
-        vdFixDef.friction = 0.5f;
+        vdFixDef.friction = 0.7f;
 
         // Create circle shape
-        CircleShape circleshape = new CircleShape();
-        circleshape.setRadius(radius);
+        PolygonShape polyShape = new PolygonShape();
+        polyShape.setAsBox(width, height);
 
         // Add the shape to the fixture
-        vdFixDef.shape = circleshape;
+        vdFixDef.shape = polyShape;
 
         return vdFixDef;
     }
@@ -119,12 +120,12 @@ public class BodyHandler {
                 //body.getUserData().toString()
 
                 batch.draw(info.objectTexture,
-                        body.getPosition().x - info.radius,
-                        body.getPosition().y - info.radius,
-                        info.radius,                   // originX
-                        info.radius,                   // originY
-                        info.radius * 2,               // windowWidth
-                        info.radius * 2,               // windowHeight
+                        body.getPosition().x - info.width,
+                        body.getPosition().y - info.width,
+                        info.width,                   // originX
+                        info.width,                   // originY
+                        info.width * 2,               // windowWidth
+                        info.width * 2,               // windowHeight
                         1.0f,                          // scaleX
                         1.0f,                          // scaleY
                         body.getTransform().getRotation() * MathUtils.radiansToDegrees,
@@ -139,17 +140,22 @@ public class BodyHandler {
         }
     }
 
-    public void clearBodies(World world) {
+    public void clearBodies(World world, LightDoll lightDoll) {
+
+        //voodooBodyTemplate.setLinearVelocity(new Vector2(-3,0));
 
         // If ball is off screen
         if(voodooBodyTemplate.getPosition().y < -1) {
             // Clear velocity (dropping of the screen)
-            voodooBodyTemplate.setLinearVelocity(new Vector2(0,0));
+            voodooBodyTemplate.setLinearVelocity(new Vector2(0,8));
             Gdx.app.log("offscreen", "ball Y-pos" + voodooBodyTemplate.getPosition().y);
 
             voodooBodyTemplate.setTransform(new Vector2(windowWidth / 2, windowHeight + vdObject
-                    .radius*2), 0);
+                    .width*2), 0);
+
         }
+
+
 
         /**
          * Array list for bodies which are to be destroyed
@@ -162,9 +168,21 @@ public class BodyHandler {
             if (body.getUserData().equals(voodooBodyTemplate.getUserData())) {
                 ObjectData info = (ObjectData) body.getUserData();
                 // If it is a voodoo doll, then mark it to be removed.
-                // INSERT LIGHTDOLL SHOOT CHECK HERE
                 if (info.type == ObjectData.GameObjectType.VOODOO) {
-                    // INSERT LIGHTDOLL SHOOT CHECK HERE
+
+                    // Check when the light doll is near enemy body
+                    if(lightDoll.getLightDollBody().getPosition().x >
+                            (body.getPosition().x - 0.5f) &&
+                            lightDoll.getLightDollBody().getPosition().x <
+                                    (body.getPosition().x + 0.3f) &&
+                            lightDoll.getLightDollBody().getPosition().y >
+                                    (body.getPosition().y - 0.5f) &&
+                            lightDoll.getLightDollBody().getPosition().y <
+                                    (body.getPosition().y + 0.3f)) {
+
+                        // Add the specific body to bodiesToBeDestroyed-list
+                        bodiesToBeDestroyed.add(body);
+                    }
                 }
             }
         }
@@ -172,6 +190,8 @@ public class BodyHandler {
         // Destroy needed bodies
         for (Body body : bodiesToBeDestroyed) {
             world.destroyBody(body);
+            Gdx.app.log("log: ", "destroyed body x: " + body.getPosition().x);
+            Gdx.app.log("log: ", "total body count: " + bodies.size);
         }
     }
 

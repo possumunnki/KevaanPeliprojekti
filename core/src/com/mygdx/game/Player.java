@@ -98,6 +98,7 @@ public class Player {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            Gdx.app.log("log", "player x/y: " + playerBody.getPosition());
             jump();
         }
 

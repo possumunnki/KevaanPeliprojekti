@@ -8,8 +8,12 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class ObjectData {
 
-    public Texture objectTexture;
-    public float radius;
+    Texture objectTexture;
+    //float radius;
+
+    float width;
+    float height;
+
     // public int id;
 
 
@@ -21,9 +25,11 @@ public class ObjectData {
 
     ObjectData.GameObjectType type;
 
-    public ObjectData(Texture texture, float r, ObjectData.GameObjectType gameObjectType) {
+    public ObjectData(Texture texture, float x, float y, ObjectData.GameObjectType
+            gameObjectType) {
         objectTexture = texture;
-        radius = r;
+        width = x;
+        height = y;
         type = gameObjectType;
     }
 }
