@@ -30,7 +30,7 @@ public class LightSetup {
 
     // The distance that light will travel
     private float LIGHT_DISTANCE = 4.5f;
-    private float RADIUS = 0.25f;
+    private float RADIUS = 1f;
     private RayHandler rayHandler;
     private ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
 

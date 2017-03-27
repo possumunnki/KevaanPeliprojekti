@@ -123,6 +123,7 @@ public class MapScreen implements Screen {
         nextStage.dispose();
         stage1Point.dispose();
         stage2Point.dispose();
+        Gdx.app.log("MapScreen", "disposed");
     }
 
     private void configStage() {

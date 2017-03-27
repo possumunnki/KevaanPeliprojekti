@@ -34,7 +34,7 @@ public class MyGdxGame extends Game {
 	public void create () {
 		batch = new SpriteBatch();
         currentStage = 1;
-        availableStage = new boolean[]{AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE};
+        availableStage = new boolean[]{AVAILABLE, NOT_AVAILABLE, AVAILABLE, NOT_AVAILABLE};
 		mainMenu = new MainMenuScreen(this);
 		setScreen(mainMenu);
 	}

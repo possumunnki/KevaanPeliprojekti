@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -34,11 +35,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Map size is 70 x 60 tiles.
      */
-    private final int TILES_AMOUNT_WIDTH = 160;
-    private final int TILES_AMOUNT_HEIGHT = 64;
+    private int tilesAmountWidth;
+    private int tilesAmountHeight;
 
     /**
-     * One tile is 32.
+     * One tile is 32 pixels.
      */
     private final int TILE_WIDTH = 32;
     private final int TILE_HEIGHT = 32;
@@ -48,8 +49,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
      * WORLD_HEIGHT_PIXELS = 42 * 32 = 1344 pixels
      * WORLD_WIDTH_PIXELS  = 42 * 32 = 1344 pixels
      */
-    int WORLD_WIDTH_PIXELS  = TILES_AMOUNT_WIDTH  * TILE_WIDTH;
-    int WORLD_HEIGHT_PIXELS = TILES_AMOUNT_HEIGHT * TILE_HEIGHT;
+    int worldWidthPixels;
+    int worldHeightPixels;
 
     private MyGdxGame host;
     private SpriteBatch batch;
@@ -79,6 +80,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private InputMultiplexer inputMultiplexer;
 
     private BodyHandler bodyHandler;
+
+    private boolean downLeft, downRight, downMiddle;
 
     public GameScreen(MyGdxGame host) {
 
@@ -122,17 +125,37 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private void setGameStage() {
         if(host.getCurrentStage() == 1) {
             tiledMap = new TmxMapLoader().load("testMap_1.tmx");
+            tilesAmountWidth = 160;
+            tilesAmountHeight = 64;
+            Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
+            Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
+            Utilities.transformWallsToBodies("ground-rectangles", "ground", tiledMap, world);
+            Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
         } else if(host.getCurrentStage() == 2) {
             tiledMap = new TmxMapLoader().load("stage_2.tmx");
+            tilesAmountWidth = 64;
+            tilesAmountHeight = 32;
+            Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
+            Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
+            Utilities.transformWallsToBodies("ground-rectangles", "ground", tiledMap, world);
+            Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
+        } else if(host.getCurrentStage() == 3) {
+            tiledMap = new TmxMapLoader().load("stage_3.tmx");
+            tilesAmountWidth = 64;
+            tilesAmountHeight = 32;
+
+            Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
+
+            Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
         }
         Gdx.app.log("Stage: ","" + host.getCurrentStage());
 
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
 
-        Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
-        Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
-        Utilities.transformWallsToBodies("ground-rectangles", "ground", tiledMap, world);
-        Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
+
+
+        worldWidthPixels = tilesAmountWidth  * TILE_WIDTH;
+        worldHeightPixels = tilesAmountHeight * TILE_HEIGHT;
     }
 
     public World getWorld() {
@@ -149,6 +172,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if(isPossibleToJump()) {
+            player.setOnTheGround();
+        }
 
         controller1.moveTouchPad();
         player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
@@ -162,15 +188,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         moveCamera();
         camera.update();
         tiledMapRenderer.render();
-
         world.getBodies(bodyHandler.getBodies());
 
         // uses debug renderer if boolean value is true
         if(isDebugOn) {
             debugRenderer.render(world,camera.combined);
         }
-
-
 
         batch.begin();
         // doHeavyStuff();
@@ -232,12 +255,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                         //Gdx.app.log("collision1.1", "Dump");
                         if( body2.getUserData().equals("ground")) {
                             //Gdx.app.log("collision1.2", "Dump");
-                            player.setOnTheGround();
+//                            player.setOnTheGround();
                         } else if(body2.getUserData().equals("goal")) {
                             goal = true;
                         }
-
-
                     }
 
                     // when player touches goal-rectangle
@@ -253,7 +274,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                             //jump = false;
                             //doubleJump = false;
                             Gdx.app.log("collision2.2", "Dump");
-                            player.setOnTheGround();
+                            //player.setOnTheGround();
                         }
 
                     }
@@ -362,18 +383,16 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         if (player.getPlayerBody().getPosition().x < MyGdxGame.SCREEN_WIDTH / 2) {
             camera.position.x = MyGdxGame.SCREEN_WIDTH / 2;
-        } else if (player.getPlayerBody().getPosition().x > WORLD_WIDTH_PIXELS / 100f - MyGdxGame.SCREEN_WIDTH /2) {
-            camera.position.x = WORLD_WIDTH_PIXELS / 100f - MyGdxGame.SCREEN_WIDTH / 2;
+        } else if (player.getPlayerBody().getPosition().x > worldWidthPixels / 100f - MyGdxGame.SCREEN_WIDTH /2) {
+            camera.position.x = worldWidthPixels / 100f - MyGdxGame.SCREEN_WIDTH / 2;
         } else {
             camera.position.x = player.getPlayerBody().getPosition().x;
         }
 
-
-
         if(player.getPlayerBody().getPosition().y < MyGdxGame.SCREEN_HEIGHT / 2) {
             camera.position.y = MyGdxGame.SCREEN_HEIGHT / 2;
-        } else if (player.getPlayerBody().getPosition().y > WORLD_HEIGHT_PIXELS / 100f - MyGdxGame.SCREEN_HEIGHT /2) {
-            camera.position.y = WORLD_HEIGHT_PIXELS / 100f - MyGdxGame.SCREEN_HEIGHT / 2;
+        } else if (player.getPlayerBody().getPosition().y > worldHeightPixels / 100f - MyGdxGame.SCREEN_HEIGHT /2) {
+            camera.position.y = worldHeightPixels / 100f - MyGdxGame.SCREEN_HEIGHT / 2;
         } else {
             camera.position.y = player.getPlayerBody().getPosition().y;
         }
@@ -392,6 +411,108 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 camera.viewportWidth / 2,
                 camera.viewportHeight);
 
+    }
+
+    public boolean isPossibleToJump() {
+        getPlayerDownPoints(player.getPlayerSprite().getX(),
+                            player.getPlayerSprite().getY() - 0.01f);
+
+        if(downLeft && downMiddle) {
+            return true;
+        } else if(downMiddle && downRight) {
+            return true;
+        } else if(downLeft && downRight) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void getPlayerDownPoints(float pX, float pY) {
+        /*
+         * pX and pY are the coordinates of the player.
+         * coordinates are calculated from the bottom
+         * left position of the texture:
+         *
+         *       XXXXXX
+         *       X    X
+         *       X    X
+         *       PXXXXX
+         *   (px, py)
+         */
+
+        float downLeftXPos  = pX;
+        float downRightXPos  = player.getPlayerSprite().getWidth() + pX;
+        float downMiddleXPos = player.getPlayerSprite().getWidth() / 2 + pX;
+
+        /*
+         *        X X X X X X X
+         *        X           X
+         *        X           X
+         *        P X X P X X P
+         *        ^     ^     ^
+         *        |     |     |
+         * downLeftXpos |    downRightXpos
+         *         downMiddleXpos
+         */
+
+        /*
+         *        X X X X X X X
+         *        X           X
+         *        X           X
+         *        P X X X X X X
+         *        ^
+         *        |
+         *     downLeft
+         *
+         */
+        downLeft = isGround(downLeftXPos, pY);
+
+        /*
+         *        X X X X X X X
+         *        X           X
+         *        X           X
+         *        X X X P X X X
+         *              ^
+         *              |
+         *          downMiddle
+         *
+         */
+        downMiddle = isGround(downMiddleXPos, pY);
+        /*
+         *        X X X X X X X
+         *        X           X
+         *        X           X
+         *        X X X X X X P
+         *                    ^
+         *                    |
+         *                  downRight
+         *
+         */
+        downLeft = isGround(downRightXPos, pY);
+
+
+    }
+
+    public boolean isGround(float x, float y) {
+
+        // Calculate player coordinates to tile coordinates
+        // example, (34,34) => (1,1)
+        x = x * 100f / TILE_WIDTH; // 32 = TILE_WIDTH
+        y = y * 100f / TILE_HEIGHT; // 32 = TILE_HEIGHT
+        int indexX = (int) x ;
+        int indexY = (int) y ;
+
+        TiledMapTileLayer wallCells = (TiledMapTileLayer) tiledMap.getLayers().get("wall-tiles");
+
+        // Is the coordinate / cell free?
+        if(wallCells.getCell(indexX, indexY) != null) {
+            // There was a cell, it's ground
+            return true;
+        } else {
+            // There was no cell, it's not ground
+            return false;
+        }
     }
 
     private boolean screenRectangleTouched(float x, float y) {
