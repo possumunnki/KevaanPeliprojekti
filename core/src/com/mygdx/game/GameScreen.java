@@ -188,6 +188,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             debugRenderer.render(world,camera.combined);
         }
 
+        /*if(player.getPlayerBody().getLinearVelocity().y == 0) {
+            player.setOnTheGround();
+        }*/
         batch.begin();
         // doHeavyStuff();
         player.draw(batch, stateTime);

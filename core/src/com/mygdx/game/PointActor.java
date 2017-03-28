@@ -64,8 +64,6 @@ public class PointActor extends Actor {
                                  int pointer,
                                  int button) {
             touch = true;
-            Gdx.app.log("Example1", "touch done at (" + x + ", " + y + ")");
-
             return false;
         }
 
@@ -75,7 +73,6 @@ public class PointActor extends Actor {
                             int pointer,
                             int button) {
             touch = true;
-            Gdx.app.log("Example2", "touch done at (" + x + ", " + y + ")");
         }
 
 
