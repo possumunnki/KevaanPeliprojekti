@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -23,6 +22,12 @@ public class BodyHandler {
     private ObjectData vdObject;
     private Texture voodooTex;
 
+    private ObjectData ratObject;
+    private Texture ratTex;
+
+    private Body ratTemplate;
+    boolean ratRight = false;
+
     /**
      * Body template for voodoo doll enemy body
      * Draw-method compares bodies to this, if it's a match, draw bodies
@@ -34,6 +39,8 @@ public class BodyHandler {
     private Body testBody2;
     private Body testBody3;
 
+    //private Body labRatBody1;
+
     private float windowWidth;
     private float windowHeight;
 
@@ -44,7 +51,10 @@ public class BodyHandler {
 
         voodooTex = new Texture(Gdx.files.internal("voodoo_alpha.png"));
 
+        ratTex = new Texture(Gdx.files.internal("rat256.png"));
+
         vdObject = new ObjectData(voodooTex, 0.2f, 0.2f, ObjectData.GameObjectType.VOODOO);
+        ratObject = new ObjectData(ratTex, 1.2f, 0.5f, ObjectData.GameObjectType.RAT);
 
         voodooBodyTemplate = createBody(1, 1, vdObject.width, vdObject.height, world);
         voodooBodyTemplate.setUserData(vdObject);
@@ -55,17 +65,20 @@ public class BodyHandler {
         testBody2 = createBody(7, 7, vdObject.width, vdObject.height, world);
         testBody2.setUserData(vdObject);
 
-        testBody3 = createBody(14, 5, vdObject.width, vdObject.height, world);
+        testBody3 = createBody(25, 7, vdObject.width, vdObject.height, world);
         testBody3.setUserData(vdObject);
+
+        ratTemplate = createBody(12.9f, 3, ratObject.width, ratObject.height, world);
+        ratTemplate.setUserData(ratObject);
     }
 
     private Body createBody(float x, float y, float width, float height, World world) {
-        Body playerBody = world.createBody(getDefinitionOfPlayerBody(x, y));
+        Body playerBody = world.createBody(getDefinitionOfBody(x, y));
         playerBody.createFixture(getFixtureDefinition(width, height));
         return playerBody;
     }
 
-    private BodyDef getDefinitionOfPlayerBody(float x, float y) {
+    private BodyDef getDefinitionOfBody(float x, float y) {
         // Voodoo doll body definition
         BodyDef vdBodyDef = new BodyDef();
 
@@ -89,9 +102,9 @@ public class BodyHandler {
         vdFixDef.restitution = 0.4f;
 
         // How slipper object? [0,1]
-        vdFixDef.friction = 0.7f;
+        vdFixDef.friction = 0.01f;
 
-        // Create circle shape
+        // Create polygon shape
         PolygonShape polyShape = new PolygonShape();
         polyShape.setAsBox(width, height);
 
@@ -101,41 +114,69 @@ public class BodyHandler {
         return vdFixDef;
     }
 
-    public void drawAllBodies(SpriteBatch batch) {
+    public void drawAllBodies(SpriteBatch batch, Player player) {
         // DEBUG: Print total amount of bodies in the world
         //Gdx.app.log("", "Number of bodies: " + bodies.size);
 
         // Draw all bodies
         for (Body body : bodies) {
 
-            // Draw all bodies with user data (ground is not drawn)
+            // Draw all bodies with  voodoo doll user data (ground is not drawn)
             if(body.getUserData().equals(voodooBodyTemplate.getUserData())) {
 
-                // Get user data, has texture, type (bullet, or tennisball) and
+                // Get user data, has texture, enemy type and
                 // radius
-                ObjectData info = (ObjectData) body.getUserData();
+                ObjectData voodoo = (ObjectData) body.getUserData();
 
-                //Gdx.app.log("offscreen", "data " + body.getUserData().toString());
-
-                //body.getUserData().toString()
-
-                batch.draw(info.objectTexture,
-                        body.getPosition().x - info.width,
-                        body.getPosition().y - info.width,
-                        info.width,                   // originX
-                        info.width,                   // originY
-                        info.width * 2,               // windowWidth
-                        info.width * 2,               // windowHeight
+                batch.draw(voodoo.objectTexture,
+                        body.getPosition().x - voodoo.width,
+                        body.getPosition().y - voodoo.width,
+                        voodoo.width,                   // originX
+                        voodoo.width,                   // originY
+                        voodoo.width * 2,               // windowWidth
+                        voodoo.width * 2,               // windowHeight
                         1.0f,                          // scaleX
                         1.0f,                          // scaleY
                         body.getTransform().getRotation() * MathUtils.radiansToDegrees,
                         0,                             // Start drawing from x = 0
                         0,                             // Start drawing from y = 0
-                        info.objectTexture.getWidth(),       // End drawing x
-                        info.objectTexture.getHeight(),      // End drawing y
+                        voodoo.objectTexture.getWidth(),       // End drawing x
+                        voodoo.objectTexture.getHeight(),      // End drawing y
                         false,                         // flipX
                         false);                        // flipY
 
+                /**
+                if(player.getPlayerBody().getPosition().x >
+                        (body.getPosition().x - 0.2f) &&
+                        player.getPlayerBody().getPosition().x <
+                                (body.getPosition().x + 0.2f) &&
+                        player.getPlayerBody().getPosition().y >
+                                (body.getPosition().y - 0.2f) &&
+                        player.getPlayerBody().getPosition().y <
+                                (body.getPosition().y + 0.2f)) {
+
+                    Gdx.app.log("log", "mob collision");
+                }
+                */
+            } else if (body.getUserData().equals(ratTemplate.getUserData())) {
+                ObjectData rat = (ObjectData) body.getUserData();
+
+                batch.draw(rat.objectTexture,
+                        body.getPosition().x - rat.width,
+                        body.getPosition().y - rat.height,
+                        rat.width,                   // originX
+                        rat.height,                   // originY
+                        rat.width * 2,               // windowWidth
+                        rat.height * 2,               // windowHeight
+                        1.0f,                          // scaleX
+                        1.0f,                          // scaleY
+                        body.getTransform().getRotation() * MathUtils.radiansToDegrees,
+                        0,                             // Start drawing from x = 0
+                        0,                             // Start drawing from y = 0
+                        rat.objectTexture.getWidth(),       // End drawing x
+                        rat.objectTexture.getHeight(),      // End drawing y
+                        false,                         // flipX
+                        false);                        // flipY
             }
         }
     }
@@ -152,10 +193,7 @@ public class BodyHandler {
 
             voodooBodyTemplate.setTransform(new Vector2(windowWidth / 2, windowHeight + vdObject
                     .width*2), 0);
-
         }
-
-
 
         /**
          * Array list for bodies which are to be destroyed
@@ -176,9 +214,9 @@ public class BodyHandler {
                             lightDoll.getLightDollBody().getPosition().x <
                                     (body.getPosition().x + 0.3f) &&
                             lightDoll.getLightDollBody().getPosition().y >
-                                    (body.getPosition().y - 0.5f) &&
+                                    (body.getPosition().y - 0.3f) &&
                             lightDoll.getLightDollBody().getPosition().y <
-                                    (body.getPosition().y + 0.3f)) {
+                                    (body.getPosition().y + 0.2f)) {
 
                         // Add the specific body to bodiesToBeDestroyed-list
                         bodiesToBeDestroyed.add(body);
@@ -195,11 +233,39 @@ public class BodyHandler {
         }
     }
 
+    public void ratWalk() {
+
+        if(ratTemplate.getLinearVelocity().y == 0) {
+
+            if(!ratRight) {
+                ratTemplate.setLinearVelocity(2f, 0);
+                Gdx.app.log("log", "rat x " + ratTemplate.getPosition().x);
+
+                if(ratTemplate.getPosition().x > 18.5f) {
+                    ratTemplate.setLinearVelocity(0, 0);
+                    ratRight = true;
+                }
+            } else if(ratRight) {
+                ratTemplate.setLinearVelocity(-2f, 0);
+                Gdx.app.log("log", "rat x " + ratTemplate.getPosition().x);
+
+                if(ratTemplate.getPosition().x < 13.0f) {
+                    ratRight = false;
+                }
+            }
+        }
+    }
+
     public Array<Body> getBodies() {
         return bodies;
     }
 
+    public Body getVoodooBodyTemplate() {
+        return voodooBodyTemplate;
+    }
+
     public void dispose() {
         voodooTex.dispose();
+        ratTex.dispose();
     }
 }

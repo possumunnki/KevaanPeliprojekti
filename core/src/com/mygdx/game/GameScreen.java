@@ -67,7 +67,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = true;
+    private boolean isDebugOn = false;
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
@@ -168,12 +168,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if(isPossibleToJump()) {
             player.setOnTheGround();
         }
-
         controller1.moveTouchPad();
         player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
                 controller1.getTouchpad().getKnobPercentY());
         player.movePlayer();
         lightDoll.moveLightDoll(player);
+        bodyHandler.ratWalk();
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += deltaTime;
         lightDoll.setDollDefPos(player);
@@ -195,16 +195,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // doHeavyStuff();
         player.draw(batch, stateTime);
         lightDoll.draw(batch);
-        bodyHandler.drawAllBodies(batch);
+        bodyHandler.drawAllBodies(batch, player);
         batch.end();
 
-        /**
-         * BOX2D LIGHT-RELATED BEGIN
-         */
+        // Render lights
         lightSetup.render(camera, stepped);
-        /**
-         * BOX2D LIGHT-RELATED END
-         */
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
@@ -288,6 +283,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 }
             }
         });
+
         bodyHandler.clearBodies(world, lightDoll);
 
         if(goal) {

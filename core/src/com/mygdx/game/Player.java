@@ -33,8 +33,8 @@ public class Player {
     private final float PLAYER_WIDTH = 0.5f;
     private final float PLAYER_HEIGHT = 1f;
     private boolean onTheGround = true;
-    private final float MAXSPEED = 5.0f;
-    private final float JUMP_VELOSITY = 4.0f;
+    private final float MAX_SPEED = 5.0f;
+    private final float JUMP_VELOCITY = 4.0f;
     private boolean isFixed = true;
 
 
@@ -86,11 +86,11 @@ public class Player {
 
     public void movePlayer() {
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            playerBody.applyForceToCenter(new Vector2(MAXSPEED, 0f), true);
+            playerBody.applyForceToCenter(new Vector2(MAX_SPEED, 0f), true);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            playerBody.applyForceToCenter(new Vector2(- MAXSPEED, 0f), true);
+            playerBody.applyForceToCenter(new Vector2(-MAX_SPEED, 0f), true);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -120,7 +120,7 @@ public class Player {
             isWalking = false;
         }
 
-        playerBody.setLinearVelocity(MAXSPEED * knobPercentX, playerBody.getLinearVelocity().y);
+        playerBody.setLinearVelocity(MAX_SPEED * knobPercentX, playerBody.getLinearVelocity().y);
 
             // playerBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
         if(knobPercentY > 0.3f) {
@@ -132,7 +132,7 @@ public class Player {
 
     public void jump() {
         if (onTheGround) {
-            playerBody.applyLinearImpulse(new Vector2(0f, JUMP_VELOSITY), playerBody.getWorldCenter(), true);
+            playerBody.applyLinearImpulse(new Vector2(0f, JUMP_VELOCITY), playerBody.getWorldCenter(), true);
             onTheGround = false;
         }
     }
