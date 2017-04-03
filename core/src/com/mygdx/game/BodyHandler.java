@@ -39,7 +39,15 @@ public class BodyHandler {
     private Body testBody2;
     private Body testBody3;
 
-    //private Body labRatBody1;
+    private Body testBody4;
+    private Body testBody5;
+    private Body testBody6;
+
+    private Body testBody7;
+    private Body testBody8;
+    private Body testBody9;
+
+    private Body ratBody2;
 
     private float windowWidth;
     private float windowHeight;
@@ -59,17 +67,43 @@ public class BodyHandler {
         voodooBodyTemplate = createBody(1, 1, vdObject.width, vdObject.height, world);
         voodooBodyTemplate.setUserData(vdObject);
 
-        testBody1 = createBody(9, 10, vdObject.width, vdObject.height, world);
+        // Voodoo 1-3
+        testBody1 = createBody(7, 7, vdObject.width, vdObject.height, world);
         testBody1.setUserData(vdObject);
 
-        testBody2 = createBody(7, 7, vdObject.width, vdObject.height, world);
+        testBody2 = createBody(9, 5, vdObject.width, vdObject.height, world);
         testBody2.setUserData(vdObject);
 
-        testBody3 = createBody(25, 7, vdObject.width, vdObject.height, world);
+        testBody3 = createBody(12, 7, vdObject.width, vdObject.height, world);
         testBody3.setUserData(vdObject);
 
+        // Voodoo 4-6
+        testBody4 = createBody(15, 7, vdObject.width, vdObject.height, world);
+        testBody4.setUserData(vdObject);
+
+        testBody5 = createBody(17, 7, vdObject.width, vdObject.height, world);
+        testBody5.setUserData(vdObject);
+
+        testBody6 = createBody(20, 7, vdObject.width, vdObject.height, world);
+        testBody6.setUserData(vdObject);
+
+        // Voodoo 7-9
+        testBody7 = createBody(24, 7, vdObject.width, vdObject.height, world);
+        testBody7.setUserData(vdObject);
+
+        testBody8 = createBody(29, 7, vdObject.width, vdObject.height, world);
+        testBody8.setUserData(vdObject);
+
+        testBody9 = createBody(32, 7, vdObject.width, vdObject.height, world);
+        testBody9.setUserData(vdObject);
+
+
+        // Rat bodies
         ratTemplate = createBody(12.9f, 3, ratObject.width, ratObject.height, world);
         ratTemplate.setUserData(ratObject);
+
+        ratBody2 = createBody(30, 3, ratObject.width, ratObject.height, world);
+        ratBody2.setUserData(ratObject);
     }
 
     private Body createBody(float x, float y, float width, float height, World world) {
@@ -183,9 +217,23 @@ public class BodyHandler {
 
     public void clearBodies(World world, LightDoll lightDoll) {
 
-        //voodooBodyTemplate.setLinearVelocity(new Vector2(-3,0));
+        Array<Body> bodiesToBeDestroyed = new Array<Body>();
 
-        // If ball is off screen
+        for (Body body : bodies) {
+            // If it equals voodoo template
+            if (body.getUserData().equals(voodooBodyTemplate.getUserData())) {
+
+                if (body.getPosition().y < -1) {
+                    // Clear velocity (dropping of the screen)
+                    body.setLinearVelocity(new Vector2(0, 0));
+                    Gdx.app.log("offscreen", "ball Y-pos" + body.getPosition().y);
+
+                    bodiesToBeDestroyed.add(body);
+                }
+            }
+        }
+
+        // If voodoo template is off screen
         if(voodooBodyTemplate.getPosition().y < -1) {
             // Clear velocity (dropping of the screen)
             voodooBodyTemplate.setLinearVelocity(new Vector2(0,8));
@@ -198,7 +246,7 @@ public class BodyHandler {
         /**
          * Array list for bodies which are to be destroyed
          */
-        Array<Body> bodiesToBeDestroyed = new Array<Body>();
+
 
         // Iterate all voodooDolls
         for (Body body : bodies) {
@@ -216,7 +264,7 @@ public class BodyHandler {
                             lightDoll.getLightDollBody().getPosition().y >
                                     (body.getPosition().y - 0.3f) &&
                             lightDoll.getLightDollBody().getPosition().y <
-                                    (body.getPosition().y + 0.2f)) {
+                                    (body.getPosition().y + 0.4f)) {
 
                         // Add the specific body to bodiesToBeDestroyed-list
                         bodiesToBeDestroyed.add(body);
@@ -239,17 +287,37 @@ public class BodyHandler {
 
             if(!ratRight) {
                 ratTemplate.setLinearVelocity(2f, 0);
-                Gdx.app.log("log", "rat x " + ratTemplate.getPosition().x);
+                //Gdx.app.log("log", "rat1 x " + ratTemplate.getPosition().x);
 
-                if(ratTemplate.getPosition().x > 18.5f) {
+                if(ratTemplate.getPosition().x > 20.5f) {
                     ratTemplate.setLinearVelocity(0, 0);
                     ratRight = true;
                 }
             } else if(ratRight) {
                 ratTemplate.setLinearVelocity(-2f, 0);
-                Gdx.app.log("log", "rat x " + ratTemplate.getPosition().x);
+                //Gdx.app.log("log", "rat1 x " + ratTemplate.getPosition().x);
 
-                if(ratTemplate.getPosition().x < 13.0f) {
+                if(ratTemplate.getPosition().x < 15.0f) {
+                    ratRight = false;
+                }
+            }
+        }
+
+        if(ratBody2.getLinearVelocity().y == 0) {
+
+            if(!ratRight) {
+                ratBody2.setLinearVelocity(2f, 0);
+                //Gdx.app.log("log", "rat2 x " + ratBody2.getPosition().x);
+
+                if(ratBody2.getPosition().x > 40.5f) {
+                    ratBody2.setLinearVelocity(0, 0);
+                    ratRight = true;
+                }
+            } else if(ratRight) {
+                ratBody2.setLinearVelocity(-2f, 0);
+                //Gdx.app.log("log", "rat2 x " + ratBody2.getPosition().x);
+
+                if(ratBody2.getPosition().x < 35.0f) {
                     ratRight = false;
                 }
             }

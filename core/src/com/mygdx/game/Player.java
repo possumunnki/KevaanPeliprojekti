@@ -127,6 +127,17 @@ public class Player {
             jump();
         }
 
+        // If player falls below screen
+        if(playerBody.getPosition().y < -1) {
+            // Clear velocity (dropping of the screen)
+            playerBody.setLinearVelocity(new Vector2(0,0));
+            Gdx.app.log("offscreen", "ball Y-pos" + playerBody.getPosition().y);
+
+            playerBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
+                    .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
+        }
+
+
         setPlayerSpritePosition();
     }
 

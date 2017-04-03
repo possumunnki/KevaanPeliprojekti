@@ -102,7 +102,7 @@ public class GameOverScreen implements Screen {
     @Override
     public void dispose() {
         gameOverTexture.dispose();
-        quit.dispose();
+        retry.dispose();
         quit.dispose();
     }
 }

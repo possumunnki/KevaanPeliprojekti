@@ -83,6 +83,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private boolean downLeft, downRight, downMiddle;
 
+
     public GameScreen(MyGdxGame host) {
 
         this.host = host;
@@ -109,7 +110,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
         stage.addActor(controller1.getTouchpad());
 
-        // allows to set multiple inputprocessor
+        // allows to set multiple input processors
         inputMultiplexer = new InputMultiplexer();
         // adds touchpad
         setUpTouchArea();
@@ -124,9 +125,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private void setGameStage() {
         if(host.getCurrentStage() == 1) {
-            tiledMap = new TmxMapLoader().load("testMap_1.tmx");
-            tilesAmountWidth = 160;
-            tilesAmountHeight = 64;
+            tiledMap = new TmxMapLoader().load("NewMap_01.tmx");
+            tilesAmountWidth = 200;
+            tilesAmountHeight = 30;
 
         } else if(host.getCurrentStage() == 2) {
             tiledMap = new TmxMapLoader().load("stage_2.tmx");
@@ -357,7 +358,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
          * BOX2D LIGHT-RELATED
          */
         lightSetup.dispose();
-
+        
         Gdx.app.log("GameScreen","disposed");
     }
 

@@ -71,9 +71,9 @@ public class LightSetup {
                     rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 0f, 0f);
             DollLight.attachToBody(lightDoll.getLightDollBody());
             DollLight.setColor(
-                    0.6f,
-                    0.45f,
-                    0.08f,
+                    0.77f,
+                    0.64f,
+                    0.43f,
                     0.15f);
             lights.add(DollLight);
 
