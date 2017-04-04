@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -84,6 +85,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private boolean downLeft, downRight, downMiddle;
 
+    private Texture dialog1;
+    private FontActor dialog1text;
+    private FontActor dialog1text2;
+
 
     public GameScreen(MyGdxGame host) {
 
@@ -111,6 +116,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
         stage.addActor(controller1.getTouchpad());
 
+
         // allows to set multiple input processors
         inputMultiplexer = new InputMultiplexer();
         // adds touchpad
@@ -121,6 +127,23 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // adds gesture detector
 
         Gdx.input.setInputProcessor(inputMultiplexer);
+
+        dialog1 = new Texture("chatboxWithText.png");
+
+        /**
+        dialog1text = new FontActor("wow it's the Peruvian", host.SCREEN_WIDTH *
+                75f + 80f, host.SCREEN_HEIGHT *
+                100f / 2 + 120f);
+
+        dialog1text2 = new FontActor("Sun God Doll!", host.SCREEN_WIDTH *
+                70f, host.SCREEN_HEIGHT *
+                100f / 2 + 100f);
+        dialog1text.setFontScale(0.2f);
+        dialog1text2.setFontScale(0.2f);
+        stage.addActor(dialog1text);
+        stage.addActor(dialog1text2);
+         */
+
 
     }
 
@@ -189,6 +212,22 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if(isDebugOn) {
             debugRenderer.render(world,camera.combined);
         }
+
+
+        // DRAW DIALOG
+        if(host.getCurrentStage() == 1) {
+            batch.begin();
+            batch.draw(dialog1, 1.8f, 4f, dialog1.getWidth() / 100f, dialog1.getHeight() / 100f);
+            batch.end();
+        }
+
+        /**
+        if (dialog1text.getTouch()) {
+            dialog1.dispose();
+            dialog1text.remove();
+            dialog1text2.remove();
+        }
+         */
 
         /*if(player.getPlayerBody().getLinearVelocity().y == 0) {
             player.setOnTheGround();
@@ -372,6 +411,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
          */
         lightSetup.dispose();
 
+        dialog1.dispose();
+
+        //dialog1text.dispose();
+        //dialog1text2.dispose();
         Gdx.app.log("GameScreen","disposed");
     }
 

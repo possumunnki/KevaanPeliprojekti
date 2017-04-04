@@ -37,7 +37,7 @@ public class GameOverScreen implements Screen {
                 host.SCREEN_WIDTH * 1/2 * 100f,
                 host.SCREEN_HEIGHT * 2/4 * 100f);
         quit = new FontActor("QUIT",
-                host.SCREEN_WIDTH  * 8/8 * 100f,
+                host.SCREEN_WIDTH  * 1/2 * 100f,
                 host.SCREEN_HEIGHT * 1/4 * 100f);
 
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
