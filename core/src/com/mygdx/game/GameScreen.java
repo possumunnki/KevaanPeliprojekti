@@ -68,7 +68,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = true;
+    private boolean isDebugOn = false;
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
@@ -243,6 +243,13 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
 
                 if (body1.getUserData() != null ) {
+
+                    if (body1.getUserData().equals("player")) {
+                        if (body2.getUserData().equals("goal")) {
+
+                            goal = true;
+                        }
+                    }
                     // when player touches an enemy
                     if (body1.getUserData().equals(bodyHandler.getVdObject()) ||
                             body1.getUserData().equals(bodyHandler.getRatObject())) {
@@ -251,10 +258,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                             Gdx.app.log("log", "gameover");
                             gameOver = true;
 
-                        }
-                        if(body2.getUserData().equals("goal")) {
-
-                            goal = true;
                         }
                     }
 

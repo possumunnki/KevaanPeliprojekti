@@ -72,32 +72,28 @@ public class BodyHandler {
         testBody1 = createBody(7, 7, vdObject.width, vdObject.height, world);
         testBody1.setUserData(vdObject);
 
-        testBody2 = createBody(9, 5, vdObject.width, vdObject.height, world);
+        testBody2 = createBody(11, 5, vdObject.width, vdObject.height, world);
         testBody2.setUserData(vdObject);
 
-        testBody3 = createBody(12, 7, vdObject.width, vdObject.height, world);
+        testBody3 = createBody(18, 8, vdObject.width, vdObject.height, world);
         testBody3.setUserData(vdObject);
 
         // Voodoo 4-6
-        testBody4 = createBody(15, 7, vdObject.width, vdObject.height, world);
+        testBody4 = createBody(20, 8, vdObject.width, vdObject.height, world);
         testBody4.setUserData(vdObject);
 
-        testBody5 = createBody(17, 7, vdObject.width, vdObject.height, world);
+        testBody5 = createBody(24, 7, vdObject.width, vdObject.height, world);
         testBody5.setUserData(vdObject);
 
-        testBody6 = createBody(20, 7, vdObject.width, vdObject.height, world);
+        testBody6 = createBody(29, 7, vdObject.width, vdObject.height, world);
         testBody6.setUserData(vdObject);
 
         // Voodoo 7-9
-        testBody7 = createBody(24, 7, vdObject.width, vdObject.height, world);
+        testBody7 = createBody(32, 7, vdObject.width, vdObject.height, world);
         testBody7.setUserData(vdObject);
 
-        testBody8 = createBody(29, 7, vdObject.width, vdObject.height, world);
+        testBody8 = createBody(35, 7, vdObject.width, vdObject.height, world);
         testBody8.setUserData(vdObject);
-
-        testBody9 = createBody(32, 7, vdObject.width, vdObject.height, world);
-        testBody9.setUserData(vdObject);
-
 
         // Rat bodies
         ratTemplate = createBody(12.9f, 3, ratObject.width, ratObject.height, world);
