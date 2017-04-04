@@ -27,7 +27,7 @@ public class GameOverScreen implements Screen {
         this.host = host;
         batch = host.getSpriteBatch();
 
-        gameOverTexture = new Texture("game_over_BG.ong");
+        gameOverTexture = new Texture("game_over_BG.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,

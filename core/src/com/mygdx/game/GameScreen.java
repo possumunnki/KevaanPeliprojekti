@@ -243,12 +243,17 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
 
                 if (body1.getUserData() != null ) {
-                    // when player touches ground-rectangle
-                    if (body1.getUserData().equals("player")) {
-                        if(body2.getUserData().equals(bodyHandler.getVdObject())) { //!!!!!!!!!!!!
+                    // when player touches an enemy
+                    if (body1.getUserData().equals(bodyHandler.getVdObject()) ||
+                            body1.getUserData().equals(bodyHandler.getRatObject())) {
+                        if(body2.getUserData().equals("player")) {
+                            //switch to game over screen
+                            Gdx.app.log("log", "gameover");
                             gameOver = true;
+
                         }
                         if(body2.getUserData().equals("goal")) {
+
                             goal = true;
                         }
                     }
@@ -363,7 +368,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
          * BOX2D LIGHT-RELATED
          */
         lightSetup.dispose();
-        
+
         Gdx.app.log("GameScreen","disposed");
     }
 

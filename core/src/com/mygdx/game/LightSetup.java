@@ -46,7 +46,7 @@ public class LightSetup {
         rayHandler = new RayHandler(world);
 
         // Ambient light-setting, (RED, GREEN, BLUE, ALPHA)
-        rayHandler.setAmbientLight(0.06f, 0.22f, 0.35f, 0.55f);
+        rayHandler.setAmbientLight(0.12f, 0.29f, 0.44f, 0.55f);
         rayHandler.setBlurNum(3);
 
         initPointLights(doll, player);

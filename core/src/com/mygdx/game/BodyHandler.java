@@ -35,6 +35,7 @@ public class BodyHandler {
      */
     private Body voodooBodyTemplate;
 
+
     private Body testBody1;
     private Body testBody2;
     private Body testBody3;
@@ -107,9 +108,9 @@ public class BodyHandler {
     }
 
     private Body createBody(float x, float y, float width, float height, World world) {
-        Body playerBody = world.createBody(getDefinitionOfBody(x, y));
-        playerBody.createFixture(getFixtureDefinition(width, height));
-        return playerBody;
+        Body newBody = world.createBody(getDefinitionOfBody(x, y));
+        newBody.createFixture(getFixtureDefinition(width, height));
+        return newBody;
     }
 
     private BodyDef getDefinitionOfBody(float x, float y) {
@@ -156,7 +157,7 @@ public class BodyHandler {
         for (Body body : bodies) {
 
             // Draw all bodies with  voodoo doll user data (ground is not drawn)
-            if(body.getUserData().equals(voodooBodyTemplate.getUserData())) {
+            if(body.getUserData().equals(vdObject)) {
 
                 // Get user data, has texture, enemy type and
                 // radius
@@ -192,7 +193,7 @@ public class BodyHandler {
                     Gdx.app.log("log", "mob collision");
                 }
                 */
-            } else if (body.getUserData().equals(ratTemplate.getUserData())) {
+            } else if (body.getUserData().equals(ratObject)) {
                 ObjectData rat = (ObjectData) body.getUserData();
 
                 batch.draw(rat.objectTexture,
@@ -221,7 +222,7 @@ public class BodyHandler {
 
         for (Body body : bodies) {
             // If it equals voodoo template
-            if (body.getUserData().equals(voodooBodyTemplate.getUserData())) {
+            if (body.getUserData().equals(vdObject)) {
 
                 if (body.getPosition().y < -1) {
                     // Clear velocity (dropping of the screen)
@@ -251,7 +252,7 @@ public class BodyHandler {
         // Iterate all voodooDolls
         for (Body body : bodies) {
             // If it equals voodoo template
-            if (body.getUserData().equals(voodooBodyTemplate.getUserData())) {
+            if (body.getUserData().equals(vdObject)) {
                 ObjectData info = (ObjectData) body.getUserData();
                 // If it is a voodoo doll, then mark it to be removed.
                 if (info.type == ObjectData.GameObjectType.VOODOO) {
@@ -332,11 +333,19 @@ public class BodyHandler {
         return voodooBodyTemplate;
     }
 
+    public Body getRatBody2() {
+        return ratBody2;
+    }
+
     public void dispose() {
         voodooTex.dispose();
         ratTex.dispose();
     }
     public ObjectData getVdObject() {
         return vdObject;
+    }
+
+    public ObjectData getRatObject() {
+        return ratObject;
     }
 }

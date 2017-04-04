@@ -154,6 +154,9 @@ public class Player {
 
             playerBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
                     .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
+
+            footBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
+                    .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
         }
 
 
