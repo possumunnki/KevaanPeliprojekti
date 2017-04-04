@@ -9,9 +9,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
 /**
  * Created by possumunnki on 7.3.2017.
@@ -30,14 +34,15 @@ public class Player {
     private Sprite playerSprite;
     private Texture mummoTexture;
     private Body playerBody;
+    private Body footBody;
     private final float PLAYER_WIDTH = 0.5f;
     private final float PLAYER_HEIGHT = 1f;
     private boolean onTheGround = true;
     private final float MAX_SPEED = 5.0f;
-    private final float JUMP_VELOCITY = 4.0f;
+    private final float JUMP_VELOCITY = 6.0f;
     private boolean isFixed = true;
 
-
+    private BodyDef footBodyDef;
     private final boolean RIGHT = true;
     private final boolean LEFT = false;
     private boolean playerDirection = RIGHT;
@@ -52,12 +57,24 @@ public class Player {
         playerSprite.setSize(PLAYER_WIDTH,
                 PLAYER_HEIGHT);
 
-        playerBody = world.createBody(Utilities.getDefinitionOfBody());
-        playerBody.createFixture(getFixtureDefinition());
+        playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
+                                    MyGdxGame.SCREEN_HEIGHT / 2));
+        playerBody.createFixture(getPlayerFixtureDefinition());
+
+        footBody = world.createBody(getFootDefinitionOfBody());
+        footBody.createFixture(getFootFixtureDefinition());
         playerBody.setUserData("player");
-
+        footBody.setUserData("foot");
+        // fixes players body
         playerBody.setFixedRotation(isFixed);
+        footBody.setFixedRotation(isFixed);
 
+        RevoluteJointDef rDef = new RevoluteJointDef();
+        rDef.bodyA = playerBody;
+        rDef.bodyB = footBody;
+        rDef.localAnchorB.set(0.04f, //
+                0.41f);
+        world.createJoint(rDef);
 
         walkTexture = new Texture("mummoWalk.png");
         mummoWalkAnim = new Animation<TextureRegion>(1/5f,
@@ -103,12 +120,14 @@ public class Player {
         }
 
         setPlayerSpritePosition();
+        setFootBodyPos();
     }
 
     public void movePlayer(float knobPercentX, float knobPercentY) {
 
 
             // playerBody.applyForceToCenter(new Vector2(2.5f, 0f), true);
+
         if(knobPercentX > 0) {
             changeDirection(RIGHT);
             isWalking = true;
@@ -139,7 +158,12 @@ public class Player {
 
 
         setPlayerSpritePosition();
+        setFootBodyPos();
     }
+    /**
+     * lets player jump, when ever player touches ground
+     *
+     **/
 
     public void jump() {
         if (onTheGround) {
@@ -148,7 +172,39 @@ public class Player {
         }
     }
 
-    public FixtureDef getFixtureDefinition() {
+    /**
+     * sets position of footBody so that the position will be always foot
+     */
+    public void setFootBodyPos() {
+        footBodyDef.position.set(playerSprite.getX(),
+                                 playerSprite.getY()); // position of Y must be bit lower than playerBody
+    }
+
+    public BodyDef getDefinitionOfBody(float positionX, float positionY) {
+        // Body Definition
+        BodyDef myBodyDef = new BodyDef();
+        // It's a body that moves
+        myBodyDef.type = BodyDef.BodyType.DynamicBody;
+        // Initial position is centered up
+        // This position is the CENTER of the shape!
+        myBodyDef.position.set( positionX, positionY);
+
+        return myBodyDef;
+    }
+
+    public BodyDef getFootDefinitionOfBody() {
+        // Body Definition
+        footBodyDef = new BodyDef();
+        // It's a body that moves
+        footBodyDef.type = BodyDef.BodyType.DynamicBody;
+        // Initial position is centered up
+        // This position is the CENTER of the shape!
+        setFootBodyPos();
+
+        return footBodyDef;
+    }
+
+    public FixtureDef getPlayerFixtureDefinition() {
         FixtureDef playerFixtureDef = new FixtureDef();
 
         // Mass per square meter (kg^m2)
@@ -171,10 +227,32 @@ public class Player {
         return playerFixtureDef;
     }
 
+    public FixtureDef getFootFixtureDefinition() {
+        FixtureDef footFixtureDef = new FixtureDef();
+
+        // Mass per square meter (kg^m2)
+        footFixtureDef.density = 0f;
+
+        // How bouncy object? Very bouncy [0,1]
+        footFixtureDef.restitution = 0.0f;
+
+        // How slipper object? [0,1]
+        footFixtureDef.friction = 0.0f;
+
+        PolygonShape footBox = new PolygonShape();
+        footBox.setAsBox( PLAYER_WIDTH / 2 - 0.1f, // bit smaller width than player
+                            PLAYER_HEIGHT / 10); // height could be pretty small
+
+
+        // Add the shape to the fixture
+        footFixtureDef.shape = footBox;
+
+        return footFixtureDef;
+    }
+
     public void dispose() {
         mummoTexture.dispose();
         walkTexture.dispose();
-
     }
 
     public void setPlayerSpritePosition() {
@@ -200,6 +278,10 @@ public class Player {
 
     public Body getPlayerBody() {
         return playerBody;
+    }
+
+    public Body getFootBody() {
+        return footBody;
     }
 
     public Sprite getPlayerSprite() {

@@ -64,10 +64,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Rectangle screenRectangle;
     private Vector3 touchPos;
     private boolean goal;
+    private boolean gameOver = false;
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = false;
+    private boolean isDebugOn = true;
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
@@ -166,9 +167,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if(isPossibleToJump()) {
+        /*if(isPossibleToJump()) {
             player.setOnTheGround();
-        }
+        }*/
         controller1.moveTouchPad();
         player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
                 controller1.getTouchpad().getKnobPercentY());
@@ -244,20 +245,21 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 if (body1.getUserData() != null ) {
                     // when player touches ground-rectangle
                     if (body1.getUserData().equals("player")) {
-                        //Gdx.app.log("collision1.1", "Dump");
-                        //if( body2.getUserData().equals("ground")) {
-                            //Gdx.app.log("collision1.2", "Dump");
-//                            player.setOnTheGround();
-                     //   }
+                        if(body2.getUserData().equals(bodyHandler.getVdObject())) { //!!!!!!!!!!!!
+                            gameOver = true;
+                        }
                         if(body2.getUserData().equals("goal")) {
                             goal = true;
                         }
                     }
 
                     // when player touches goal-rectangle
-                    if(body1.getUserData().equals("player")) {
-
+                    if(body1.getUserData().equals("foot")) {
+                        if(body2.getUserData().equals("wall")) {
+                            player.setOnTheGround();
+                        }
                     }
+
 
                 } else if (body2.getUserData() != null) {
 
@@ -293,6 +295,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             Gdx.app.log("Current Stage", "" + host.getCurrentStage());
             doHeavyStuff();
             host.setScreen(new MapScreen(host));
+        } else if(gameOver) {
+            doHeavyStuff();
+            host.setScreen(new GameOverScreen(host));
         }
     }
 

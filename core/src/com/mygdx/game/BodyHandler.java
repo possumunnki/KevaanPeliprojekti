@@ -336,4 +336,7 @@ public class BodyHandler {
         voodooTex.dispose();
         ratTex.dispose();
     }
+    public ObjectData getVdObject() {
+        return vdObject;
+    }
 }
