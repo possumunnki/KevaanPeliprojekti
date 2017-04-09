@@ -78,6 +78,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Stage stage;
     private Controller1 controller1;
     private ExclamationMarkActor exclamationMarkActor;
+    private PauseResumeButtonActor pauseResumeButtonActor;
 
     private LightSetup lightSetup;
 
@@ -91,6 +92,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private FontActor dialog1text;
     private FontActor dialog1text2;
 
+    private final boolean ON = true;
+    private final boolean OFF = false;
+    private boolean pause = OFF;
 
     public GameScreen(MyGdxGame host) {
 
@@ -114,10 +118,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // adds game on pad
         controller1 = new Controller1(MyGdxGame.SCREEN_WIDTH / 10, MyGdxGame.SCREEN_HEIGHT / 5);
         exclamationMarkActor = new ExclamationMarkActor();
+        pauseResumeButtonActor = new PauseResumeButtonActor();
         //Create a Stage and add TouchPad
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
         stage.addActor(controller1.getTouchpad());
         stage.addActor(exclamationMarkActor);
+        stage.addActor(pauseResumeButtonActor);
 
 
         // allows to set multiple input processors
@@ -199,41 +205,41 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        /*if(isPossibleToJump()) {
-            player.setOnTheGround();
-        }*/
-        controller1.moveTouchPad();
-        player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
-                controller1.getTouchpad().getKnobPercentY());
-        player.movePlayer();
-        lightDoll.moveLightDoll(player);
-        bodyHandler.ratWalk();
-
-        exclamationMarkActor.setExclamationMarkPosition(player);
-
-        deltaTime = Gdx.graphics.getDeltaTime();
-        stateTime += deltaTime;
-        lightDoll.setDollDefPos(player);
-        tiledMapRenderer.setView(camera);
-        moveCamera();
-        camera.update();
         tiledMapRenderer.render();
-        world.getBodies(bodyHandler.getBodies());
+        if(pause == OFF) {
+            controller1.moveTouchPad();
+            player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
+                    controller1.getTouchpad().getKnobPercentY());
+            player.movePlayer();
+            lightDoll.moveLightDoll(player);
+            bodyHandler.ratWalk();
 
-        // uses debug renderer if boolean value is true
-        if(isDebugOn) {
-            debugRenderer.render(world,camera.combined);
+            exclamationMarkActor.setExclamationMarkPosition(player);
+
+            deltaTime = Gdx.graphics.getDeltaTime();
+            stateTime += deltaTime;
+            lightDoll.setDollDefPos(player);
+            tiledMapRenderer.setView(camera);
+            moveCamera();
+            camera.update();
+
+            world.getBodies(bodyHandler.getBodies());
+
+            // uses debug renderer if boolean value is true
+            if(isDebugOn) {
+                debugRenderer.render(world,camera.combined);
+            }
+            // draw dialog when player touches exclamation mark
+            if(host.getCurrentStage() == 1 && exclamationMarkActor.getTouch()) {
+                batch.begin();
+                batch.draw(dialog1, 1.8f, 4f, dialog1.getWidth() / 100f, dialog1.getHeight() / 100f);
+                batch.end();
+                exclamationMarkActor.remove();
+            }
         }
 
 
-        // draw dialog when player touches exclamation mark
-        if(host.getCurrentStage() == 1 && exclamationMarkActor.getTouch()) {
-            batch.begin();
-            batch.draw(dialog1, 1.8f, 4f, dialog1.getWidth() / 100f, dialog1.getHeight() / 100f);
-            batch.end();
-            exclamationMarkActor.remove();
-        }
-
+        activatePause();
         /**
         if (dialog1text.getTouch()) {
             dialog1.dispose();
@@ -257,8 +263,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
+        if(pause == OFF) {
+            doPhysicsStep(deltaTime);
+        }
 
-        doPhysicsStep(deltaTime);
 
         world.setContactListener(new ContactListener() {
             @Override
@@ -392,6 +400,15 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             e.printStackTrace();
         }
     }
+
+    private void activatePause() {
+        if(pauseResumeButtonActor.getTouch() && pauseResumeButtonActor.getStatus()) {
+            pause = ON;
+        } else if(pauseResumeButtonActor.getTouch()) {
+            pause = OFF;
+        }
+    }
+
     @Override
     public void resize(int width, int height) {
 
