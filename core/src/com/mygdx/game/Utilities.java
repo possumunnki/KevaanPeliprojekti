@@ -107,6 +107,13 @@ public class Utilities {
         wall.createFixture(groundBox, 0.0f);
     }
 
+    /**
+     * Scales rectangle size.
+     *
+     * @param r
+     * @param scale
+     * @return
+     */
     private static Rectangle scaleRect(Rectangle r, float scale) {
         Rectangle rectangle = new Rectangle();
         rectangle.x      = r.x * scale;
@@ -116,8 +123,15 @@ public class Utilities {
         return rectangle;
     }
 
+    /**
+     * Flips animation right left.
+     *
+     * @param animation     animimation that must flip.
+     */
     public static void flip(Animation<TextureRegion> animation) {
         TextureRegion[] regions = animation.getKeyFrames();
+
+        // flips all frames
         for(TextureRegion r : regions) {
             r.flip(true, false);
         }

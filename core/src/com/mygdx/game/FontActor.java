@@ -53,9 +53,12 @@ public class FontActor extends Actor {
 
     public void dispose() {
         font.dispose();
+        this.remove();
     }
     public void setFontScale(float scale) {
         font.getData().setScale(scale);
+        fontLayout.setText(font, fontString); // not working
+        setBounds(printX - getWidth() / 2 ,printY ,getWidth(), getHeight());
     }
 
     class FontListener extends InputListener {

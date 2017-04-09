@@ -39,7 +39,7 @@ public class Player {
     private final float PLAYER_HEIGHT = 1f;
     private boolean onTheGround = true;
     private final float MAX_SPEED = 5.0f;
-    private final float JUMP_VELOCITY = 6.0f;
+    private final float JUMP_VELOCITY = 8.0f;
     private boolean isFixed = true;
 
     private BodyDef footBodyDef;
@@ -69,11 +69,12 @@ public class Player {
         playerBody.setFixedRotation(isFixed);
         footBody.setFixedRotation(isFixed);
 
+        // joints player body and foot body.
         RevoluteJointDef rDef = new RevoluteJointDef();
         rDef.bodyA = playerBody;
         rDef.bodyB = footBody;
-        rDef.localAnchorB.set(0.04f, //
-                0.41f);
+        rDef.localAnchorB.set(0.04f, 0.41f); // I don't know how these values works, but it still works.
+
         world.createJoint(rDef);
 
         walkTexture = new Texture("mummoWalk.png");
@@ -170,7 +171,8 @@ public class Player {
 
     public void jump() {
         if (onTheGround) {
-            playerBody.applyLinearImpulse(new Vector2(0f, JUMP_VELOCITY), playerBody.getWorldCenter(), true);
+            playerBody.applyLinearImpulse(new Vector2(0f, JUMP_VELOCITY),
+                                            playerBody.getWorldCenter(), true);
             onTheGround = false;
         }
     }
@@ -270,6 +272,7 @@ public class Player {
             Utilities.flip(mummoWalkAnim);
         }
     }
+
 
     public void setOnTheGround() {
         this.onTheGround = true;

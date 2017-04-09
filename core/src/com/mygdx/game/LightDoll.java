@@ -26,14 +26,22 @@ public class LightDoll {
     private final boolean DOWN = false;
     private boolean floatDirection = DOWN;
     private Vector2 dollLocation;
-    private boolean throwMode = false;
-    private float throwSpeed = 0.1f;
 
+    /**
+     * Whenever light doll is away from the player it is true.
+     */
+    private boolean throwMode = false;
+
+    /**
+     * Speed of light doll when it's shot and coming back.
+     *
+     */
+    private final int STEPS = 15;
+    private boolean leftDown = false;
     private float targetPointX;
     private float targetPointY;
     private float flingVelocityX;
     private float flingVelocityY;
-    private int throwStep = 0;
 
     private boolean comingBack = false;
     //body for light doll
@@ -43,7 +51,7 @@ public class LightDoll {
     public LightDoll(Player player, World world) {
         lightDollTexture = new Texture("lightdoll-2.png");
         lightDollSprite = new Sprite(lightDollTexture);
-
+        // size scaled for meters
         lightDollSprite.setSize(lightDollTexture.getWidth() / 100f, lightDollTexture.getHeight() / 100f);
         dollDefPosY = player.getPlayerBody().getPosition().y +
                 player.getPlayerSprite().getHeight() +
@@ -86,7 +94,7 @@ public class LightDoll {
 
     public void moveLightDoll(Player player) {
         if (throwMode) {
-            shootLightDoll(player);
+            shootLightDoll();
         } else {
             followPlayer(player);
         }
@@ -94,38 +102,7 @@ public class LightDoll {
 
     private float deltaX;
     private float deltaY;
-    public void shootLightDoll(Player player) {
-        if(comingBack) {
-            deltaX = lightDollSprite.getX() - dollDefPosX;
-            deltaY = lightDollSprite.getY() - dollDefPosY;
-            lightDollSprite.setPosition(lightDollSprite.getX() - deltaX / 20,
-                                        lightDollSprite.getY() - deltaY / 20);
-            throwStep++;
-            if(lightDollSprite.getX() +- 0.01f < dollDefPosX  &&
-                    lightDollSprite.getY() +- 0.01f < dollDefPosY ) {
-                comingBack = false;
-                throwMode = false;
-                throwStep = 0;
-                floatDeph = 0;
-            }
-        } else {
-            deltaX = lightDollSprite.getX() - targetPointX;
-            deltaY = lightDollSprite.getY() - targetPointY;
-            lightDollSprite.setPosition(lightDollSprite.getX() - deltaX / 20,
-                                        lightDollSprite.getY() - deltaY / 20);
-            throwStep++;
-            if(lightDollSprite.getX() > targetPointX +- 0.01f &&
-               lightDollSprite.getY() > targetPointY +- 0.01f) {
-                comingBack = true;
-                throwStep = 0;
-            }
-        }
-        dollLocation.x = lightDollSprite.getX() + lightDollSprite.getWidth() / 2;
-        dollLocation.y = lightDollSprite.getY() + lightDollSprite.getHeight() / 2;
 
-        // Set body position
-        lightDollBody.setTransform(dollLocation, 0);
-    }
     public void setDollDefPos(Player player) {
         // sets lightDoll's position
         dollDefPosX = player.getPlayerBody().getPosition().x -
@@ -168,6 +145,13 @@ public class LightDoll {
         }
     }
 
+    /**
+     * Converts fling velocity values and determines the target point
+     * where the light doll is supposed to go.
+     *
+     * @param velocityX     velocity of fling for x coordinate.
+     * @param velocityY     velocity of fling for y coordinate.
+     */
     public void throwLightDoll(float velocityX, float velocityY) {
 
         if(!throwMode) {
@@ -189,12 +173,71 @@ public class LightDoll {
                 flingVelocityY = velocityY / - 500f;
             }
 
+            if(flingVelocityX < 0 && flingVelocityY < 0) {
+                leftDown = true;
+
+            }
             targetPointX = lightDollSprite.getX() + flingVelocityX;
             targetPointY = lightDollSprite.getY() + flingVelocityY;
 
-
+            Gdx.app.log("flingVelocityY ", "" + flingVelocityX);
             Gdx.app.log("flingVelocityY ", "" + flingVelocityY);
         }
+    }
+
+    /**
+     * Shoots light doll from the player and comes back.
+     *
+     */
+
+    public void shootLightDoll() {
+        if(comingBack) { // light doll comes back
+            deltaX = lightDollSprite.getX() - dollDefPosX;
+            deltaY = lightDollSprite.getY() - dollDefPosY;
+            lightDollSprite.setPosition(lightDollSprite.getX() - deltaX / STEPS,
+                    lightDollSprite.getY() - deltaY / STEPS);
+            if(leftDown) {
+                if(lightDollSprite.getX()   > dollDefPosX  +- 0.01f&&
+                        lightDollSprite.getY()  > dollDefPosY +- 0.01f ) {
+
+                    comingBack = false;
+                    throwMode = false;
+                    leftDown = false;
+                }
+            } else {
+                if (lightDollSprite.getX() +- 0.01f < dollDefPosX  &&
+                        lightDollSprite.getY() +- 0.01f < dollDefPosY ) {
+                    comingBack = false;
+                    throwMode = false;
+                    floatDeph = 0;
+                }
+            }
+
+        } else {  // light doll moves toward the target point
+            deltaX = lightDollSprite.getX() - targetPointX;
+            deltaY = lightDollSprite.getY() - targetPointY;
+
+            lightDollSprite.setPosition(lightDollSprite.getX() - deltaX / STEPS,
+                    lightDollSprite.getY() - deltaY / STEPS);
+            // when light doll reaches to the target point, it goes back towards player
+            if(leftDown) {
+              if(lightDollSprite.getX() +- 0.01f < targetPointX  &&
+                      lightDollSprite.getY() +- 0.01f < targetPointY ) {
+                  comingBack = true;
+              }
+            } else {
+                if (lightDollSprite.getX() > targetPointX +- 0.01f &&
+                        lightDollSprite.getY() > targetPointY +- 0.01f) {
+
+                    comingBack = true;
+                }
+            }
+        }
+        dollLocation.x = lightDollSprite.getX() + lightDollSprite.getWidth() / 2;
+        dollLocation.y = lightDollSprite.getY() + lightDollSprite.getHeight() / 2;
+
+        // Set body position
+        lightDollBody.setTransform(dollLocation, 0);
     }
     /**
      * Box2DLight-related getter

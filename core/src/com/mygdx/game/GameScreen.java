@@ -66,6 +66,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Vector3 touchPos;
     private boolean goal;
     private boolean gameOver = false;
+
     /**
      * Debug renderer setting, set false to disable debug render
      */
@@ -76,6 +77,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private Stage stage;
     private Controller1 controller1;
+    private ExclamationMarkActor exclamationMarkActor;
 
     private LightSetup lightSetup;
 
@@ -109,12 +111,13 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         setGameStage();
 
-
+        // adds game on pad
         controller1 = new Controller1(MyGdxGame.SCREEN_WIDTH / 10, MyGdxGame.SCREEN_HEIGHT / 5);
-
+        exclamationMarkActor = new ExclamationMarkActor();
         //Create a Stage and add TouchPad
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
         stage.addActor(controller1.getTouchpad());
+        stage.addActor(exclamationMarkActor);
 
 
         // allows to set multiple input processors
@@ -147,9 +150,16 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     }
 
+    /**
+     * Sets tile map, width and height of the stage depending on current stage.
+     * Also transforms tile maps rectangles to bodies.
+     *
+     */
     private void setGameStage() {
+        // if current game stage is 1.
         if(host.getCurrentStage() == 1) {
             tiledMap = new TmxMapLoader().load("NewMap_01.tmx");
+            // sets tiles amount on the game stage
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
 
@@ -164,13 +174,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             tilesAmountHeight = 32;
 
         }
-        Gdx.app.log("Stage: ","" + host.getCurrentStage());
+
         Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
         Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
         Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
+
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
-
-
 
         worldWidthPixels = tilesAmountWidth  * TILE_WIDTH;
         worldHeightPixels = tilesAmountHeight * TILE_HEIGHT;
@@ -199,6 +208,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         player.movePlayer();
         lightDoll.moveLightDoll(player);
         bodyHandler.ratWalk();
+
+        exclamationMarkActor.setExclamationMarkPosition(player);
+
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += deltaTime;
         lightDoll.setDollDefPos(player);
@@ -214,11 +226,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
 
 
-        // DRAW DIALOG
-        if(host.getCurrentStage() == 1) {
+        // draw dialog when player touches exclamation mark
+        if(host.getCurrentStage() == 1 && exclamationMarkActor.getTouch()) {
             batch.begin();
             batch.draw(dialog1, 1.8f, 4f, dialog1.getWidth() / 100f, dialog1.getHeight() / 100f);
             batch.end();
+            exclamationMarkActor.remove();
         }
 
         /**
@@ -348,6 +361,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
     }
 
+
     private double accumulator = 0;
     private float TIME_STEP = 1 / 60f;
     private boolean stepped;
@@ -428,7 +442,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     }
 
-
+    /**
+     * Moves camera depending on players position.
+     * If player is next to the walls, the camera stops moving to avoid showing out side of the
+     * game stage. Otherwise it centralizes the player.
+     *
+     */
     private void moveCamera() {
 
         if (player.getPlayerBody().getPosition().x < MyGdxGame.SCREEN_WIDTH / 2) {
@@ -597,8 +616,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public boolean fling(float velocityX, float velocityY, int button) {
-
-        lightDoll.throwLightDoll(velocityX, velocityY);
+        if(controller1.getIsTouched()) {
+            // won't do any, if touch pad is touched
+        } else {
+            lightDoll.throwLightDoll(velocityX, velocityY);
+        }
         return false;
     }
 

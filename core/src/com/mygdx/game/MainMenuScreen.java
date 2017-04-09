@@ -48,7 +48,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void show() {
-
+        Gdx.app.log("MainMenu:", "show");
     }
 
     @Override

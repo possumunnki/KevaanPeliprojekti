@@ -22,7 +22,15 @@ public class MyGdxGame extends Game {
     public static final int LEFT = 2;
     public static final boolean AVAILABLE = true;
     public static final boolean NOT_AVAILABLE = false;
+
+    /**
+     * stage that player is currently playing
+     */
     private int currentStage;
+
+    /**
+     * list of available stages
+     */
     private boolean[] availableStage;
 	private MainMenuScreen mainMenu;
 
@@ -34,8 +42,9 @@ public class MyGdxGame extends Game {
 	public void create () {
 		batch = new SpriteBatch();
         currentStage = 1;
-        availableStage = new boolean[]{AVAILABLE, NOT_AVAILABLE, AVAILABLE, NOT_AVAILABLE};
+        availableStage = new boolean[]{AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE};
 		mainMenu = new MainMenuScreen(this);
+		// moves to main menu
 		setScreen(mainMenu);
 	}
 
@@ -52,18 +61,40 @@ public class MyGdxGame extends Game {
         Gdx.app.log("MyGdxGame", "disposed");
 	}
 
+    /**
+     * Sets current stage.
+     *
+     * @param stage     stage number that will be set as a current stage
+     *
+     */
     public void setCurrentStage(int stage) {
         currentStage = stage;
     }
 
+    /**
+     * Returns current stage
+     *
+     * @return          current stage
+     */
     public int getCurrentStage() {
         return currentStage;
     }
 
+    /**
+     * Returns current stage
+     *
+     * @param nextStage     stage that will be unlocked
+     */
     public void unlocStage(int nextStage) {
         availableStage[nextStage] = AVAILABLE;
     }
 
+    /**
+     * Checks is the stage currently able to play or not.
+     *
+     * @param stageNumber   stage number wanted to check
+     * @return              whether the stage is unlocked or not
+     */
     public boolean getStageAvailability(int stageNumber) {
         return availableStage[stageNumber -1];
     }
