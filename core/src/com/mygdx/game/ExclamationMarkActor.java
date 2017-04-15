@@ -4,9 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 
 /**
  * Created by possumunnki on 31.3.2017.
@@ -20,27 +23,58 @@ public class ExclamationMarkActor extends Actor {
      */
     private float printX;
     private float printY;
+    private Sprite exclamationSprite;
 
     public ExclamationMarkActor() {
         exclamationTexture = new Texture("exclamation_mark.png");
+        exclamationSprite = new Sprite(exclamationTexture);
+
         setWidth(exclamationTexture.getWidth());
         setHeight(exclamationTexture.getHeight());
         addListener(new exclamationListener());
+       // setOrigin(getWidth()/2, getHeight()/2);
+        scaleAction();
     }
 
     public void draw(Batch batch, float alpha) {
-        batch.draw(exclamationTexture,
+        batch.draw(exclamationSprite,
                 getX(),
-                getY(),
+                getY(),getOriginX(),
+                getOriginY(),
                 getWidth(),
-                getHeight());
+                getHeight(),
+                getScaleX(),
+                getScaleY(),
+                getRotation());
+
 
     }
 
     public void act(float delta) {
         super.act(delta);
+
     }
 
+    /**
+     * Scales the
+     */
+    private void scaleAction() {
+        Action scaleUpAction = Actions.scaleTo(2f, 2f, 0.5f);
+        Action scaleDownAction = Actions.scaleTo(1f, 1f, 0.5f);
+        Gdx.app.log("ScaleX1", "" + getScaleX());
+        Gdx.app.log("ScaleY1", "" + getScaleY());
+       addAction( Actions.forever(
+                Actions.sequence(
+                        scaleUpAction,
+                        scaleDownAction
+                )
+        ));
+    }
+
+    private void scaleDownAction() {
+        Action scaleDownAction = Actions.scaleTo(1f, 1f, 0.5f);
+        addAction(scaleDownAction);
+    }
     public void setExclamationMarkPosition(Player player) {
 
         // whenever player is near the left world wall
@@ -63,7 +97,7 @@ public class ExclamationMarkActor extends Actor {
         //Gdx.app.log("ExclamationY","" + getY());
 
     }
-
+    //!!!!!!! add scale action !!!!
     public boolean getTouch() {
         return touch;
     }

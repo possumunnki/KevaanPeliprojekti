@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 public class Controller1 extends Actor{
 
     private int direction;
-    private final float radius = 0.5f;
+    private final float DIAMETER = Gdx.graphics.getWidth() / 4;
 
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
@@ -49,23 +50,14 @@ public class Controller1 extends Actor{
         touchpadStyle.background = touchBackground;
         touchpadStyle.knob = touchKnob;
         //Create new TouchPad with the created style
-        // touchpad(float deadzoneRadius, Skin skin)
-        touchpad = new Touchpad(10 / 100f, touchpadStyle);
-        //setBounds(x,y,width,height)
-        touchpad.setBounds(positionX, positionY, 200, 200);
-        //touchpad.setSize();
-        setWidth(touchKnobTexture.getWidth() / 100f);
-        setHeight(touchKnobTexture.getHeight() / 100f);
-        touchpad.setPosition(positionX,positionY);
 
-        //Create block sprite
-        /*blockTexture = new Texture("touchKnob.png");
-        blockSprite = new Sprite(blockTexture);
-         blockSprite.setSize(blockTexture.getWidth()/ 100f, blockSprite.getHeight() / 100f);
-        //Set position to centre of the screen
-        blockSprite.setPosition(padDefPositionX,
-                                padDefPositionY);
-        */
+        touchpad = new Touchpad(10 / 100f, touchpadStyle);
+
+        touchpad.setBounds(positionX, positionY, DIAMETER, DIAMETER);
+
+        setWidth(DIAMETER);
+        setHeight(DIAMETER);
+        touchpad.setPosition(positionX,positionY);
 
     }
 
@@ -116,6 +108,6 @@ public class Controller1 extends Actor{
     public void dispose() {
         touchKnobTexture.dispose();
         touchpadSkin.dispose();
-
+        this.remove();
     }
 }

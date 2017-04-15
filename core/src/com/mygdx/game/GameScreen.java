@@ -76,6 +76,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private TiledMap tiledMap;
 
     private Stage stage;
+    private Stage exclamationStage;
+
     private Controller1 controller1;
     private ExclamationMarkActor exclamationMarkActor;
     private PauseResumeButtonActor pauseResumeButtonActor;
@@ -116,14 +118,18 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         setGameStage();
 
         // adds game on pad
-        controller1 = new Controller1(MyGdxGame.SCREEN_WIDTH / 10, MyGdxGame.SCREEN_HEIGHT / 5);
+        controller1 = new Controller1(0, 0 );
+
         exclamationMarkActor = new ExclamationMarkActor();
         pauseResumeButtonActor = new PauseResumeButtonActor();
         //Create a Stage and add TouchPad
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
         stage.addActor(controller1.getTouchpad());
-        stage.addActor(exclamationMarkActor);
         stage.addActor(pauseResumeButtonActor);
+
+
+        exclamationStage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
+        exclamationStage.addActor(exclamationMarkActor);
 
 
         // allows to set multiple input processors
@@ -133,6 +139,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         inputMultiplexer.addProcessor(new GestureDetector(this));
         inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(exclamationStage);
         // adds gesture detector
 
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -232,27 +239,21 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             // draw dialog when player touches exclamation mark
             if(host.getCurrentStage() == 1 && exclamationMarkActor.getTouch()) {
                 batch.begin();
-                batch.draw(dialog1, 1.8f, 4f, dialog1.getWidth() / 100f, dialog1.getHeight() / 100f);
+                batch.draw(dialog1, player.getPlayerSprite().getX(), 4f, dialog1.getWidth() / 100f, dialog1.getHeight() / 100f);
                 batch.end();
                 exclamationMarkActor.remove();
             }
         }
 
+        // shows position of player
+        if(Gdx.input.isKeyPressed(Input.Keys.P)) {
+            Gdx.app.log("Player body posX", "" + player.getPlayerBody().getPosition().x);
+        }
+
 
         activatePause();
-        /**
-        if (dialog1text.getTouch()) {
-            dialog1.dispose();
-            dialog1text.remove();
-            dialog1text2.remove();
-        }
-         */
 
-        /*if(player.getPlayerBody().getLinearVelocity().y == 0) {
-            player.setOnTheGround();
-        }*/
         batch.begin();
-        // doHeavyStuff();
         player.draw(batch, stateTime);
         lightDoll.draw(batch);
         bodyHandler.drawAllBodies(batch, player);
@@ -263,6 +264,13 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
+
+        if(player.getPlayerBody().getPosition().x > 5.6f &&
+                player.getPlayerBody().getPosition().x < 10.0f &&
+                host.getCurrentStage() == 1) {
+            exclamationStage.act();
+            exclamationStage.draw();
+        }
         if(pause == OFF) {
             doPhysicsStep(deltaTime);
         }
@@ -460,7 +468,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     }
 
     /**
-     * Moves camera depending on players position.
+     * Changes camera position depending on players position.
      * If player is next to the walls, the camera stops moving to avoid showing out side of the
      * game stage. Otherwise it centralizes the player.
      *
