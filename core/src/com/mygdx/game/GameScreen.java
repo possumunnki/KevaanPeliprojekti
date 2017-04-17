@@ -70,7 +70,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = false;
+    private boolean isDebugOn = true;
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
@@ -98,6 +98,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private final boolean OFF = false;
     private boolean pause = OFF;
 
+
     public GameScreen(MyGdxGame host) {
 
         this.host = host;
@@ -111,7 +112,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         world = new World(new Vector2(0, -9.8f), true);
         bodyHandler = new BodyHandler(world, host);
         debugRenderer = new Box2DDebugRenderer();
-        player = new Player(world);
+        player = new Player(world, host);
         lightDoll = new LightDoll(player, world);
         lightSetup = new LightSetup(world, lightDoll, player);
 
@@ -177,9 +178,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             tilesAmountHeight = 30;
 
         } else if(host.getCurrentStage() == 2) {
-            tiledMap = new TmxMapLoader().load("stage_2.tmx");
-            tilesAmountWidth = 64;
-            tilesAmountHeight = 32;
+            tiledMap = new TmxMapLoader().load("mappikaks.tmx");
+            tilesAmountWidth = 200;
+            tilesAmountHeight = 30;
 
         } else if(host.getCurrentStage() == 3) {
             tiledMap = new TmxMapLoader().load("stage_3.tmx");
@@ -216,8 +217,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if(pause == OFF) {
             controller1.moveTouchPad();
             player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
-                    controller1.getTouchpad().getKnobPercentY());
-            player.movePlayer();
+                    controller1.getTouchpad().getKnobPercentY(), host);
+            player.movePlayer(host);
             lightDoll.moveLightDoll(player);
             bodyHandler.ratWalk();
 

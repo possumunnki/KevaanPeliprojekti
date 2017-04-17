@@ -58,7 +58,7 @@ public class BodyHandler {
         windowWidth = host.SCREEN_WIDTH;
         windowHeight = host.SCREEN_HEIGHT;
 
-        voodooTex = new Texture(Gdx.files.internal("voodoo_alpha.png"));
+        voodooTex = new Texture(Gdx.files.internal("voodooNew.png"));
 
         ratTex = new Texture(Gdx.files.internal("rat256.png"));
 

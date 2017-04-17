@@ -47,7 +47,8 @@ public class Player {
     private final boolean LEFT = false;
     private boolean playerDirection = RIGHT;
 
-    public Player(World world) {
+
+    public Player(World world, MyGdxGame host) {
         this.world = world;
 
         mummoTexture = new Texture("mummo1.png");
@@ -57,11 +58,22 @@ public class Player {
         playerSprite.setSize(PLAYER_WIDTH,
                 PLAYER_HEIGHT);
 
-        playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
-                                    MyGdxGame.SCREEN_HEIGHT / 2));
+
+        // Set player start position according to current level
+        if(host.getCurrentStage() == 1) {
+            playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
+                    MyGdxGame.SCREEN_HEIGHT / 2));
+        } else if(host.getCurrentStage() == 2) {
+            playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2 - 2,
+                    MyGdxGame.SCREEN_HEIGHT / 2  + MyGdxGame.SCREEN_HEIGHT * 1.5f));
+        } else if(host.getCurrentStage() == 3) {
+            playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
+                    MyGdxGame.SCREEN_HEIGHT / 2));
+        }
+
         playerBody.createFixture(getPlayerFixtureDefinition());
 
-        footBody = world.createBody(getFootDefinitionOfBody());
+        footBody = world.createBody(getFootDefinitionOfBody(host));
         footBody.createFixture(getFootFixtureDefinition());
         playerBody.setUserData("player");
         footBody.setUserData("foot");
@@ -80,6 +92,8 @@ public class Player {
         walkTexture = new Texture("mummoWalk.png");
         mummoWalkAnim = new Animation<TextureRegion>(1/5f,
                 Utilities.transformToFrames(walkTexture, 5, 1));
+
+
 
     }
 
@@ -102,7 +116,7 @@ public class Player {
         }
     }
 
-    public void movePlayer() {
+    public void movePlayer(MyGdxGame host) {
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             playerBody.applyForceToCenter(new Vector2(MAX_SPEED, 0f), true);
         }
@@ -121,10 +135,10 @@ public class Player {
         }
 
         setPlayerSpritePosition();
-        setFootBodyPos();
+        setFootBodyPos(host);
     }
 
-    public void movePlayer(float knobPercentX, float knobPercentY) {
+    public void movePlayer(float knobPercentX, float knobPercentY, MyGdxGame host) {
 
 
             // playerBody.applyForceToCenter(new Vector2(2.5f, 0f), true);
@@ -162,7 +176,7 @@ public class Player {
 
 
         setPlayerSpritePosition();
-        setFootBodyPos();
+        setFootBodyPos(host);
     }
     /**
      * lets player jump, when ever player touches ground
@@ -180,9 +194,15 @@ public class Player {
     /**
      * sets position of footBody so that the position will be always foot
      */
-    public void setFootBodyPos() {
-        footBodyDef.position.set(playerSprite.getX(),
-                                 playerSprite.getY()); // position of Y must be bit lower than playerBody
+    public void setFootBodyPos(MyGdxGame host) {
+
+        if(host.getCurrentStage() == 1) {
+            footBodyDef.position.set(playerSprite.getX(),
+                    playerSprite.getY());
+        } else if(host.getCurrentStage() == 2) {
+            footBodyDef.position.set(playerSprite.getX(),
+                    playerSprite.getY() + MyGdxGame.SCREEN_HEIGHT); // position of Y must be bit lower than
+        }// playerBody
     }
 
     public BodyDef getDefinitionOfBody(float positionX, float positionY) {
@@ -197,14 +217,14 @@ public class Player {
         return myBodyDef;
     }
 
-    public BodyDef getFootDefinitionOfBody() {
+    public BodyDef getFootDefinitionOfBody(MyGdxGame host) {
         // Body Definition
         footBodyDef = new BodyDef();
         // It's a body that moves
         footBodyDef.type = BodyDef.BodyType.DynamicBody;
         // Initial position is centered up
         // This position is the CENTER of the shape!
-        setFootBodyPos();
+        setFootBodyPos(host);
 
         return footBodyDef;
     }
