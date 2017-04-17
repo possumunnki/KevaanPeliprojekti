@@ -70,7 +70,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = true;
+    private boolean isDebugOn = false;
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
@@ -220,7 +220,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                     controller1.getTouchpad().getKnobPercentY(), host);
             player.movePlayer(host);
             lightDoll.moveLightDoll(player);
-            bodyHandler.ratWalk();
+            bodyHandler.callRatWalk();
 
             exclamationMarkActor.setExclamationMarkPosition(player);
 
@@ -320,8 +320,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                         }
                     }
                     // when player touches an enemy
-                    if (body1.getUserData().equals(bodyHandler.getVdObject()) ||
-                            body1.getUserData().equals(bodyHandler.getRatObject())) {
+                    if (body1.getUserData().equals(bodyHandler.callVoodooGetter()) ||
+                            body1.getUserData().equals(bodyHandler.callRatGetter())) {
                         if(body2.getUserData().equals("player")) {
                             //switch to game over screen
                             Gdx.app.log("log", "gameover");
