@@ -22,8 +22,6 @@ public class Rat {
 
     private Body ratBody2;
 
-    private float windowWidth;
-    private float windowHeight;
 
     public Rat(World world, MyGdxGame host) {
 
@@ -31,12 +29,16 @@ public class Rat {
 
         ratObject = new ObjectData(ratTex, 1.2f, 0.5f, ObjectData.GameObjectType.RAT);
 
-        // Rat bodies
-        ratTemplate = createBody(12.9f, 3, ratObject.width, ratObject.height, world);
-        ratTemplate.setUserData(ratObject);
 
-        ratBody2 = createBody(30, 3, ratObject.width, ratObject.height, world);
-        ratBody2.setUserData(ratObject);
+        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+            // Rat bodies
+            ratTemplate = createBody(12.9f, 3, ratObject.width, ratObject.height, world);
+            ratTemplate.setUserData(ratObject);
+
+            ratBody2 = createBody(30, 3, ratObject.width, ratObject.height, world);
+            ratBody2.setUserData(ratObject);
+        }
+
 
     }
 
@@ -84,6 +86,7 @@ public class Rat {
 
 
     public void ratWalk() {
+
 
         if(ratTemplate.getLinearVelocity().y == 0) {
 

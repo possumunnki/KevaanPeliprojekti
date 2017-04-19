@@ -183,9 +183,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             tilesAmountHeight = 30;
 
         } else if(host.getCurrentStage() == 3) {
-            tiledMap = new TmxMapLoader().load("stage_3.tmx");
-            tilesAmountWidth = 64;
-            tilesAmountHeight = 32;
+            tiledMap = new TmxMapLoader().load("map_03_rat.tmx");
+            tilesAmountWidth = 400;
+            tilesAmountHeight = 30;
 
         }
 
@@ -220,7 +220,13 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                     controller1.getTouchpad().getKnobPercentY(), host);
             player.movePlayer(host);
             lightDoll.moveLightDoll(player);
-            bodyHandler.callRatWalk();
+
+
+            // If current map is containing rats
+            if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+                bodyHandler.callRatWalk();
+            }
+
 
             exclamationMarkActor.setExclamationMarkPosition(player);
 
@@ -255,9 +261,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         activatePause();
 
         batch.begin();
-        player.draw(batch, stateTime);
+        player.draw(batch, stateTime, host);
         lightDoll.draw(batch);
-        bodyHandler.drawAllBodies(batch, player);
+
+        bodyHandler.drawAllBodies(batch);
+
+
         batch.end();
 
         // Render lights
@@ -364,7 +373,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             }
         });
 
-        bodyHandler.clearBodies(world, lightDoll);
+        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+            bodyHandler.clearBodies(world, lightDoll);
+        }
 
         if(goal) {
             host.unlocStage(host.getCurrentStage());

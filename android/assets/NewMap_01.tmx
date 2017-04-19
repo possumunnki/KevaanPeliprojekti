@@ -112,6 +112,5 @@
  </objectgroup>
  <objectgroup name="goal-rectangle">
   <object id="7" x="6080" y="768" width="84" height="97"/>
-  <object id="41" x="320" y="810" width="32" height="36"/>
  </objectgroup>
 </map>

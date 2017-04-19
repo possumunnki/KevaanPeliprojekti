@@ -39,7 +39,7 @@ public class BodyHandler {
     }
 
 
-    public void drawAllBodies(SpriteBatch batch, Player player) {
+    public void drawAllBodies(SpriteBatch batch) {
         // DEBUG: Print total amount of bodies in the world
         //Gdx.app.log("", "Number of bodies: " + bodies.size);
 
@@ -57,9 +57,9 @@ public class BodyHandler {
                         body.getPosition().x - voodoo.width,
                         body.getPosition().y - voodoo.width,
                         voodoo.width,                   // originX
-                        voodoo.width,                   // originY
+                        voodoo.height,                   // originY
                         voodoo.width * 2,               // windowWidth
-                        voodoo.width * 2,               // windowHeight
+                        voodoo.height * 2,               // windowHeight
                         1.0f,                          // scaleX
                         1.0f,                          // scaleY
                         body.getTransform().getRotation() * MathUtils.radiansToDegrees,
@@ -111,6 +111,7 @@ public class BodyHandler {
                 }
             }
         }
+
 
         // If voodoo template is off screen
         if(voodoo.getVoodooBodyTemplate().getPosition().y < -1) {
@@ -171,8 +172,6 @@ public class BodyHandler {
         return rat.getRatObject();
     }
 
-
-
     public Array<Body> getBodies() {
         return bodies;
     }
@@ -181,5 +180,5 @@ public class BodyHandler {
         voodoo.dispose();
         rat.dispose();
     }
-
 }
+// end of file

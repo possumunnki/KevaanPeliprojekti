@@ -37,49 +37,46 @@ public class Voodoo {
     private Body testBody7;
     private Body testBody8;
 
-    private float windowWidth;
-    private float windowHeight;
 
     public Voodoo(World world, MyGdxGame host) {
 
-        windowWidth = host.SCREEN_WIDTH;
-        windowHeight = host.SCREEN_HEIGHT;
 
         voodooTex = new Texture(Gdx.files.internal("voodooNew.png"));
 
         vdObject = new ObjectData(voodooTex, 0.2f, 0.2f, ObjectData.GameObjectType.VOODOO);
 
 
-        voodooBodyTemplate = createBody(1, 1, vdObject.width, vdObject.height, world);
-        voodooBodyTemplate.setUserData(vdObject);
+        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+            voodooBodyTemplate = createBody(1, 1, vdObject.width, vdObject.height, world);
+            voodooBodyTemplate.setUserData(vdObject);
 
-        // Voodoo 1-3
-        testBody1 = createBody(7, 7, vdObject.width, vdObject.height, world);
-        testBody1.setUserData(vdObject);
+            // Voodoo 1-3
+            testBody1 = createBody(7, 7, vdObject.width, vdObject.height, world);
+            testBody1.setUserData(vdObject);
 
-        testBody2 = createBody(11, 5, vdObject.width, vdObject.height, world);
-        testBody2.setUserData(vdObject);
+            testBody2 = createBody(11, 5, vdObject.width, vdObject.height, world);
+            testBody2.setUserData(vdObject);
 
-        testBody3 = createBody(18, 8, vdObject.width, vdObject.height, world);
-        testBody3.setUserData(vdObject);
+            testBody3 = createBody(18, 8, vdObject.width, vdObject.height, world);
+            testBody3.setUserData(vdObject);
 
-        // Voodoo 4-6
-        testBody4 = createBody(20, 8, vdObject.width, vdObject.height, world);
-        testBody4.setUserData(vdObject);
+            // Voodoo 4-6
+            testBody4 = createBody(20, 8, vdObject.width, vdObject.height, world);
+            testBody4.setUserData(vdObject);
 
-        testBody5 = createBody(24, 7, vdObject.width, vdObject.height, world);
-        testBody5.setUserData(vdObject);
+            testBody5 = createBody(24, 7, vdObject.width, vdObject.height, world);
+            testBody5.setUserData(vdObject);
 
-        testBody6 = createBody(29, 7, vdObject.width, vdObject.height, world);
-        testBody6.setUserData(vdObject);
+            testBody6 = createBody(29, 7, vdObject.width, vdObject.height, world);
+            testBody6.setUserData(vdObject);
 
-        // Voodoo 7-9
-        testBody7 = createBody(32, 7, vdObject.width, vdObject.height, world);
-        testBody7.setUserData(vdObject);
+            // Voodoo 7-9
+            testBody7 = createBody(32, 7, vdObject.width, vdObject.height, world);
+            testBody7.setUserData(vdObject);
 
-        testBody8 = createBody(35, 7, vdObject.width, vdObject.height, world);
-        testBody8.setUserData(vdObject);
-
+            testBody8 = createBody(35, 7, vdObject.width, vdObject.height, world);
+            testBody8.setUserData(vdObject);
+        }
     }
 
     private Body createBody(float x, float y, float width, float height, World world) {
