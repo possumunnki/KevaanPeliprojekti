@@ -90,7 +90,11 @@ public class MapScreen implements Screen {
         configStage();
 
         if (nextStage.getTouch()) {
-            host.setScreen(new GameScreen(host));
+            if(host.getCurrentStage() == 1) {
+                host.setScreen(new TalkScreen(host));
+            } else {
+                host.setScreen(new GameScreen(host));
+            }
         } else if(returnToMainMenu.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
         }

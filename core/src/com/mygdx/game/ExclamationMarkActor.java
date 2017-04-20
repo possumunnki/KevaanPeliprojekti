@@ -61,8 +61,6 @@ public class ExclamationMarkActor extends Actor {
     private void scaleAction() {
         Action scaleUpAction = Actions.scaleTo(2f, 2f, 0.5f);
         Action scaleDownAction = Actions.scaleTo(1f, 1f, 0.5f);
-        Gdx.app.log("ScaleX1", "" + getScaleX());
-        Gdx.app.log("ScaleY1", "" + getScaleY());
        addAction( Actions.forever(
                 Actions.sequence(
                         scaleUpAction,
@@ -71,10 +69,6 @@ public class ExclamationMarkActor extends Actor {
         ));
     }
 
-    private void scaleDownAction() {
-        Action scaleDownAction = Actions.scaleTo(1f, 1f, 0.5f);
-        addAction(scaleDownAction);
-    }
     public void setExclamationMarkPosition(Player player) {
 
         // whenever player is near the left world wall
@@ -93,11 +87,9 @@ public class ExclamationMarkActor extends Actor {
 
         setPosition(printX, printY);
         setBounds(getX(), getY() ,getWidth(), getHeight());
-        //Gdx.app.log("ExclamationX","" + getX());
-        //Gdx.app.log("ExclamationY","" + getY());
 
     }
-    //!!!!!!! add scale action !!!!
+
     public boolean getTouch() {
         return touch;
     }
