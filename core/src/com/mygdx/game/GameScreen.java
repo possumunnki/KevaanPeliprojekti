@@ -26,6 +26,8 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Created by possumunnki on 7.3.2017.
@@ -57,6 +59,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private SpriteBatch batch;
     private World world;
     private OrthographicCamera camera;
+    Viewport viewport;
+
     private float deltaTime;
     private float stateTime;
     private Player player;
@@ -75,7 +79,14 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
 
+    /**
+     * Stage where is all the buttons / controllers from the beginning
+     */
     private Stage stage;
+
+    /**
+     * stage for exclamation stage.
+     */
     private Stage exclamationStage;
 
     private Controller1 controller1;
@@ -108,8 +119,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         camera.setToOrtho(false,
                 host.SCREEN_WIDTH,
                 host.SCREEN_HEIGHT);
+        viewport = new FitViewport(host.SCREEN_WIDTH, host.SCREEN_HEIGHT, camera);
 
         world = new World(new Vector2(0, -9.8f), true);
+        stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
+
         bodyHandler = new BodyHandler(world, host);
         debugRenderer = new Box2DDebugRenderer();
         player = new Player(world, host);
@@ -117,16 +131,14 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         lightSetup = new LightSetup(world, lightDoll, player);
 
         setGameStage();
+        setGameController();
 
-        // adds game on pad
-        controller1 = new Controller1(0, 0 );
 
         exclamationMarkActor = new ExclamationMarkActor();
+        // creates pause/resume button and adds into the game
         pauseResumeButtonActor = new PauseResumeButtonActor();
-        //Create a Stage and add TouchPad
-        stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
-        stage.addActor(controller1.getTouchpad());
         stage.addActor(pauseResumeButtonActor);
+        //Create a Stage and add TouchPad
 
 
         exclamationStage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
@@ -147,26 +159,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         dialog1 = new Texture("chatboxWithText.png");
 
-        /**
-        dialog1text = new FontActor("wow it's the Peruvian", host.SCREEN_WIDTH *
-                75f + 80f, host.SCREEN_HEIGHT *
-                100f / 2 + 120f);
-
-        dialog1text2 = new FontActor("Sun God Doll!", host.SCREEN_WIDTH *
-                70f, host.SCREEN_HEIGHT *
-                100f / 2 + 100f);
-        dialog1text.setFontScale(0.2f);
-        dialog1text2.setFontScale(0.2f);
-        stage.addActor(dialog1text);
-        stage.addActor(dialog1text2);
-         */
-
-
     }
 
     /**
-     * Sets tile map, width and height of the stage depending on current stage.
-     * Also transforms tile maps rectangles to bodies.
+     * Sets tile map, width and height of the game stage depending on current stage.
+     * Also transforms tile maps rectangles to bodies and sets gameMode.
      *
      */
     private void setGameStage() {
@@ -176,16 +173,20 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             // sets tiles amount on the game stage
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
+            host.setGameMode(host.ADVENTURE);
 
         } else if(host.getCurrentStage() == 2) {
             tiledMap = new TmxMapLoader().load("mappikaks.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
+            host.setGameMode(host.ADVENTURE);
 
         } else if(host.getCurrentStage() == 3) {
             tiledMap = new TmxMapLoader().load("map_03_rat.tmx");
             tilesAmountWidth = 400;
             tilesAmountHeight = 30;
+            // turns rat race on, it changes game control
+            host.setGameMode(host.RAT_RACE);
 
         }
 
@@ -197,6 +198,16 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         worldWidthPixels = tilesAmountWidth  * TILE_WIDTH;
         worldHeightPixels = tilesAmountHeight * TILE_HEIGHT;
+    }
+
+    public void setGameController() {
+        if(host.getGameMode() == host.ADVENTURE) {
+            // adds game on pad in the game
+            controller1 = new Controller1(0, 0);
+            stage.addActor(controller1.getTouchpad());
+        } else if(host.getGameMode() == host.RAT_RACE) {
+
+        }
     }
 
     public World getWorld() {
@@ -215,10 +226,20 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiledMapRenderer.render();
         if(pause == OFF) {
-            controller1.moveTouchPad();
-            player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
-                    controller1.getTouchpad().getKnobPercentY(), host);
-            player.movePlayer(host);
+            if(host.getGameMode() == host.ADVENTURE) {
+                controller1.moveTouchPad();
+                // enables player to move with game on pad
+                player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
+                                  controller1.getTouchpad().getKnobPercentY(), host);
+                // enables player to move with arrow key
+                player.movePlayer(host);
+            } else if(host.getGameMode() == host.RAT_RACE) {
+                // enables player to move automatically
+                player.moveMountedPlayer(host);
+            }
+
+
+
             lightDoll.moveLightDoll(player);
 
 
@@ -275,13 +296,15 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        if(player.getPlayerBody().getPosition().x > 5.6f &&
-                player.getPlayerBody().getPosition().x < 10.0f &&
-                host.getCurrentStage() == 1) {
-            exclamationStage.act();
-            exclamationStage.draw();
-        }
+
+
         if(pause == OFF) {
+            if(player.getPlayerBody().getPosition().x > 5.6f &&
+                    player.getPlayerBody().getPosition().x < 10.0f &&
+                    host.getCurrentStage() == 1) {
+                exclamationStage.act();
+                exclamationStage.draw();
+            }
             doPhysicsStep(deltaTime);
         }
 
@@ -431,7 +454,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public void resize(int width, int height) {
-
+        viewport.update(width,height);
+        stage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -451,8 +475,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public void dispose() {
+        if(host.getGameMode() == host.ADVENTURE) {
+            controller1.dispose();
+        }
         player.dispose();
-        controller1.dispose();
         stage.dispose();
 
         lightDoll.dispose();
@@ -519,6 +545,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     }
 
+    //turha classi atm
     public boolean isPossibleToJump() {
         getPlayerDownPoints(player.getPlayerSprite().getX(),
                             player.getPlayerSprite().getY());
@@ -534,6 +561,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
     }
 
+    //turha classi atm.
     public void getPlayerDownPoints(float pX, float pY) {
         /*
          * pX and pY are the coordinates of the player.
@@ -599,7 +627,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
 
     }
-
+    // turha classi atm.
     public boolean isGround(float x, float y) {
 
         // Calculate player coordinates to tile coordinates
@@ -643,6 +671,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
+        if(host.getGameMode() == host.RAT_RACE) {
+            player.jump(host);
+        }
         return false;
     }
 
@@ -653,7 +684,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public boolean fling(float velocityX, float velocityY, int button) {
-        if(controller1.getIsTouched()) {
+        if(host.getGameMode() == host.ADVENTURE && controller1.getIsTouched()) {
             // won't do any, if touch pad is touched
         } else {
             lightDoll.throwLightDoll(velocityX, velocityY);

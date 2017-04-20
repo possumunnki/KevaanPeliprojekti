@@ -20,8 +20,7 @@ public class MyGdxGame extends Game {
     public static final int STOP = 0;
     public static final int RIGHT = 1;
     public static final int LEFT = 2;
-    public static final boolean AVAILABLE = true;
-    public static final boolean NOT_AVAILABLE = false;
+
 
     /**
      * stage that player is currently playing
@@ -32,6 +31,17 @@ public class MyGdxGame extends Game {
      * list of available stages
      */
     private boolean[] availableStage;
+
+    public static final boolean AVAILABLE = true;
+    public static final boolean NOT_AVAILABLE = false;
+
+    /**
+     * Game modes to change game mechanics depending on current stage.
+     */
+    private int gameMode;
+    public static final int ADVENTURE = 1;
+    public static final int RAT_RACE = 2;
+
 	private MainMenuScreen mainMenu;
 
 	public SpriteBatch getSpriteBatch() {
@@ -41,7 +51,7 @@ public class MyGdxGame extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-        currentStage = 1;
+        currentStage = 1; // Korjaa, kun tehdään muisti osio!
         // !! LEVEL 3 SET TO AVAILABLE FOR TESTING !!
         availableStage = new boolean[]{AVAILABLE, NOT_AVAILABLE, AVAILABLE, NOT_AVAILABLE};
 		mainMenu = new MainMenuScreen(this);
@@ -98,5 +108,12 @@ public class MyGdxGame extends Game {
      */
     public boolean getStageAvailability(int stageNumber) {
         return availableStage[stageNumber -1];
+    }
+
+    public int getGameMode() {
+        return gameMode;
+    }
+    public void setGameMode(int gameMode) {
+        this.gameMode = gameMode;
     }
 }

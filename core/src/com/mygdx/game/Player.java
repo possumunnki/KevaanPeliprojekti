@@ -29,13 +29,18 @@ public class Player {
 
     private boolean isWalking = false;
 
+    /**
+     * Sprite to change players texture direction
+     *
+     */
     private Sprite playerSprite;
     private Texture mummoTexture;
+    private Sprite ratMountSprite;
 
     // Rat mount combo
     private Texture ratMountTexture;
     private Body ratMountBody;
-    private Sprite ratMountSprite;
+
 
     private Texture ratRunTexture;
     private Animation<TextureRegion> ratRunAnim;
@@ -52,8 +57,9 @@ public class Player {
     // Running speed
     private final float MAX_SPEED = 5.0f;
     // Mounted speed
-    private final float MOUNTED_MAX_SPEED = 8.5f;
+    private final float MOUNTED_MAX_SPEED = 7.0f;
     private final float JUMP_VELOCITY = 8.0f;
+    private final float MOUNTED_JUMP_VELOCITY = 12.0f;
     private boolean isFixed = true;
 
     private BodyDef footBodyDef;
@@ -83,14 +89,14 @@ public class Player {
 
         // Set player start position according to current level
         if(host.getCurrentStage() == 1) {
-            playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
-                    MyGdxGame.SCREEN_HEIGHT / 2));
+            playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2,
+                    host.SCREEN_HEIGHT / 2));
         } else if(host.getCurrentStage() == 2) {
-            playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2 - 2,
-                    MyGdxGame.SCREEN_HEIGHT / 2 + MyGdxGame.SCREEN_HEIGHT * 1.5f));
+            playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2 - 2,
+                    host.SCREEN_HEIGHT / 2 + host.SCREEN_HEIGHT * 1.5f));
         } else if(host.getCurrentStage() == 3) {
             playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
-                    MyGdxGame.SCREEN_HEIGHT / 2 + MyGdxGame.SCREEN_HEIGHT * 1.5f));
+                    host.SCREEN_HEIGHT / 4 + host.SCREEN_HEIGHT * 1.5f));
         }
 
         playerBody.createFixture(getPlayerFixtureDefinition());
@@ -136,7 +142,7 @@ public class Player {
         if(isWalking) {
 
             // IF player is currently in stage 3 and rat race-part
-            if(host.getCurrentStage() == 3 && playerBody.getPosition().x > 10) {
+            if(host.getGameMode() == host.RAT_RACE && playerBody.getPosition().x > 10) {
                 mummoWalkAnim = ratRunAnim;
                 isMounted = true;
             }
@@ -162,11 +168,17 @@ public class Player {
             playerSprite.draw(sb);
         }
 
-        if(host.getCurrentStage() == 3 && playerBody.getPosition().x > 10 && !isWalking) {
+        if(host.getGameMode() == host.RAT_RACE && playerBody.getPosition().x > 10 && !isWalking) {
             playerSprite = ratMountSprite;
         }
+
     }
 
+    /**
+     * Moves player with arrow key
+     *
+     * @param host
+     */
     public void movePlayer(MyGdxGame host) {
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             playerBody.applyForceToCenter(new Vector2(MAX_SPEED, 0f), true);
@@ -182,7 +194,7 @@ public class Player {
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             Gdx.app.log("log", "player x/y: " + playerBody.getPosition());
-            jump();
+            jump(host);
         }
 
         setPlayerSpritePosition();
@@ -205,19 +217,11 @@ public class Player {
             isWalking = false;
         }
 
-        /**
-         *  Switches player speed to a bigger mounted speed when in rat race!
-         */
-        if(!isMounted) {
-            playerBody.setLinearVelocity(MAX_SPEED * knobPercentX, playerBody.getLinearVelocity().y);
-        } else {
-            playerBody.setLinearVelocity(MOUNTED_MAX_SPEED * knobPercentX, playerBody.getLinearVelocity().y);
-        }
+        playerBody.setLinearVelocity(MAX_SPEED * knobPercentX, playerBody.getLinearVelocity().y);
 
-
-            // playerBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
+        // playerBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
         if(knobPercentY > 0.3f) {
-            jump();
+            jump(host);
         }
 
         // If player falls below screen
@@ -237,15 +241,45 @@ public class Player {
         setPlayerSpritePosition();
         setFootBodyPos(host);
     }
+
+    /**
+     * Moves player automatically.
+     *
+     * @param host
+     */
+    public void moveMountedPlayer(MyGdxGame host)  {
+        playerBody.setLinearVelocity(MOUNTED_MAX_SPEED, playerBody.getLinearVelocity().y);
+        isWalking = true;
+        setPlayerSpritePosition();
+        setFootBodyPos(host);
+
+        if(playerBody.getPosition().y < -1) {
+            // Clear velocity (dropping of the screen)
+            playerBody.setLinearVelocity(new Vector2(0,0));
+            Gdx.app.log("offscreen", "player Y-position" + playerBody.getPosition().y);
+
+            playerBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
+                    .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
+
+            footBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
+                    .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
+        }
+    }
+
     /**
      * lets player jump, when ever player touches ground
      *
      **/
-
-    public void jump() {
+    public void jump(MyGdxGame host) {
         if (onTheGround) {
-            playerBody.applyLinearImpulse(new Vector2(0f, JUMP_VELOCITY),
-                                            playerBody.getWorldCenter(), true);
+            if(host.getGameMode() == host.ADVENTURE) {
+                playerBody.applyLinearImpulse(new Vector2(0f, JUMP_VELOCITY),
+                        playerBody.getWorldCenter(), true);
+            } else if(host.getGameMode() == host.RAT_RACE) {
+                playerBody.applyLinearImpulse(new Vector2(0f, MOUNTED_JUMP_VELOCITY),
+                        playerBody.getWorldCenter(), true);
+            }
+
             onTheGround = false;
         }
     }
