@@ -22,6 +22,9 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 public class Player {
     private World world;
 
+    private boolean positionReset = false;
+    public boolean gameOver2 = false;
+
     // Walk animation sprite sheet.png
     private Texture walkTexture;
     private Animation<TextureRegion> mummoWalkAnim;
@@ -60,7 +63,6 @@ public class Player {
     private final float MOUNTED_MAX_SPEED = 7.0f;
     private final float JUMP_VELOCITY = 8.0f;
     private final float MOUNTED_JUMP_VELOCITY = 12.0f;
-    private boolean isFixed = true;
 
     private BodyDef footBodyDef;
     private final boolean RIGHT = true;
@@ -106,8 +108,8 @@ public class Player {
         playerBody.setUserData("player");
         footBody.setUserData("foot");
         // fixes players body
-        playerBody.setFixedRotation(isFixed);
-        footBody.setFixedRotation(isFixed);
+        playerBody.setFixedRotation(true);
+        footBody.setFixedRotation(true);
 
         // joints player body and foot body.
         RevoluteJointDef rDef = new RevoluteJointDef();
@@ -248,6 +250,7 @@ public class Player {
      * @param host
      */
     public void moveMountedPlayer(MyGdxGame host)  {
+        positionReset = false;
         playerBody.setLinearVelocity(MOUNTED_MAX_SPEED, playerBody.getLinearVelocity().y);
         isWalking = true;
         setPlayerSpritePosition();
@@ -258,11 +261,16 @@ public class Player {
             playerBody.setLinearVelocity(new Vector2(0,0));
             Gdx.app.log("offscreen", "player Y-position" + playerBody.getPosition().y);
 
+            gameOver2 = true;
+            /**
             playerBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
                     .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
 
+            positionReset = true;
+
             footBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
                     .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
+             */
         }
     }
 
@@ -412,4 +420,11 @@ public class Player {
         return playerSprite;
     }
 
+    public boolean getPositionReset() {
+        return positionReset;
+    }
+
+    public boolean getGameOver2() {
+        return gameOver2;
+    }
 }

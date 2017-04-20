@@ -22,6 +22,8 @@ public class BodyHandler {
 
     private Rat rat;
 
+    //private Cat cat;
+
     private Array<Body> bodies = new Array<Body>();
 
     private float windowWidth;
@@ -35,6 +37,8 @@ public class BodyHandler {
         voodoo = new Voodoo(world, host);
 
         rat = new Rat(world, host);
+
+        //cat = new Cat(world);
 
     }
 
@@ -160,7 +164,7 @@ public class BodyHandler {
         }
     }
 
-    public void callRatWalk() {
+    public void callEnemyWalk() {
         rat.ratWalk();
     }
 

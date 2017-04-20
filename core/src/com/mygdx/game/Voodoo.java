@@ -2,11 +2,13 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by Juz3 on 17.4.2017.
@@ -47,7 +49,7 @@ public class Voodoo {
 
 
         if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
-            voodooBodyTemplate = createBody(1, 1, vdObject.width, vdObject.height, world);
+            voodooBodyTemplate = createBody(5, 1, vdObject.width, vdObject.height, world);
             voodooBodyTemplate.setUserData(vdObject);
 
             // Voodoo 1-3
@@ -120,6 +122,7 @@ public class Voodoo {
 
         return vdFixDef;
     }
+
 
     public void dispose() {
         voodooTex.dispose();

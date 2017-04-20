@@ -109,6 +109,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private final boolean OFF = false;
     private boolean pause = OFF;
 
+    private Cat cat;
+
 
     public GameScreen(MyGdxGame host) {
 
@@ -158,6 +160,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         Gdx.input.setInputProcessor(inputMultiplexer);
 
         dialog1 = new Texture("chatboxWithText.png");
+
+        cat = new Cat(world, host);
 
     }
 
@@ -236,6 +240,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             } else if(host.getGameMode() == host.RAT_RACE) {
                 // enables player to move automatically
                 player.moveMountedPlayer(host);
+
+                // If player falls down in stage 3, it's game over instead of going back to start
+                if(player.getGameOver2()) {
+                    gameOver = true;
+                }
             }
 
 
@@ -243,9 +252,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             lightDoll.moveLightDoll(player);
 
 
-            // If current map is containing rats
+            // If current map is containing rats and voodoo dolls
             if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
-                bodyHandler.callRatWalk();
+                bodyHandler.callEnemyWalk();
             }
 
 
@@ -280,12 +289,16 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
 
         activatePause();
+        cat.moveCat(host, player, world);
 
         batch.begin();
         player.draw(batch, stateTime, host);
         lightDoll.draw(batch);
 
         bodyHandler.drawAllBodies(batch);
+
+
+        cat.draw(batch, stateTime, host, player);
 
 
         batch.end();
@@ -361,6 +374,21 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
                         }
                     }
+
+                    /**
+                     * Cat collision gameover-check
+                     */
+
+
+                    if(body1.getUserData().equals("player")) {
+                        if(body2.getUserData().equals("cat")) {
+                            //switch to game over screen
+                            Gdx.app.log("log", "gameover");
+                            gameOver = true;
+                        }
+
+                    }
+
 
                     // when player touches goal-rectangle
                     if(body1.getUserData().equals("foot")) {
@@ -471,28 +499,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     @Override
     public void hide() {
         this.dispose();
-    }
-
-    @Override
-    public void dispose() {
-        if(host.getGameMode() == host.ADVENTURE) {
-            controller1.dispose();
-        }
-        player.dispose();
-        stage.dispose();
-
-        lightDoll.dispose();
-        bodyHandler.dispose();
-        /**
-         * BOX2D LIGHT-RELATED
-         */
-        lightSetup.dispose();
-
-        dialog1.dispose();
-
-        //dialog1text.dispose();
-        //dialog1text2.dispose();
-        Gdx.app.log("GameScreen","disposed");
     }
 
     @Override
@@ -715,5 +721,28 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     @Override
     public void pinchStop() {
 
+    }
+
+    @Override
+    public void dispose() {
+        if(host.getGameMode() == host.ADVENTURE) {
+            controller1.dispose();
+        }
+        player.dispose();
+        stage.dispose();
+
+        lightDoll.dispose();
+        bodyHandler.dispose();
+
+        /**
+         * BOX2D LIGHTS
+         */
+        lightSetup.dispose();
+
+        dialog1.dispose();
+
+        cat.dispose();
+
+        Gdx.app.log("GameScreen","disposed");
     }
 }
