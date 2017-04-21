@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -39,15 +40,12 @@ public class SkipActor extends Actor {
     }
 
     public void draw(Batch batch, float alpha) {
-        batch.draw(skipSprite,
-                getX(),
-                getY(),getOriginX(),
-                getOriginY(),
-                getWidth(),
-                getHeight(),
-                getScaleX(),
-                getScaleY(),
-                getRotation());
+
+        Color color = getColor();
+        batch.setColor(color.r, color.g, color.b, color.a * alpha);
+        batch.draw(skipSprite, getX(), getY(), getWidth() * getScaleX(),
+                getHeight() * getScaleY());
+        batch.setColor(color.r, color.g, color.b, 1f);
 
 
     }
@@ -62,13 +60,14 @@ public class SkipActor extends Actor {
      */
     private void faceInFadeOutAction() {
 
-        Action faceInAction = Actions.fadeIn(1f);
-        Action fadeOutAction = Actions.fadeOut(1f);
+        Action faceInAction = Actions.fadeIn(1.5f);
+        Action fadeOutAction = Actions.fadeOut(1.5f);
         this.addAction( Actions.forever(
-                Actions.sequence(Actions.fadeIn(1f),
-                        Actions.fadeOut(1f)
+                Actions.sequence(Actions.fadeIn(1.5f),
+                        Actions.fadeOut(1.5f)
                 )
         ));
+
     }
 
 
@@ -80,7 +79,7 @@ public class SkipActor extends Actor {
         skipTexture.dispose();
     }
 
-    //public void setEx
+
 
 
     class skipListener extends InputListener {
