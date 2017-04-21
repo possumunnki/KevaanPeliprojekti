@@ -74,7 +74,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = true;
+    private boolean isDebugOn = false;
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
