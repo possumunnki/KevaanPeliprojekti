@@ -39,6 +39,8 @@ public class Voodoo {
     private Body testBody7;
     private Body testBody8;
 
+    private Array<Body> voodooBodyArray = new Array<Body>();
+
 
     public Voodoo(World world, MyGdxGame host) {
 
@@ -78,6 +80,16 @@ public class Voodoo {
 
             testBody8 = createBody(35, 7, vdObject.width, vdObject.height, world);
             testBody8.setUserData(vdObject);
+
+            voodooBodyArray.add(testBody1);
+            voodooBodyArray.add(testBody2);
+            voodooBodyArray.add(testBody3);
+            voodooBodyArray.add(testBody4);
+            voodooBodyArray.add(testBody5);
+            voodooBodyArray.add(testBody6);
+            voodooBodyArray.add(testBody7);
+            voodooBodyArray.add(testBody8);
+
         }
     }
 
@@ -123,6 +135,47 @@ public class Voodoo {
         return vdFixDef;
     }
 
+
+    public void voodooWalk() {
+
+        for(Body body:voodooBodyArray) {
+
+            int i = 1;
+
+            if(i < voodooBodyArray.size) {
+                i++;
+            }
+
+            if(body.getLinearVelocity().y == 0) {
+
+                float bodyInitialPos;
+
+                bodyInitialPos = voodooBodyArray.get(i).getPosition().x;
+
+                body.setLinearVelocity(-1.5f, 0);
+
+                if(body.getPosition().x < bodyInitialPos - 3f) {
+                    body.setLinearVelocity(1.5f, 0);
+                }
+            }
+
+        }
+    }
+
+    /**
+     * TEST METHOD
+    public void voodooWalk() {
+
+        for(int i = 1; i < voodooBodyArray.size; i++) {
+
+            float bodyInitialPos;
+
+            bodyInitialPos = voodooBodyArray.get(i).getPosition().x;
+
+            body.setL
+        }
+    }
+     */
 
     public void dispose() {
         voodooTex.dispose();

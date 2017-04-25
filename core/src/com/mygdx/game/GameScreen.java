@@ -84,7 +84,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
      */
     private Stage stage;
 
-    /**
+    /**-*
      * stage for exclamation stage.
      */
     private Stage exclamationStage;
@@ -173,20 +173,20 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private void setGameStage() {
         // if current game stage is 1.
         if(host.getCurrentStage() == 1) {
-            tiledMap = new TmxMapLoader().load("NewMap_01.tmx");
+            tiledMap = new TmxMapLoader().load("stage1.tmx");
             // sets tiles amount on the game stage
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
 
         } else if(host.getCurrentStage() == 2) {
-            tiledMap = new TmxMapLoader().load("mappikaks.tmx");
+            tiledMap = new TmxMapLoader().load("stage2.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
 
         } else if(host.getCurrentStage() == 3) {
-            tiledMap = new TmxMapLoader().load("map_03_rat.tmx");
+            tiledMap = new TmxMapLoader().load("stage3.tmx");
             tilesAmountWidth = 400;
             tilesAmountHeight = 30;
             // turns rat race on, it changes game control

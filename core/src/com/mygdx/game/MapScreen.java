@@ -31,7 +31,7 @@ public class MapScreen implements Screen {
         this.host = host;
         batch = host.getSpriteBatch();
 
-        backGroundTexture = new Texture("mapBG.png");
+        backGroundTexture = new Texture("mapSelectBackground.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,

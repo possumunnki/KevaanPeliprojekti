@@ -23,7 +23,7 @@ public class PointActor extends Actor {
         this.printX = printX;
         this.printY = printY;
 
-        pointTexture = new Texture("point.png");
+        pointTexture = new Texture("orangePointer.png");
         // font.getData().setScale(0.01f);
 
         setWidth(pointTexture.getWidth());
