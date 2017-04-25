@@ -17,28 +17,45 @@ public class PointActor extends Actor {
     private float printX;
     private float printY;
     private boolean touch = false;
-    private Texture pointTexture;
+    private boolean touchEnter = false;
+    /**
+     * Texture that appears whenever the point is not touched.
+     */
+    private Texture exitTexture;
+    /**
+     * Texture that appears whenever the point is touched.
+     */
+    private Texture enterTexture;
 
     public PointActor(float printX, float printY) {
         this.printX = printX;
         this.printY = printY;
 
-        pointTexture = new Texture("orangePointer.png");
+        exitTexture = new Texture("nappulaBlack.png");
+        enterTexture = new Texture("nappulaRed.png");
         // font.getData().setScale(0.01f);
 
-        setWidth(pointTexture.getWidth());
-        setHeight(pointTexture.getHeight());
+        setWidth(exitTexture.getWidth());
+        setHeight(exitTexture.getHeight());
         setBounds(printX, printY ,getWidth(), getHeight());
         addListener(new PointListener());
     }
     public void draw(Batch batch, float alpha) {
-        if(touch == true) {
-            batch.draw(pointTexture,
+        if(touchEnter == true || touch == true) {
+            batch.draw(enterTexture,
                     printX,
                     printY,
-                    pointTexture.getWidth(),
-                    pointTexture.getHeight());
+                    getWidth(),
+                    getHeight());
+        } else {
+            batch.draw(exitTexture,
+                    printX,
+                    printY,
+                    getWidth(),
+                    getHeight());
         }
+
+
 
     }
 
@@ -54,7 +71,8 @@ public class PointActor extends Actor {
         this.touch = touch;
     }
     public void dispose() {
-        pointTexture.dispose();
+        enterTexture.dispose();
+        exitTexture.dispose();
     }
 
     class PointListener extends InputListener {
@@ -63,7 +81,9 @@ public class PointActor extends Actor {
                                  float y,
                                  int pointer,
                                  int button) {
+
             touch = true;
+            Gdx.app.log("touch","down");
             return false;
         }
 
@@ -73,6 +93,23 @@ public class PointActor extends Actor {
                             int pointer,
                             int button) {
             touch = true;
+            Gdx.app.log("touch","up");
+        }
+        public void enter(InputEvent event,
+                          float x,
+                          float y,
+                          int pointer,
+                          Actor fromActor) {
+            Gdx.app.log("touch","enter");
+            touchEnter = true;
+        }
+        public void exit(InputEvent event,
+                         float x,
+                         float y,
+                         int pointer,
+                         Actor toActor) {
+            Gdx.app.log("touch","exit");
+            touchEnter = false;
         }
 
 

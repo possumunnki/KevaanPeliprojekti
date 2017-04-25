@@ -55,9 +55,7 @@ public class SkipActor extends Actor {
 
     }
 
-    /**
-     * Ei toimi KORJAAA!!!
-     */
+
     private void faceInFadeOutAction() {
 
         Action faceInAction = Actions.fadeIn(1.5f);

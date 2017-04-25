@@ -34,7 +34,10 @@ public class MyGdxGame extends Game {
 
     public static final boolean AVAILABLE = true;
     public static final boolean NOT_AVAILABLE = false;
-
+    /**
+     * amount of unlocked stage
+     */
+    private int unlockedStages = 3;
     /**
      * Game modes to change game mechanics depending on current stage.
      */
@@ -73,6 +76,14 @@ public class MyGdxGame extends Game {
 	}
 
     /**
+     * returns amount of unlocked stages to print right number of points on map screen
+     * @return amount of unlocked stages
+     */
+    public int getUnlockedStages() {
+        return unlockedStages;
+    }
+
+    /**
      * Sets current stage.
      *
      * @param stage     stage number that will be set as a current stage
@@ -85,7 +96,7 @@ public class MyGdxGame extends Game {
     /**
      * Returns current stage
      *
-     * @return          current stage
+     * @return current stage
      */
     public int getCurrentStage() {
         return currentStage;
@@ -110,6 +121,10 @@ public class MyGdxGame extends Game {
         return availableStage[stageNumber -1];
     }
 
+    /**
+     *  returns game mode of current stage to set up the game stage
+     * @return game mode of the current stage
+     */
     public int getGameMode() {
         return gameMode;
     }

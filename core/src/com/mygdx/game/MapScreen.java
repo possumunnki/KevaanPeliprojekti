@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.mygdx.game.MainMenu2.MapBorderActor;
 
 /**
  * Created by possumunnki on 25.3.2017.
@@ -15,55 +17,61 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 
 public class MapScreen implements Screen {
     private MyGdxGame host;
+    private float screenWidth;
+    private float screenHeight;
+
     private SpriteBatch batch;
     private OrthographicCamera camera;
-    private FontActor nextStage;
+    //private FontActor nextStage;
     private FontActor returnToMainMenu;
     private PointActor stage1Point;
     private PointActor stage2Point;
     private PointActor stage3Point;
-    private Stage stage;
+    private PointActor stage4Point;
+    private PointActor stage5Point;
+    private Stage pointStage;
     private Texture backGroundTexture;
+    private Stage mapBorderStage;
+    private MapBorderActor mapBorderActor;
 
-    //private Background mapScreenBG;
 
     public MapScreen(MyGdxGame host) {
         this.host = host;
         batch = host.getSpriteBatch();
-
-        backGroundTexture = new Texture("mapSelectBackground.png");
+        screenWidth = host.SCREEN_WIDTH * 100f;
+        screenHeight = host.SCREEN_HEIGHT * 100f;
+        backGroundTexture = new Texture("mapBG.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
-                host.SCREEN_WIDTH,
-                host.SCREEN_HEIGHT);
-        nextStage = new FontActor("Next Stage",
+                screenWidth,
+                screenHeight);
+        /*nextStage = new FontActor("Next Stage",
                                     host.SCREEN_WIDTH * 6/8 * 100f,
                                     host.SCREEN_HEIGHT * 2/8 * 100f);
+        */
         returnToMainMenu = new FontActor("Return to main menu",
-                                    host.SCREEN_WIDTH  * 8/8 * 100f,
-                                    host.SCREEN_HEIGHT * 1/8 * 100f);
-        returnToMainMenu.setFontScale(0.5f);
-
-        stage1Point = new PointActor(host.SCREEN_WIDTH  * 1 / 12 * 100f,
-                                     host.SCREEN_HEIGHT * 1 / 6 * 100f);
-        stage2Point = new PointActor(host.SCREEN_WIDTH  * 3 / 12 * 100f,
-                                     host.SCREEN_HEIGHT * 4.5f / 24 * 100f);
-        stage3Point = new PointActor(host.SCREEN_WIDTH * 5 / 12 * 100f,
-                                     host.SCREEN_HEIGHT * 3.5f / 12 * 100f);
+                                    screenWidth  * 1/8,
+                                    screenHeight * 7/8);
 
 
-        stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
 
+
+        mapBorderActor = new MapBorderActor();
+        mapBorderStage = new Stage(new FillViewport(screenWidth, screenHeight), batch);
+        mapBorderStage.addActor(mapBorderActor);
+
+        pointStage = new Stage(new FillViewport(screenWidth, screenHeight), batch);
+
+        setPointActors();
         //mapScreenBG = new Background("mapScreenBG");
 
         //stage.addActor(mapScreenBG);
-        stage.addActor(nextStage);
-        stage.addActor(returnToMainMenu);
-        stage.addActor(stage1Point);
-        stage.addActor(stage2Point);
-        stage.addActor(stage3Point);
-        Gdx.input.setInputProcessor(stage);
+        //pointStage.addActor(nextStage);
+        pointStage.addActor(returnToMainMenu);
+
+
+        Gdx.input.setInputProcessor(pointStage);
     }
 
     @Override
@@ -79,17 +87,20 @@ public class MapScreen implements Screen {
 
 
         batch.begin();
-        batch.draw(backGroundTexture, 0, 0,
-                backGroundTexture.getWidth(),
-                backGroundTexture.getHeight());
+        batch.draw(backGroundTexture,
+                    0f,
+                    0f,
+                    screenWidth,
+                    screenHeight);
 
         batch.end();
+        mapBorderStage.act();
+        mapBorderStage.draw();
+        pointStage.act(Gdx.graphics.getDeltaTime());
+        pointStage.draw();
+        // configStage();
 
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
-        configStage();
-
-        if (nextStage.getTouch()) {
+        /*if (nextStage.getTouch()) {
             if(host.getCurrentStage() == 1) {
                 host.setScreen(new TalkScreen(host));
             } else {
@@ -97,6 +108,12 @@ public class MapScreen implements Screen {
             }
         } else if(returnToMainMenu.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
+        }
+        */
+        if(returnToMainMenu.getTouch()) {
+            host.setScreen(new MainMenuScreen(host));
+        } else {
+            moveToStage();
         }
     }
 
@@ -124,12 +141,57 @@ public class MapScreen implements Screen {
     public void dispose() {
         backGroundTexture.dispose();
         //mapScreenBG.dispose();
-        nextStage.dispose();
+        //nextStage.dispose();
         stage1Point.dispose();
         stage2Point.dispose();
         Gdx.app.log("MapScreen", "disposed");
     }
 
+    /**
+     * Creates point actors as many as stages are unlocked
+     */
+    private void setPointActors() {
+        switch (host.getUnlockedStages()) {
+            case 5:
+                stage5Point = new PointActor(screenWidth  * 6.5f / 12,
+                                             screenHeight * 4.5f / 24);
+                pointStage.addActor(stage5Point);
+            case 4:
+                stage4Point = new PointActor(screenWidth  * 1f / 12,
+                        screenHeight * 3.5f / 12);
+                pointStage.addActor(stage4Point);
+            case 3:
+                stage3Point = new PointActor(screenWidth * 1f / 12 ,
+                        screenHeight * 7 / 12);
+                pointStage.addActor(stage3Point);
+                Gdx.app.log("stage3","unlocked");
+            case 2:
+                stage2Point = new PointActor(screenWidth  * 8.5f / 12,
+                        screenHeight * 6f / 12);
+                pointStage.addActor(stage2Point);
+                Gdx.app.log("stage2","unlocked");
+            case 1:
+                stage1Point = new PointActor(screenWidth * 4.5f / 12 ,
+                        screenHeight * 8.5f / 12);
+                pointStage.addActor(stage1Point);
+                Gdx.app.log("stage1","unlocked");
+        }
+
+    }
+
+    private void moveToStage() {
+        if(stage1Point.getTouch()) {
+            host.setCurrentStage(1);
+            moveAndZoomAction(stage1Point.getX(),stage1Point.getY());
+
+        } else if(stage2Point.getTouch()) {
+            host.setCurrentStage(2);
+            moveAndZoomAction(stage1Point.getX(),stage1Point.getY());
+        } else if(stage3Point.getTouch()) {
+            host.setCurrentStage(3);
+            moveAndZoomAction(stage1Point.getX(),stage1Point.getY());
+        }
+    }
     private void configStage() {
         if (host.getCurrentStage() == 1) {
             if (stage2Point.getTouch() && host.getStageAvailability(2)) {
@@ -169,6 +231,23 @@ public class MapScreen implements Screen {
                 stage3Point.setTouch(true);
             }
         }
+    }
+
+    public void moveAndZoomAction(float moveToX, float moveToY) {
+        mapBorderActor.addAction(
+                Actions.sequence(
+                        Actions.moveTo(moveToX - screenWidth / 2, moveToY - screenHeight / 2, 1f),
+                        Actions.scaleTo( 2, 2, 1f),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(host.getCurrentStage() == 1) {
+                                    host.setScreen(new TalkScreen(host));
+                                } else {
+                                    host.setScreen(new GameScreen(host));
+                                }
+                            }
+                        })));
     }
 
 }
