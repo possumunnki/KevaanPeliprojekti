@@ -49,6 +49,8 @@ public class BodyHandler {
             // Draw all bodies with  voodoo doll user data (ground is not drawn)
             if(body.getUserData().equals(voodoo.getVdObject())) {   // > voodoo getter!
 
+                body.setFixedRotation(true);
+
                 // Get user data, has texture, enemy type and
                 // radius
                 ObjectData voodoo = (ObjectData) body.getUserData();
@@ -102,6 +104,7 @@ public class BodyHandler {
             // If it equals voodoo template
             if (body.getUserData().equals(voodoo.getVdObject())) {
 
+                // If voodoo body is off screen
                 if (body.getPosition().y < -1) {
                     // Clear velocity (dropping of the screen)
                     body.setLinearVelocity(new Vector2(0, 0));
@@ -110,17 +113,6 @@ public class BodyHandler {
                     bodiesToBeDestroyed.add(body);
                 }
             }
-        }
-
-
-        // If voodoo template is off screen
-        if(voodoo.getVoodooBodyTemplate().getPosition().y < -1) {
-            // Clear velocity (dropping of the screen)
-            voodoo.getVoodooBodyTemplate().setLinearVelocity(new Vector2(0,8));
-            Gdx.app.log("offscreen", "ball Y-pos" + voodoo.getVoodooBodyTemplate().getPosition().y);
-
-            voodoo.getVoodooBodyTemplate().setTransform(new Vector2(windowWidth / 2, windowHeight
-                    + voodoo.getVdObject().width*2), 0);
         }
 
         /**
@@ -165,7 +157,7 @@ public class BodyHandler {
      */
     public void callEnemyWalk() {
         rat.ratWalk();
-        voodoo.voodooWalk();
+        //voodoo.voodooWalk();
     }
 
     public ObjectData callVoodooGetter() {

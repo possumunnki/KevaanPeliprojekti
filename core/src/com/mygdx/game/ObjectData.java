@@ -9,13 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 public class ObjectData {
 
     Texture objectTexture;
-    //float radius;
-
     float width;
     float height;
-
-    // public int id;
-
 
     public enum GameObjectType {
         VOODOO,

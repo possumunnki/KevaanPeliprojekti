@@ -194,7 +194,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         }
 
-        Utilities.transformWallsToBodies("world-wall-rectangles", "world-wall", tiledMap, world);
+        if(host.getCurrentStage() == 2) {
+            Utilities.transformWallsToBodies("spike-rectangles", "spike", tiledMap, world);
+        }
+
         Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
         Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
 
@@ -371,24 +374,27 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                             //switch to game over screen
                             Gdx.app.log("log", "gameover");
                             gameOver = true;
-
                         }
                     }
 
                     /**
                      * Cat collision gameover-check
                      */
-
-
                     if(body1.getUserData().equals("player")) {
                         if(body2.getUserData().equals("cat")) {
                             //switch to game over screen
                             Gdx.app.log("log", "gameover");
                             gameOver = true;
                         }
-
                     }
 
+                    if(body1.getUserData().equals("foot")) {
+                        if(body2.getUserData().equals("spike")) {
+                            //switch to game over screen
+                            Gdx.app.log("log", "gameover");
+                            gameOver = true;
+                        }
+                    }
 
                     // when player touches goal-rectangle
                     if(body1.getUserData().equals("foot")) {

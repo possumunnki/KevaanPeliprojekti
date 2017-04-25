@@ -78,52 +78,42 @@
 </data>
  </layer>
  <objectgroup name="goal-rectangle">
-  <object id="10" x="12382.6" y="778.135" width="354.981" height="134.617" rotation="0.847134"/>
- </objectgroup>
- <objectgroup name="world-wall-rectangles">
-  <object id="87" x="2" y="-2" width="6" height="958"/>
-  <object id="88" x="-14" y="950" width="1484" height="6"/>
-  <object id="89" x="12790" y="0" width="8" height="956"/>
-  <object id="90" x="2" y="0" width="12796" height="8"/>
-  <object id="98" x="1952" y="948" width="1056" height="10"/>
-  <object id="99" x="4096" y="944" width="3648" height="14"/>
-  <object id="100" x="7936" y="942" width="1150" height="14"/>
-  <object id="101" x="9312" y="944" width="1566" height="12"/>
-  <object id="102" x="11072" y="946" width="642" height="10"/>
-  <object id="103" x="11904" y="946" width="886" height="10"/>
+  <object id="10" x="12381.7" y="780.557" width="354.981" height="134.617" rotation="0.0627389"/>
  </objectgroup>
  <objectgroup name="wall-rectangles">
   <object id="91" x="12" y="451" width="533" height="123"/>
-  <object id="92" x="10" y="924" width="1458" height="20"/>
+  <object id="92" x="10" y="924" width="1458" height="33"/>
   <object id="93" x="416" y="894" width="30" height="26"/>
   <object id="94" x="448" y="862" width="32" height="58"/>
   <object id="95" x="480" y="834" width="444" height="86"/>
   <object id="96" x="928" y="868" width="544" height="50"/>
   <object id="104" x="1632" y="804" width="192" height="25"/>
-  <object id="105" x="1948" y="899" width="1062" height="51"/>
+  <object id="105" x="1948" y="899" width="1251" height="60"/>
   <object id="106" x="2368" y="805" width="30" height="93"/>
-  <object id="107" x="3008" y="771" width="196" height="187"/>
+  <object id="107" x="3008" y="771" width="196" height="124"/>
   <object id="108" x="3392" y="835" width="92" height="60"/>
   <object id="109" x="3618" y="771" width="92" height="61"/>
   <object id="110" x="3872" y="835" width="93" height="61"/>
-  <object id="111" x="4097" y="899" width="447" height="47"/>
-  <object id="112" x="4546" y="931" width="866" height="11"/>
-  <object id="113" x="5410" y="899" width="1152" height="41"/>
+  <object id="111" x="4097" y="899" width="447" height="58"/>
+  <object id="112" x="4546" y="931" width="866" height="26"/>
+  <object id="113" x="5410" y="899" width="1623" height="56"/>
   <object id="114" x="5729" y="835" width="416" height="62"/>
-  <object id="115" x="6144" y="771" width="672" height="167"/>
-  <object id="116" x="6818" y="899" width="220" height="46"/>
-  <object id="117" x="7038" y="803" width="706" height="139"/>
-  <object id="118" x="7936" y="899" width="1152" height="49"/>
+  <object id="115" x="6144" y="771" width="672" height="123"/>
+  <object id="117" x="7038" y="803" width="706" height="152"/>
+  <object id="118" x="7936" y="899" width="1152" height="58"/>
   <object id="119" x="8256" y="835" width="64" height="62"/>
   <object id="120" x="8704" y="834" width="66" height="62"/>
-  <object id="121" x="9310" y="867" width="1570" height="85"/>
-  <object id="122" x="11070" y="899" width="644" height="51"/>
+  <object id="121" x="9310" y="867" width="1570" height="92"/>
+  <object id="122" x="11070" y="899" width="644" height="59"/>
   <object id="123" x="10945" y="739" width="64" height="30"/>
   <object id="124" x="11200" y="707" width="192" height="28"/>
   <object id="125" x="11617" y="707" width="318" height="27"/>
-  <object id="126" x="11902" y="931" width="888" height="15"/>
+  <object id="126" x="11902" y="931" width="888" height="28"/>
   <object id="127" x="12128" y="772" width="64" height="157"/>
   <object id="128" x="12128" y="452" width="660" height="60"/>
   <object id="129" x="12128" y="515" width="66" height="27"/>
+  <object id="87" x="2" y="-2" width="6" height="958"/>
+  <object id="89" x="12790" y="0" width="8" height="956"/>
+  <object id="90" x="2" y="0" width="12796" height="8"/>
  </objectgroup>
 </map>

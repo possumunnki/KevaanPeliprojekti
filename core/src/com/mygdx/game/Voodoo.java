@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -25,8 +24,6 @@ public class Voodoo {
      * Draw-method compares bodies to this, if it's a match, draw bodies
      * Otherwise the userdata from ground and wall objects interferes this
      */
-    private Body voodooBodyTemplate;
-
 
     private Body testBody1;
     private Body testBody2;
@@ -38,6 +35,7 @@ public class Voodoo {
 
     private Body testBody7;
     private Body testBody8;
+    private Body testBody9;
 
     private Array<Body> voodooBodyArray = new Array<Body>();
 
@@ -51,14 +49,16 @@ public class Voodoo {
 
 
         if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
-            voodooBodyTemplate = createBody(5, 1, vdObject.width, vdObject.height, world);
-            voodooBodyTemplate.setUserData(vdObject);
+
+            int[]stage1XposArray = {5, 7, 13, 18, 20, 24, 29, 32, 35};
+
+            int[]stage1YposArray = {1, 2, 8, 8, 8, 7, 7, 7, 7};
 
             // Voodoo 1-3
-            testBody1 = createBody(7, 7, vdObject.width, vdObject.height, world);
+            testBody1 = createBody(7, 2, vdObject.width, vdObject.height, world);
             testBody1.setUserData(vdObject);
 
-            testBody2 = createBody(11, 5, vdObject.width, vdObject.height, world);
+            testBody2 = createBody(13, 8, vdObject.width, vdObject.height, world);
             testBody2.setUserData(vdObject);
 
             testBody3 = createBody(18, 8, vdObject.width, vdObject.height, world);
@@ -81,6 +81,9 @@ public class Voodoo {
             testBody8 = createBody(35, 7, vdObject.width, vdObject.height, world);
             testBody8.setUserData(vdObject);
 
+            testBody9 = createBody(5, 1, vdObject.width, vdObject.height, world);
+            testBody9.setUserData(vdObject);
+
             voodooBodyArray.add(testBody1);
             voodooBodyArray.add(testBody2);
             voodooBodyArray.add(testBody3);
@@ -89,6 +92,7 @@ public class Voodoo {
             voodooBodyArray.add(testBody6);
             voodooBodyArray.add(testBody7);
             voodooBodyArray.add(testBody8);
+            voodooBodyArray.add(testBody9);
 
         }
     }
@@ -117,13 +121,13 @@ public class Voodoo {
         FixtureDef vdFixDef = new FixtureDef();
 
         // Mass per square meter (kg^m2)
-        vdFixDef.density = 1;
+        vdFixDef.density = 1f;
 
         // How bouncy object? [0,1]
         vdFixDef.restitution = 0.4f;
 
         // How slipper object? [0,1]
-        vdFixDef.friction = 0.01f;
+        vdFixDef.friction = 0.05f;
 
         // Create polygon shape
         PolygonShape polyShape = new PolygonShape();
@@ -136,6 +140,7 @@ public class Voodoo {
     }
 
 
+    /**
     public void voodooWalk() {
 
         for(Body body:voodooBodyArray) {
@@ -145,45 +150,30 @@ public class Voodoo {
             if(i < voodooBodyArray.size) {
                 i++;
             }
-
-            if(body.getLinearVelocity().y == 0) {
-
-                float bodyInitialPos;
-
-                bodyInitialPos = voodooBodyArray.get(i).getPosition().x;
-
-                body.setLinearVelocity(-1.5f, 0);
-
-                if(body.getPosition().x < bodyInitialPos - 3f) {
-                    body.setLinearVelocity(1.5f, 0);
-                }
-            }
-
-        }
-    }
-
-    /**
-     * TEST METHOD
-    public void voodooWalk() {
-
-        for(int i = 1; i < voodooBodyArray.size; i++) {
-
             float bodyInitialPos;
 
             bodyInitialPos = voodooBodyArray.get(i).getPosition().x;
 
-            body.setL
+
+            if(body.getLinearVelocity().y == 0) {
+
+                Gdx.app.log("log", "i pos" + voodooBodyArray.get(i).getPosition().x);
+
+                body.setLinearVelocity(-1f, 0);
+
+                if(body.getPosition().x < bodyInitialPos - 4f) {
+                    body.setLinearVelocity(1f, 0);
+                } else if(body.getPosition().x > bodyInitialPos + 4f) {
+                    body.setLinearVelocity(-1f, 0);
+                }
+            }
+
         }
     }
      */
 
     public void dispose() {
         voodooTex.dispose();
-
-    }
-
-    public Body getVoodooBodyTemplate() {
-        return voodooBodyTemplate;
     }
 
     public ObjectData getVdObject() {
