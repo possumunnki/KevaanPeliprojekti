@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 /**
  * Created by possumunnki on 26.3.2017.
@@ -41,6 +43,9 @@ public class PointActor extends Actor {
         addListener(new PointListener());
     }
     public void draw(Batch batch, float alpha) {
+        Color color = getColor();
+        batch.setColor(color.r, color.g, color.b, color.a * alpha);
+
         if(touchEnter == true || touch == true) {
             batch.draw(enterTexture,
                     printX,
@@ -55,7 +60,7 @@ public class PointActor extends Actor {
                     getHeight());
         }
 
-
+        batch.setColor(color.r, color.g, color.b, 1f);
 
     }
 
@@ -73,6 +78,15 @@ public class PointActor extends Actor {
     public void dispose() {
         enterTexture.dispose();
         exitTexture.dispose();
+    }
+
+    /**
+     * Adds fade in action.
+     * @param time time to fade in totally
+     */
+    public void addFadeInAction(float time) {
+        this.addAction(Actions.sequence(Actions.fadeOut(0f),
+                Actions.fadeIn(time)));
     }
 
     class PointListener extends InputListener {

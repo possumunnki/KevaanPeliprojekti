@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MainMenu2.MapBorderActor;
 
+import java.util.ArrayList;
+
 /**
  * Created by possumunnki on 25.3.2017.
  */
@@ -34,6 +36,7 @@ public class MapScreen implements Screen {
     private Stage mapBorderStage;
     private MapBorderActor mapBorderActor;
 
+    ArrayList<PointActor> pointActors;
 
     public MapScreen(MyGdxGame host) {
         this.host = host;
@@ -54,7 +57,7 @@ public class MapScreen implements Screen {
                                     screenWidth  * 1/8,
                                     screenHeight * 7/8);
 
-
+        pointActors = new ArrayList<PointActor>();
 
 
         mapBorderActor = new MapBorderActor();
@@ -64,6 +67,7 @@ public class MapScreen implements Screen {
         pointStage = new Stage(new FillViewport(screenWidth, screenHeight), batch);
 
         setPointActors();
+        fadeInActions();
         //mapScreenBG = new Background("mapScreenBG");
 
         //stage.addActor(mapScreenBG);
@@ -148,35 +152,82 @@ public class MapScreen implements Screen {
     }
 
     /**
-     * Creates point actors as many as stages are unlocked
+     * Creates point actors as many as stages are unlocked.
+     * Point actors will be added to array list to implement fade in effect in order.
      */
     private void setPointActors() {
         switch (host.getUnlockedStages()) {
             case 5:
                 stage5Point = new PointActor(screenWidth  * 6.5f / 12,
                                              screenHeight * 4.5f / 24);
-                pointStage.addActor(stage5Point);
+                pointActors.add(stage5Point);
+                pointStage.addActor(pointActors.get(4));
+
             case 4:
                 stage4Point = new PointActor(screenWidth  * 1f / 12,
                         screenHeight * 3.5f / 12);
-                pointStage.addActor(stage4Point);
+                pointActors.add(stage4Point);
+                pointStage.addActor(pointActors.get(0));
             case 3:
                 stage3Point = new PointActor(screenWidth * 1f / 12 ,
                         screenHeight * 7 / 12);
+                pointActors.add(stage3Point);
                 pointStage.addActor(stage3Point);
-                Gdx.app.log("stage3","unlocked");
+                Gdx.app.log("point3", "added");
             case 2:
                 stage2Point = new PointActor(screenWidth  * 8.5f / 12,
                         screenHeight * 6f / 12);
+                pointActors.add(stage2Point);
                 pointStage.addActor(stage2Point);
-                Gdx.app.log("stage2","unlocked");
+                Gdx.app.log("point2", "added");
             case 1:
                 stage1Point = new PointActor(screenWidth * 4.5f / 12 ,
                         screenHeight * 8.5f / 12);
+                pointActors.add(stage1Point);
                 pointStage.addActor(stage1Point);
-                Gdx.app.log("stage1","unlocked");
+                Gdx.app.log("point1", "added");
         }
 
+    }
+
+    private void fadeInActions() {
+        fadeOutAllPointActors();
+        mapBorderActor.addAction(
+                Actions.sequence(
+                        Actions.fadeOut(0f),
+                        Actions.fadeIn(1.0f),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                setPointActions(host.getUnlockedStages());
+                            }
+                        })));
+    }
+
+    public void fadeOutAllPointActors() {
+        for(int i = 0; i < pointActors.size(); i++) {
+            pointActors.get(i).addAction(Actions.fadeOut(0f));
+        }
+    }
+
+    /**
+     * sets fade in actions for point actors
+     *
+     *
+     */
+    public void setPointActions(final int pointNumber) {
+        pointActors.get(pointNumber - 1).addAction(
+                Actions.sequence(
+                        Actions.fadeIn(0.5f),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                int nextPointNumber = pointNumber - 1;
+                                if(nextPointNumber > 0) {
+                                    setPointActions(nextPointNumber);
+                                }
+                            }
+                        })));
     }
 
     private void moveToStage() {
@@ -192,6 +243,8 @@ public class MapScreen implements Screen {
             moveAndZoomAction(stage1Point.getX(),stage1Point.getY());
         }
     }
+
+    // ehkä turha
     private void configStage() {
         if (host.getCurrentStage() == 1) {
             if (stage2Point.getTouch() && host.getStageAvailability(2)) {
