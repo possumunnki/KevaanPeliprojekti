@@ -39,6 +39,7 @@ public class PointActor extends Actor {
 
         setWidth(exitTexture.getWidth());
         setHeight(exitTexture.getHeight());
+        setPosition(printX,printY);
         setBounds(printX, printY ,getWidth(), getHeight());
         addListener(new PointListener());
     }
@@ -48,14 +49,14 @@ public class PointActor extends Actor {
 
         if(touchEnter == true || touch == true) {
             batch.draw(enterTexture,
-                    printX,
-                    printY,
+                    getX(),
+                    getY(),
                     getWidth(),
                     getHeight());
         } else {
             batch.draw(exitTexture,
-                    printX,
-                    printY,
+                    getX(),
+                    getY(),
                     getWidth(),
                     getHeight());
         }
@@ -114,7 +115,6 @@ public class PointActor extends Actor {
                           float y,
                           int pointer,
                           Actor fromActor) {
-            Gdx.app.log("touch","enter");
             touchEnter = true;
         }
         public void exit(InputEvent event,
@@ -122,7 +122,6 @@ public class PointActor extends Actor {
                          float y,
                          int pointer,
                          Actor toActor) {
-            Gdx.app.log("touch","exit");
             touchEnter = false;
         }
 

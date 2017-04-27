@@ -25,7 +25,7 @@ public class MapScreen implements Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     //private FontActor nextStage;
-    private FontActor returnToMainMenu;
+    private FontActor back;
     private PointActor stage1Point;
     private PointActor stage2Point;
     private PointActor stage3Point;
@@ -53,9 +53,9 @@ public class MapScreen implements Screen {
                                     host.SCREEN_WIDTH * 6/8 * 100f,
                                     host.SCREEN_HEIGHT * 2/8 * 100f);
         */
-        returnToMainMenu = new FontActor("Return to main menu",
+        back = new FontActor("Back",
                                     screenWidth  * 1/8,
-                                    screenHeight * 7/8);
+                                    screenHeight * 1/8);
 
         pointActors = new ArrayList<PointActor>();
 
@@ -72,7 +72,7 @@ public class MapScreen implements Screen {
 
         //stage.addActor(mapScreenBG);
         //pointStage.addActor(nextStage);
-        pointStage.addActor(returnToMainMenu);
+        pointStage.addActor(back);
 
 
         Gdx.input.setInputProcessor(pointStage);
@@ -114,7 +114,7 @@ public class MapScreen implements Screen {
             host.setScreen(new MainMenuScreen(host));
         }
         */
-        if(returnToMainMenu.getTouch()) {
+        if(back.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
         } else {
             moveToStage();
@@ -161,13 +161,13 @@ public class MapScreen implements Screen {
                 stage5Point = new PointActor(screenWidth  * 6.5f / 12,
                                              screenHeight * 4.5f / 24);
                 pointActors.add(stage5Point);
-                pointStage.addActor(pointActors.get(4));
+                pointStage.addActor(stage5Point);
 
             case 4:
                 stage4Point = new PointActor(screenWidth  * 1f / 12,
                         screenHeight * 3.5f / 12);
                 pointActors.add(stage4Point);
-                pointStage.addActor(pointActors.get(0));
+                pointStage.addActor(stage4Point);
             case 3:
                 stage3Point = new PointActor(screenWidth * 1f / 12 ,
                         screenHeight * 7 / 12);
@@ -191,7 +191,9 @@ public class MapScreen implements Screen {
     }
 
     private void fadeInActions() {
+        // fade outs all point actors
         fadeOutAllPointActors();
+        // fades outs map borders and fades in and after this fades in point actors
         mapBorderActor.addAction(
                 Actions.sequence(
                         Actions.fadeOut(0f),
@@ -230,20 +232,38 @@ public class MapScreen implements Screen {
                         })));
     }
 
+    /**
+     * Whenever pointActor is touched, game moves from Map screen to talk screen or game screen.
+     */
     private void moveToStage() {
         if(stage1Point.getTouch()) {
             host.setCurrentStage(1);
-            moveAndZoomAction(stage1Point.getX(),stage1Point.getY());
+            removeOtherPointActors(stage1Point);
+            moveAndZoomAction(stage1Point);
 
         } else if(stage2Point.getTouch()) {
             host.setCurrentStage(2);
-            moveAndZoomAction(stage1Point.getX(),stage1Point.getY());
+            removeOtherPointActors(stage2Point);
+            moveAndZoomAction(stage2Point);
         } else if(stage3Point.getTouch()) {
             host.setCurrentStage(3);
-            moveAndZoomAction(stage1Point.getX(),stage1Point.getY());
+            removeOtherPointActors(stage3Point);
+            moveAndZoomAction(stage3Point);
         }
     }
 
+    /**
+     * Removes all pointActors from the screen except one pointActor.
+     *
+     * @param pointActor pointActor that won't be removed
+     */
+    private void removeOtherPointActors(PointActor pointActor) {
+        for(int i = 0; i < pointActors.size(); i++) {
+            if(!pointActors.get(i).equals(pointActor)) {
+                pointActors.get(i).remove();
+            }
+        }
+    }
     // ehkä turha
     private void configStage() {
         if (host.getCurrentStage() == 1) {
@@ -286,11 +306,23 @@ public class MapScreen implements Screen {
         }
     }
 
-    public void moveAndZoomAction(float moveToX, float moveToY) {
+    /**
+     * moves MapBorder texture so that the pointActors place is centralized and zooms in.
+     * @param pointActor point that has been touched
+     */
+    public void moveAndZoomAction(PointActor pointActor) {
+        pointActor.remove();
+        // coordinates where map should move
+        float movePointX = screenWidth / 2 - pointActor.getX() - pointActor.getWidth();
+        float movePointY = screenHeight / 2 - pointActor.getY() - pointActor.getHeight();
+        mapBorderActor.setOrigin(pointActor.getX() + pointActor.getWidth(), pointActor.getY() + pointActor.getHeight());
+
         mapBorderActor.addAction(
                 Actions.sequence(
-                        Actions.moveTo(moveToX - screenWidth / 2, moveToY - screenHeight / 2, 1f),
-                        Actions.scaleTo( 2, 2, 1f),
+                        Actions.moveTo(movePointX,
+                                       movePointY,
+                                       1f), // duaration(seconds) of move
+                        Actions.scaleTo( 1.5f, 1.5f, 1f),
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
@@ -302,5 +334,6 @@ public class MapScreen implements Screen {
                             }
                         })));
     }
+
 
 }

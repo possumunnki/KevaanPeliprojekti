@@ -22,11 +22,12 @@ public class MapBorderActor extends Actor {
 
     public MapBorderActor() {
         mapBorderTexture = new Texture("mapBorder.png");
-        mapBorderSprite = new Sprite();
+        mapBorderSprite = new Sprite(mapBorderTexture);
 
         setWidth(mapBorderTexture.getWidth());
         setHeight(mapBorderTexture.getHeight());
-        setOrigin(getWidth()/2, getHeight()/2);
+        setScale(1,1);
+        // setOrigin(getWidth()/2, getHeight()/2);
         //fadeInAction();
     }
 
@@ -34,11 +35,16 @@ public class MapBorderActor extends Actor {
 
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * alpha);
-        batch.draw(mapBorderTexture,
+        batch.draw(mapBorderSprite,
                    getX(),
                    getY(),
+                   getOriginX(),
+                   getOriginY(),
                    getWidth() * getScaleX(),
-                   getHeight() * getScaleY());
+                   getHeight() * getScaleY(),
+                   getScaleX(),
+                   getScaleY(),
+                getRotation());
         batch.setColor(color.r, color.g, color.b, 1f);
 
 
@@ -47,29 +53,6 @@ public class MapBorderActor extends Actor {
     public void act(float delta) {
         super.act(delta);
 
-    }
-
-
-    private void fadeInAction() {
-        this.addAction(Actions.sequence(Actions.fadeOut(0f),
-                       Actions.fadeIn(3f)));
-
-    }
-
-    public void moveAndZoomAction(float moveToX, float moveToY) {
-        this.addAction(Actions.sequence(Actions.moveTo(moveToX, moveToY),
-                Actions.scaleTo( 2, 2, 1f)));
-        addAction(
-                Actions.sequence(
-                        Actions.moveTo(moveToX, moveToY),
-                        Actions.scaleTo( 2, 2, 1f),
-                        Actions.run(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                System.out.println("action complete");
-                            }
-                        })));
     }
 
     public void dispose() {
