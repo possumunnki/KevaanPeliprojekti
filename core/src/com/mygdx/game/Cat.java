@@ -29,14 +29,13 @@ public class Cat {
 
     private final float CAT_SPEED_1 = 6.0f;
     private final float CAT_SPEED_2 = 7.0f;
-    private final float CAT_SPEED_3 = 8.0f;
 
     private Vector2 catPosition;
 
     public Cat(World world, MyGdxGame host) {
 
         catStillTexture = new Texture("catSprite1.png");
-        catRunTexture = new Texture("catRunAnim1.png");
+        catRunTexture = new Texture("catRunAnim2.png");
         catRunAnim = new Animation<TextureRegion>(1/8f,
                 Utilities.transformToFrames(catRunTexture, 4, 2));
         catPosition = new Vector2(24f, 1.75f);
@@ -91,23 +90,19 @@ public class Cat {
 
         catRunCurrentFrame = catRunAnim.getKeyFrame(stateTime, true);
 
-        if(host.getGameMode() == host.RAT_RACE) {
+        if(host.getGameMode() == host.RAT_RACE && host.getCurrentStage() == 3) {
             sb.draw(catRunCurrentFrame,
-                    MyGdxGame.SCREEN_WIDTH / 2 - catStillTexture.getWidth() / 100,
-                    MyGdxGame.SCREEN_HEIGHT / 2 - catStillTexture.getHeight() / 100,
-                    3.6f,
-                    1.9f);
-        }
-
-
-        if(host.getGameMode() == host.RAT_RACE) {
+                    catBody.getPosition().x - catStillTexture.getWidth() / 200,
+                    catBody.getPosition().y - catStillTexture.getHeight() / 200,
+                    4.5f,
+                    2.8f);
+        } else if(host.getGameMode() == host.RAT_RACE && host.getCurrentStage() == 4) {
             sb.draw(catRunCurrentFrame,
-                    catBody.getPosition().x - catStillTexture.getWidth() / 100,
-                    catBody.getPosition().y - catStillTexture.getHeight() / 100,
-                    3.6f,
-                    1.9f);
+                    catBody.getPosition().x - catStillTexture.getWidth() / 200,
+                    catBody.getPosition().y - catStillTexture.getHeight() / 200,
+                    4.5f,
+                    2.8f);
         }
-
     }
 
     /**
@@ -144,23 +139,45 @@ public class Cat {
 
                 catBody.setLinearVelocity(CAT_SPEED_2, 0);
             }
-
             // If cat is at the finish line, stop and remove
-            if(catBody.getPosition().x > 120) {
-                if(!catFinishPrint) {
-                    Gdx.app.log("log:", "cat @ finish line, removal");
-                }
-                catFinishPrint = true;
+            if(host.getCurrentStage() == 3) {
+                if(catBody.getPosition().x > 120) {
+                    if(!catFinishPrint) {
+                        Gdx.app.log("log:", "cat @ finish line, removal");
+                    }
+                    catFinishPrint = true;
 
-                catBody.setLinearVelocity(0, 0);
-                //world.destroyBody(catBody);
+                    catBody.setLinearVelocity(0, 0);
+                    //world.destroyBody(catBody);
+                }
+            } else if(host.getCurrentStage() == 4) {
+
+
+                //When at the stairs near stage 4 finish, set y-velocity for cat
+                if(catBody.getPosition().x > 115) {
+                    catBody.setLinearVelocity(CAT_SPEED_1, 2.7f);
+                }
+
+
+
+                if(catBody.getPosition().x > 135) {
+                    if(!catFinishPrint) {
+                        Gdx.app.log("log:", "cat @ finish line, removal");
+                    }
+                    catFinishPrint = true;
+
+                    catBody.setLinearVelocity(0, 0);
+                    //world.destroyBody(catBody);
+                }
             }
+
         }
     }
 
 
     public void dispose() {
         catRunTexture.dispose();
+        catStillTexture.dispose();
     }
 }
 // End of file

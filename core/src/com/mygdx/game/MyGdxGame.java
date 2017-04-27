@@ -37,7 +37,7 @@ public class MyGdxGame extends Game {
     /**
      * amount of unlocked stage
      */
-    private int unlockedStages = 3;
+    private int unlockedStages = 4;
     /**
      * Game modes to change game mechanics depending on current stage.
      */
@@ -56,7 +56,7 @@ public class MyGdxGame extends Game {
 		batch = new SpriteBatch();
         currentStage = 1; // Korjaa, kun tehdään muisti osio!
         // !! LEVEL 3 SET TO AVAILABLE FOR TESTING !!
-        availableStage = new boolean[]{AVAILABLE, AVAILABLE, AVAILABLE, NOT_AVAILABLE};
+        availableStage = new boolean[]{AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE, NOT_AVAILABLE};
 		mainMenu = new MainMenuScreen(this);
 		// moves to main menu
 		setScreen(mainMenu);

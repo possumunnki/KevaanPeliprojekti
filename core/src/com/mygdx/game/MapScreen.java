@@ -240,7 +240,6 @@ public class MapScreen implements Screen {
             host.setCurrentStage(1);
             removeOtherPointActors(stage1Point);
             moveAndZoomAction(stage1Point);
-
         } else if(stage2Point.getTouch()) {
             host.setCurrentStage(2);
             removeOtherPointActors(stage2Point);
@@ -249,6 +248,10 @@ public class MapScreen implements Screen {
             host.setCurrentStage(3);
             removeOtherPointActors(stage3Point);
             moveAndZoomAction(stage3Point);
+        }  else if(stage4Point.getTouch()) {
+            host.setCurrentStage(4);
+            removeOtherPointActors(stage4Point);
+            moveAndZoomAction(stage4Point);
         }
     }
 

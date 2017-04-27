@@ -99,6 +99,9 @@ public class Player {
         } else if(host.getCurrentStage() == 3) {
             playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
                     host.SCREEN_HEIGHT / 4 + host.SCREEN_HEIGHT * 1.5f));
+        } else if(host.getCurrentStage() == 4) {
+            playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
+                    (host.SCREEN_HEIGHT / 4 + host.SCREEN_HEIGHT * 2f) + 4));
         }
 
         playerBody.createFixture(getPlayerFixtureDefinition());
@@ -144,7 +147,14 @@ public class Player {
         if(isWalking) {
 
             // IF player is currently in stage 3 and rat race-part
-            if(host.getGameMode() == host.RAT_RACE && playerBody.getPosition().x > 10) {
+            if(host.getGameMode() == host.RAT_RACE &&
+                    host.getCurrentStage() == 3 &&
+                    playerBody.getPosition().x > 10) {
+                mummoWalkAnim = ratRunAnim;
+                isMounted = true;
+            // in stage 4, start right away in rat form
+            } else if(host.getGameMode() == host.RAT_RACE &&
+                    host.getCurrentStage() == 4) {
                 mummoWalkAnim = ratRunAnim;
                 isMounted = true;
             }
@@ -219,6 +229,8 @@ public class Player {
             isWalking = false;
         }
 
+        //Gdx.app.log("log", "p1 pos x" + playerBody.getPosition().x);
+
         playerBody.setLinearVelocity(MAX_SPEED * knobPercentX, playerBody.getLinearVelocity().y);
 
         // playerBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
@@ -232,11 +244,7 @@ public class Player {
             playerBody.setLinearVelocity(new Vector2(0,0));
             Gdx.app.log("offscreen", "player Y-position" + playerBody.getPosition().y);
 
-            playerBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
-                    .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
-
-            footBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
-                    .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
+            gameOver2 = true;
         }
 
 
@@ -255,6 +263,8 @@ public class Player {
         isWalking = true;
         setPlayerSpritePosition();
         setFootBodyPos(host);
+
+        Gdx.app.log("log", "p1 pos x" + playerBody.getPosition().x);
 
         if(playerBody.getPosition().y < -1) {
             // Clear velocity (dropping of the screen)
@@ -306,6 +316,9 @@ public class Player {
         } else if(host.getCurrentStage() == 3) {
             footBodyDef.position.set(playerSprite.getX(),
                     playerSprite.getY() + MyGdxGame.SCREEN_HEIGHT);// playerBody
+        } else if(host.getCurrentStage() == 4) {
+            footBodyDef.position.set(playerSprite.getX(),
+                    playerSprite.getY() + MyGdxGame.SCREEN_HEIGHT + 5f);// playerBody
         }
     }
 
