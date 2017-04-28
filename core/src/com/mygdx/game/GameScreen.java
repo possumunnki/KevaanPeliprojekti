@@ -34,9 +34,28 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 
 public class GameScreen implements Screen, Input.TextInputListener, GestureDetector.GestureListener {
+    private MyGdxGame host;
+
+    private final boolean ON = true;
+    private final boolean OFF = false;
 
     /**
-     * Map size is 70 x 60 tiles.
+     * When ever pause is on, the game will be paused so that player and enemy stops moving.
+     */
+    private boolean pause = OFF;
+
+    /**
+     * Debug renderer setting, set false to disable debug render
+     */
+    private boolean isDebugOn = ON;
+
+    /**
+     * Makes player immortal to make easy to develop the game.
+     */
+    private boolean immortality = OFF;
+
+    /**
+     * Map sizes.
      */
     private int tilesAmountWidth;
     private int tilesAmountHeight;
@@ -55,7 +74,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     int worldWidthPixels;
     int worldHeightPixels;
 
-    private MyGdxGame host;
+    private float stageWidth = host.SCREEN_WIDTH * 100f;
+    private float stageHeight = host.SCREEN_HEIGHT * 100f;
+
     private SpriteBatch batch;
     private World world;
     private OrthographicCamera camera;
@@ -71,10 +92,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private boolean goal;
     private boolean gameOver = false;
 
-    /**
-     * Debug renderer setting, set false to disable debug render
-     */
-    private boolean isDebugOn = false;
+
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
@@ -102,12 +120,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private boolean downLeft, downRight, downMiddle;
 
     private Texture dialog1;
-    private FontActor dialog1text;
-    private FontActor dialog1text2;
 
-    private final boolean ON = true;
-    private final boolean OFF = false;
-    private boolean pause = OFF;
+
 
     private Cat cat;
 
@@ -126,7 +140,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         viewport = new FitViewport(host.SCREEN_WIDTH, host.SCREEN_HEIGHT, camera);
 
         world = new World(new Vector2(0, -9.8f), true);
-        stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
+        stage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
 
         bodyHandler = new BodyHandler(world, host);
         debugRenderer = new Box2DDebugRenderer();
@@ -137,15 +151,14 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         setGameStage();
         setGameController();
 
-
         exclamationMarkActor = new ExclamationMarkActor();
-        // creates pause/resume button and adds into the game
+        // creates pause/resume button and adds on the game screen
         pauseResumeButtonActor = new PauseResumeButtonActor();
         stage.addActor(pauseResumeButtonActor);
         //Create a Stage and add TouchPad
 
 
-        exclamationStage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), batch);
+        exclamationStage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
         exclamationStage.addActor(exclamationMarkActor);
 
 
@@ -223,7 +236,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     public void setGameController() {
         if(host.getGameMode() == host.ADVENTURE) {
             // adds game on pad in the game
-            controller1 = new Controller1(0, 0);
+            controller1 = new Controller1(host, 0, 0);
             stage.addActor(controller1.getTouchpad());
         } else if(host.getGameMode() == host.RAT_RACE) {
 
@@ -383,29 +396,34 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                             goal = true;
                         }
                     }
-                    // when player touches an enemy
-                    if (body1.getUserData().equals(bodyHandler.callVoodooGetter()) ||
-                            body1.getUserData().equals(bodyHandler.callRatGetter())) {
-                        if(body2.getUserData().equals("player")) {
-                            //switch to game over screen
-                            Gdx.app.log("log", "gameover");
-                            gameOver = true;
+
+                    if(immortality == !ON) {
+                        // when player touches an enemy
+                        if (body1.getUserData().equals(bodyHandler.callVoodooGetter()) ||
+                                body1.getUserData().equals(bodyHandler.callRatGetter())) {
+                            if(body2.getUserData().equals("player")) {
+                                //switch to game over screen
+                                Gdx.app.log("log", "gameover");
+                                gameOver = true;
+                            }
+                        }
+
+                        // when players foots touches an enemy
+                        if(body1.getUserData().equals("foot")) {
+                            if(body2.getUserData().equals("spike")) {
+                                //switch to game over screen
+                                Gdx.app.log("log", "gameover");
+                                gameOver = true;
+                            }
                         }
                     }
+
 
                     /**
                      * Cat collision gameover-check
                      */
                     if(body1.getUserData().equals("player")) {
                         if(body2.getUserData().equals("cat")) {
-                            //switch to game over screen
-                            Gdx.app.log("log", "gameover");
-                            gameOver = true;
-                        }
-                    }
-
-                    if(body1.getUserData().equals("foot")) {
-                        if(body2.getUserData().equals("spike")) {
                             //switch to game over screen
                             Gdx.app.log("log", "gameover");
                             gameOver = true;
@@ -545,21 +563,27 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
      *
      */
     private void moveCamera() {
+        float playerPositionX = player.getPlayerBody().getPosition().x;
+        float playerPositionY = player.getPlayerBody().getPosition().y;
+        float worldWidthMeter = worldWidthPixels / 100f;
+        float worldHeightMerer = worldHeightPixels / 100f;
 
-        if (player.getPlayerBody().getPosition().x < MyGdxGame.SCREEN_WIDTH / 2) {
+        camera.position.x = playerPositionX;
+        camera.position.y = playerPositionY;
+
+        if (playerPositionX < MyGdxGame.SCREEN_WIDTH / 2) {
             camera.position.x = MyGdxGame.SCREEN_WIDTH / 2;
-        } else if (player.getPlayerBody().getPosition().x > worldWidthPixels / 100f - MyGdxGame.SCREEN_WIDTH /2) {
-            camera.position.x = worldWidthPixels / 100f - MyGdxGame.SCREEN_WIDTH / 2;
-        } else {
-            camera.position.x = player.getPlayerBody().getPosition().x;
+        }
+        if (playerPositionX > worldWidthMeter - MyGdxGame.SCREEN_WIDTH /2) {
+            camera.position.x = worldWidthMeter - MyGdxGame.SCREEN_WIDTH / 2;
         }
 
-        if(player.getPlayerBody().getPosition().y < MyGdxGame.SCREEN_HEIGHT / 2) {
+        if(playerPositionY < MyGdxGame.SCREEN_HEIGHT / 2) {
             camera.position.y = MyGdxGame.SCREEN_HEIGHT / 2;
-        } else if (player.getPlayerBody().getPosition().y > worldHeightPixels / 100f - MyGdxGame.SCREEN_HEIGHT /2) {
-            camera.position.y = worldHeightPixels / 100f - MyGdxGame.SCREEN_HEIGHT / 2;
-        } else {
-            camera.position.y = player.getPlayerBody().getPosition().y;
+        }
+
+        if (playerPositionY > worldHeightMerer - MyGdxGame.SCREEN_HEIGHT /2) {
+            camera.position.y = worldHeightMerer - MyGdxGame.SCREEN_HEIGHT / 2;
         }
 
         /*if(player.getPlayerBody().getPosition().y > WORLD_HEIGHT_PIXELS - WINDOW_HEIGHT) {

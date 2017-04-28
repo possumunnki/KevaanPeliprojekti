@@ -28,11 +28,8 @@ public class ExclamationMarkActor extends Actor {
     public ExclamationMarkActor() {
         exclamationTexture = new Texture("exclamation_mark.png");
         exclamationSprite = new Sprite(exclamationTexture);
-
-        setWidth(exclamationTexture.getWidth());
-        setHeight(exclamationTexture.getHeight());
+        setSize(exclamationTexture.getWidth(), exclamationTexture.getHeight());
         addListener(new exclamationListener());
-       // setOrigin(getWidth()/2, getHeight()/2);
         scaleAction();
     }
 
@@ -46,8 +43,6 @@ public class ExclamationMarkActor extends Actor {
                 getScaleX(),
                 getScaleY(),
                 getRotation());
-
-
     }
 
     public void act(float delta) {
@@ -71,18 +66,22 @@ public class ExclamationMarkActor extends Actor {
 
     public void setExclamationMarkPosition(Player player) {
 
+        float playerPositionX = player.getPlayerBody().getPosition().x;
+        float playerPositionY = player.getPlayerBody().getPosition().y;
+
+
         // whenever player is near the left world wall
-        if (player.getPlayerBody().getPosition().x < MyGdxGame.SCREEN_WIDTH / 2) {
-            printX = player.getPlayerBody().getPosition().x * 100f + player.getPlayerSprite().getWidth() * 50f;
+        if (playerPositionX < MyGdxGame.SCREEN_WIDTH / 2) {
+            printX = playerPositionX * 100f  + player.getPlayerSprite().getWidth() * 50f;
         } else {
-            printX = Gdx.graphics.getWidth() / 2 + player.getPlayerSprite().getWidth() * 50f;
+            printX = MyGdxGame.SCREEN_WIDTH * 100f / 2 + player.getPlayerSprite().getWidth() * 50f;
         }
 
         // whenever player is near the ground
-        if(player.getPlayerBody().getPosition().y < MyGdxGame.SCREEN_HEIGHT / 2) {
-            printY = player.getPlayerBody().getPosition().y * 100f + player.getPlayerSprite().getHeight() * 50f;
+        if(playerPositionY < MyGdxGame.SCREEN_HEIGHT / 2) {
+            printY = playerPositionY * 100f + player.getPlayerSprite().getHeight() * 50f;
         } else {
-            printY = Gdx.graphics.getHeight() / 2 + player.getPlayerSprite().getHeight() * 50f;;
+            printY = MyGdxGame.SCREEN_HEIGHT * 100f / 2 + player.getPlayerSprite().getHeight() * 50f;
         }
 
         setPosition(printX, printY);

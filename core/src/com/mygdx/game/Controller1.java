@@ -15,7 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 public class Controller1 extends Actor{
 
     private int direction;
-    private final float DIAMETER = Gdx.graphics.getWidth() / 4;
+    private MyGdxGame host;
+    private final float DIAMETER = (host.SCREEN_WIDTH / 4) * 100f;
 
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
@@ -27,8 +28,8 @@ public class Controller1 extends Actor{
     private Texture touchKnobTexture;
 
 
-    public Controller1(float positionX, float positionY) {
-
+    public Controller1(MyGdxGame host, float positionX, float positionY) {
+        this.host = host;
         touchKnobTexture = new Texture("touchKnob.png");
 
         //Create a touchpad skin
@@ -51,7 +52,9 @@ public class Controller1 extends Actor{
         touchpadStyle.knob = touchKnob;
         //Create new TouchPad with the created style
 
-        touchpad = new Touchpad(10 / 100f, touchpadStyle);
+        // creates touch pad(deadzoneRadius, style)
+        // deadzoneRadius - The distance in pixels from the center of the touchpad.
+        touchpad = new Touchpad(20 / 100f, touchpadStyle);
 
         touchpad.setBounds(positionX, positionY, DIAMETER, DIAMETER);
 
