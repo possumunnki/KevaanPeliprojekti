@@ -14,9 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -34,6 +32,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 
 public class GameScreen implements Screen, Input.TextInputListener, GestureDetector.GestureListener {
+
     private MyGdxGame host;
 
     private final boolean ON = true;
@@ -47,15 +46,20 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = ON;
+    private boolean isDebugOn = OFF;
 
     /**
      * Makes player immortal to make easy to develop the game.
      */
-    private boolean immortality = OFF;
+    private boolean immortality = ON;
 
     /**
-     * Map sizes.
+     * Puts touch to jump on
+     */
+    private boolean tapJump = OFF;
+
+    /**
+     * Tile amount in the world.
      */
     private int tilesAmountWidth;
     private int tilesAmountHeight;
@@ -67,15 +71,18 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private final int TILE_HEIGHT = 32;
 
     /**
-     * World in pixels
-     * WORLD_HEIGHT_PIXELS = 42 * 32 = 1344 pixels
-     * WORLD_WIDTH_PIXELS  = 42 * 32 = 1344 pixels
+     * World size in pixels
      */
     int worldWidthPixels;
     int worldHeightPixels;
 
+    /**
+     * Size of stage in pixel
+     */
     private float stageWidth = host.SCREEN_WIDTH * 100f;
     private float stageHeight = host.SCREEN_HEIGHT * 100f;
+
+
 
     private SpriteBatch batch;
     private World world;
@@ -84,11 +91,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private float deltaTime;
     private float stateTime;
+
     private Player player;
     private LightDoll lightDoll;
     private Box2DDebugRenderer debugRenderer;
-    private Rectangle screenRectangle;
-    private Vector3 touchPos;
     private boolean goal;
     private boolean gameOver = false;
 
@@ -98,18 +104,19 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private TiledMap tiledMap;
 
     /**
-     * Stage where is all the buttons / controllers from the beginning
+     * Stage where is all the buttons / controllers at the beginning
      */
-    private Stage stage;
+    private Stage buttonStage;
 
-    /**-*
-     * stage for exclamation stage.
+    /**
+     * stage for exclamation mark actor.
      */
     private Stage exclamationStage;
 
     private Controller1 controller1;
     private ExclamationMarkActor exclamationMarkActor;
     private PauseResumeButtonActor pauseResumeButtonActor;
+    private TapJumpActor tapJumpActor;
 
     private LightSetup lightSetup;
 
@@ -140,7 +147,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         viewport = new FitViewport(host.SCREEN_WIDTH, host.SCREEN_HEIGHT, camera);
 
         world = new World(new Vector2(0, -9.8f), true);
-        stage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
+        buttonStage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
 
         bodyHandler = new BodyHandler(world, host);
         debugRenderer = new Box2DDebugRenderer();
@@ -153,8 +160,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         exclamationMarkActor = new ExclamationMarkActor();
         // creates pause/resume button and adds on the game screen
-        pauseResumeButtonActor = new PauseResumeButtonActor();
-        stage.addActor(pauseResumeButtonActor);
+        pauseResumeButtonActor = new PauseResumeButtonActor(host);
+        tapJumpActor = new TapJumpActor(host);
+
+        buttonStage.addActor(tapJumpActor);
+        buttonStage.addActor(pauseResumeButtonActor);
         //Create a Stage and add TouchPad
 
 
@@ -165,10 +175,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // allows to set multiple input processors
         inputMultiplexer = new InputMultiplexer();
         // adds touchpad
-        setUpTouchArea();
 
         inputMultiplexer.addProcessor(new GestureDetector(this));
-        inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(buttonStage);
         inputMultiplexer.addProcessor(exclamationStage);
         // adds gesture detector
 
@@ -237,7 +246,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if(host.getGameMode() == host.ADVENTURE) {
             // adds game on pad in the game
             controller1 = new Controller1(host, 0, 0);
-            stage.addActor(controller1.getTouchpad());
+            buttonStage.addActor(controller1.getTouchpad());
         } else if(host.getGameMode() == host.RAT_RACE) {
 
         }
@@ -282,7 +291,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             }
 
 
-            exclamationMarkActor.setExclamationMarkPosition(player);
+            exclamationMarkActor.setExclamationMarkPosition(player, worldWidthPixels, worldHeightPixels);
 
             deltaTime = Gdx.graphics.getDeltaTime();
             stateTime += deltaTime;
@@ -298,17 +307,20 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 debugRenderer.render(world,camera.combined);
             }
             // draw dialog when player touches exclamation mark
-            if(host.getCurrentStage() == 1 && exclamationMarkActor.getTouch()) {
-                batch.begin();
-                batch.draw(dialog1, player.getPlayerSprite().getX(), 4f, dialog1.getWidth() / 100f, dialog1.getHeight() / 100f);
-                batch.end();
-                exclamationMarkActor.remove();
-            }
+
         }
 
         // shows position of player
         if(Gdx.input.isKeyPressed(Input.Keys.P)) {
             Gdx.app.log("Player body posX", "" + player.getPlayerBody().getPosition().x);
+            Gdx.app.log("Player body posY", "" + player.getPlayerBody().getPosition().y);
+        }
+
+        if(tapJump) {
+            if(tapJumpActor.getTouch()) {
+                player.jump(host);
+                tapJumpActor.setTouch(false);
+            }
         }
 
 
@@ -338,15 +350,15 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // Render lights
         lightSetup.render(camera, stepped);
 
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+        buttonStage.act(Gdx.graphics.getDeltaTime());
+        buttonStage.draw();
 
 
 
         if(pause == OFF) {
-            if(player.getPlayerBody().getPosition().x > 5.6f &&
-                    player.getPlayerBody().getPosition().x < 10.0f &&
-                    host.getCurrentStage() == 1) {
+            if(player.getPlayerBody().getPosition().x > 60f &&
+                    player.getPlayerBody().getPosition().x < 62f &&
+                    host.getCurrentStage() == 2) {
                 exclamationStage.act();
                 exclamationStage.draw();
             }
@@ -473,6 +485,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             bodyHandler.clearBodies(world, lightDoll);
         }
 
+        if(host.getCurrentStage() == 2 && exclamationMarkActor.getTouch()) {
+            exclamationMarkActor.remove();
+            host.setScreen(new TalkScreen(host));
+        }
+
         if(goal) {
             host.unlocStage(host.getCurrentStage());
             host.setCurrentStage(host.getCurrentStage() + 1);
@@ -517,6 +534,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
     }
 
+    /**
+     * Triggers pause-mode when player touches pause icon on the screen.
+     * It resumes the game if pause is already activated and player touches resume button.
+     */
     private void activatePause() {
         if(pauseResumeButtonActor.getTouch() && pauseResumeButtonActor.getStatus()) {
             pause = ON;
@@ -528,12 +549,13 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     @Override
     public void resize(int width, int height) {
         viewport.update(width,height);
-        stage.getViewport().update(width, height, false);
+        buttonStage.getViewport().update(width, height, false);
     }
 
     @Override
     public void pause() {
-
+        pause = ON;
+        pauseResumeButtonActor.setStatus(pause);
     }
 
     @Override
@@ -563,44 +585,41 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
      *
      */
     private void moveCamera() {
+        // player's position in meter
         float playerPositionX = player.getPlayerBody().getPosition().x;
         float playerPositionY = player.getPlayerBody().getPosition().y;
+
+        // world's size in meter
         float worldWidthMeter = worldWidthPixels / 100f;
         float worldHeightMerer = worldHeightPixels / 100f;
 
+        // when player is not near the world walls, camera centralizes the player
         camera.position.x = playerPositionX;
         camera.position.y = playerPositionY;
 
+        // when player is near the right world wall, camera stops moving left
         if (playerPositionX < MyGdxGame.SCREEN_WIDTH / 2) {
             camera.position.x = MyGdxGame.SCREEN_WIDTH / 2;
         }
+        // when player is near the left world wall camera stops moving right
         if (playerPositionX > worldWidthMeter - MyGdxGame.SCREEN_WIDTH /2) {
             camera.position.x = worldWidthMeter - MyGdxGame.SCREEN_WIDTH / 2;
         }
 
+        // when player is near the ground, camera stops moving down
         if(playerPositionY < MyGdxGame.SCREEN_HEIGHT / 2) {
             camera.position.y = MyGdxGame.SCREEN_HEIGHT / 2;
         }
-
+        // when player is near the roof of the world, camera stops moving up
         if (playerPositionY > worldHeightMerer - MyGdxGame.SCREEN_HEIGHT /2) {
             camera.position.y = worldHeightMerer - MyGdxGame.SCREEN_HEIGHT / 2;
         }
 
-        /*if(player.getPlayerBody().getPosition().y > WORLD_HEIGHT_PIXELS - WINDOW_HEIGHT) {
-            camera.position.y = WORLD_HEIGHT_PIXELS - WINDOW_HEIGHT;
-        }*/
 
         camera.update();
     }
 
-    private void setUpTouchArea() {
-        touchPos = new Vector3();
-        screenRectangle = new Rectangle(camera.viewportWidth / 2,
-                0,
-                camera.viewportWidth / 2,
-                camera.viewportHeight);
 
-    }
 
     //turha classi atm
     public boolean isPossibleToJump() {
@@ -706,23 +725,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
     }
 
-    private boolean screenRectangleTouched(float x, float y) {
-        return screenRectangle.contains(x,y);
-    }
 
-    private void screenToWorldCoordinates(float x, float y) {
-        camera.unproject(touchPos.set(x,y,0));
-    }
+
 
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
-        screenToWorldCoordinates(touchPos.x,touchPos.y);
-        Gdx.app.log("X", "" + x);
-        Gdx.app.log("Y", "" + y);
-        if (screenRectangleTouched(touchPos.x, touchPos.y)) {
-            Gdx.app.log("touchDown", "touched");
-        }
-
         return false;
     }
 
@@ -731,6 +738,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if(host.getGameMode() == host.RAT_RACE) {
             player.jump(host);
         }
+        Gdx.app.log("gesture tap", "detected");
         return false;
     }
 
@@ -741,11 +749,14 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public boolean fling(float velocityX, float velocityY, int button) {
-        if(host.getGameMode() == host.ADVENTURE && controller1.getIsTouched()) {
-            // won't do any, if touch pad is touched
-        } else {
-            lightDoll.throwLightDoll(velocityX, velocityY);
+        if(pause == OFF) {
+            if(host.getGameMode() == host.ADVENTURE && controller1.getIsTouched()) {
+                // won't do any, if touch pad is touched
+            } else {
+                lightDoll.throwLightDoll(velocityX, velocityY);
+            }
         }
+
         return false;
     }
 
@@ -780,7 +791,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             controller1.dispose();
         }
         player.dispose();
-        stage.dispose();
+        buttonStage.dispose();
 
         lightDoll.dispose();
         bodyHandler.dispose();

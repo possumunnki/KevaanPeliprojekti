@@ -24,7 +24,7 @@ public class MapScreen implements Screen {
 
     private SpriteBatch batch;
     private OrthographicCamera camera;
-    //private FontActor nextStage;
+
     private FontActor back;
     private PointActor stage1Point;
     private PointActor stage2Point;
@@ -159,30 +159,30 @@ public class MapScreen implements Screen {
         switch (host.getUnlockedStages()) {
             case 5:
                 stage5Point = new PointActor(screenWidth  * 6.5f / 12,
-                                             screenHeight * 4.5f / 24);
+                                             screenHeight * 4.5f / 24, 5);
                 pointActors.add(stage5Point);
                 pointStage.addActor(stage5Point);
 
             case 4:
-                stage4Point = new PointActor(screenWidth  * 1f / 12,
-                        screenHeight * 3.5f / 12);
+                stage4Point = new PointActor(screenWidth  * 2.5f / 12,
+                        screenHeight * 3.5f / 12, 4);
                 pointActors.add(stage4Point);
                 pointStage.addActor(stage4Point);
             case 3:
-                stage3Point = new PointActor(screenWidth * 1f / 12 ,
-                        screenHeight * 7 / 12);
+                stage3Point = new PointActor(screenWidth * 0.5f / 12 ,
+                        screenHeight * 6 / 12, 3);
                 pointActors.add(stage3Point);
                 pointStage.addActor(stage3Point);
                 Gdx.app.log("point3", "added");
             case 2:
-                stage2Point = new PointActor(screenWidth  * 8.5f / 12,
-                        screenHeight * 6f / 12);
+                stage2Point = new PointActor(screenWidth  * 8f / 12,
+                        screenHeight * 6f / 12, 2);
                 pointActors.add(stage2Point);
                 pointStage.addActor(stage2Point);
                 Gdx.app.log("point2", "added");
             case 1:
                 stage1Point = new PointActor(screenWidth * 4.5f / 12 ,
-                        screenHeight * 8.5f / 12);
+                        screenHeight * 8.5f / 12, 1);
                 pointActors.add(stage1Point);
                 pointStage.addActor(stage1Point);
                 Gdx.app.log("point1", "added");

@@ -64,24 +64,45 @@ public class ExclamationMarkActor extends Actor {
         ));
     }
 
-    public void setExclamationMarkPosition(Player player) {
+    /**
+     * Sets Exclamation-mark's position so that it will appear right up of the player.
+     * @param player In this method, used to get players position and width of the player texture.
+     *
+     * @param worldWidth World's width in pixel
+     */
+    public void setExclamationMarkPosition(Player player, float worldWidth, float worldHeight) {
+        // player's position in pixel
+        float playerPositionX = player.getPlayerBody().getPosition().x * 100f;
+        float playerPositionY = player.getPlayerBody().getPosition().y * 100f;
 
-        float playerPositionX = player.getPlayerBody().getPosition().x;
-        float playerPositionY = player.getPlayerBody().getPosition().y;
+        // screen size in pixel
+        float screenWidth = MyGdxGame.SCREEN_WIDTH * 100f;
+        float screenHeight = MyGdxGame.SCREEN_HEIGHT * 100f;
 
+        // exclamation-mark's distance from the player in pixel
+        float distanceWidth = player.getPlayerSprite().getWidth() * 50f;
+        float distanceHeight = player.getPlayerSprite().getHeight() * 50f;
 
+        // when camera is centralized on player
+        printX = screenWidth / 2 + distanceWidth;
         // whenever player is near the left world wall
-        if (playerPositionX < MyGdxGame.SCREEN_WIDTH / 2) {
-            printX = playerPositionX * 100f  + player.getPlayerSprite().getWidth() * 50f;
-        } else {
-            printX = MyGdxGame.SCREEN_WIDTH * 100f / 2 + player.getPlayerSprite().getWidth() * 50f;
+        if (playerPositionX < screenWidth / 2) {
+            printX = playerPositionX  + distanceWidth;
+        }
+        // whenever player is near the right world wall
+        if (playerPositionX > worldWidth - screenWidth / 2) {
+            printX = screenWidth - (worldWidth - playerPositionX ) + distanceWidth;
         }
 
+        // when camera is centralized on player
+        printY = screenHeight / 2 + distanceHeight;
         // whenever player is near the ground
-        if(playerPositionY < MyGdxGame.SCREEN_HEIGHT / 2) {
-            printY = playerPositionY * 100f + player.getPlayerSprite().getHeight() * 50f;
-        } else {
-            printY = MyGdxGame.SCREEN_HEIGHT * 100f / 2 + player.getPlayerSprite().getHeight() * 50f;
+        if(playerPositionY < screenHeight / 2) {
+            printY = playerPositionY + distanceHeight;
+        }
+        // whenever player is near the world roof
+        if(playerPositionY > worldHeight - screenHeight / 2) {
+            printY = screenHeight - (worldHeight - playerPositionY) + distanceHeight;
         }
 
         setPosition(printX, printY);

@@ -16,8 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
  */
 
 public class PointActor extends Actor {
-    private float printX;
-    private float printY;
     private boolean touch = false;
     private boolean touchEnter = false;
     /**
@@ -29,20 +27,34 @@ public class PointActor extends Actor {
      */
     private Texture enterTexture;
 
-    public PointActor(float printX, float printY) {
-        this.printX = printX;
-        this.printY = printY;
+    private Texture dottedLine;
+    private Texture dottedLine23;
+    private Texture dottedLine34;
+    private Texture dottedLine45;
+    /**
+     * The number of the level that the point corresponds to.
+     * It is need for drawing dotted line in right position.
+     */
+    private int stage;
 
-        exitTexture = new Texture("nappulaBlack.png");
-        enterTexture = new Texture("nappulaRed.png");
-        // font.getData().setScale(0.01f);
-
+    /**
+     *
+     * @param printX    x-position where the pointer will be printed
+     * @param printY    y-position where the pointer will be printed
+     * @param stage     the number of the level that the point corresponds to
+     */
+    public PointActor(float printX, float printY, int stage) {
+        this.stage = stage;
+        exitTexture = new Texture("cross_black.png");
+        enterTexture = new Texture("cross_red.png");
+        setDottedLine();
         setWidth(exitTexture.getWidth());
         setHeight(exitTexture.getHeight());
         setPosition(printX,printY);
         setBounds(printX, printY ,getWidth(), getHeight());
         addListener(new PointListener());
     }
+
     public void draw(Batch batch, float alpha) {
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * alpha);
@@ -60,6 +72,11 @@ public class PointActor extends Actor {
                     getWidth(),
                     getHeight());
         }
+
+        if(stage != 1) {
+            batch.draw(dottedLine, 0, 0, dottedLine.getWidth(), dottedLine.getHeight());
+        }
+
 
         batch.setColor(color.r, color.g, color.b, 1f);
 
@@ -79,6 +96,19 @@ public class PointActor extends Actor {
     public void dispose() {
         enterTexture.dispose();
         exitTexture.dispose();
+    }
+
+
+    private void setDottedLine() {
+        if(stage == 2) {
+            dottedLine = new Texture("reitti1-2.png");
+        } else if(stage == 3) {
+            dottedLine = new Texture("reitti2-3.png");
+        } else if(stage == 4) {
+            dottedLine = new Texture("reitti3-4.png");
+        } else if(stage == 5) {
+            dottedLine = new Texture("reitti4-5.png");
+        }
     }
 
     /**

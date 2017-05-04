@@ -82,7 +82,12 @@ public class TalkScreen implements Screen {
         }
 
         if(currentSpeech == speeches.size() || skip.getTouch()) {
-            host.setScreen(new GameScreen(host));
+            if(host.getCurrentStage() == 2){
+                host.setScreen(new MapScreen(host));
+            } else {
+                host.setScreen(new GameScreen(host));
+            }
+
         }
     }
 
@@ -115,7 +120,7 @@ public class TalkScreen implements Screen {
     }
 
     private void addTalk() {
-        if(host.getCurrentStage() == 1) {
+        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
             text = "Herran pieksut! Mitä ihmettä tapahtui? Miksi kaikki on niin valtavaa?";
             speeches.add(new Speech(GRANDMA, text));
 

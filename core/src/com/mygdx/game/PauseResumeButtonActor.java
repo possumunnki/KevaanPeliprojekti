@@ -12,13 +12,18 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
  */
 
 public class PauseResumeButtonActor extends Actor {
+    private MyGdxGame host;
+    private float stageWidth = host.SCREEN_WIDTH * 100f;
+    private float stageHeight = host.SCREEN_HEIGHT * 100f;
     private Texture pauseButtonTexture;
     private Texture resumeButtonTexture;
     private boolean touch;
     private final boolean PAUSE = true;
     private final boolean RUNNING = false;
     private boolean status;
-    public PauseResumeButtonActor() {
+
+    public PauseResumeButtonActor(MyGdxGame host) {
+        this.host = host;
         pauseButtonTexture = new Texture("pauseButton.png");
         resumeButtonTexture = new Texture("resumeButton.png");
         // sets width of the actor
@@ -26,7 +31,7 @@ public class PauseResumeButtonActor extends Actor {
         // sets hight of the actor
         setHeight(pauseButtonTexture.getHeight());
         // sets position
-        setPosition( Gdx.graphics.getWidth() * 9/10,  Gdx.graphics.getHeight() * 8/10);
+        setPosition(stageWidth * 9/10,  stageHeight * 8/10);
 
         addListener(new PauseResumeButtonActor.pauseResumeListener());
     }
@@ -60,6 +65,10 @@ public class PauseResumeButtonActor extends Actor {
 
     public boolean getStatus() {
         return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
     public void dispose() {
         pauseButtonTexture.dispose();

@@ -60,8 +60,8 @@ public class Player {
     // Running speed
     private final float MAX_SPEED = 5.0f;
     // Mounted speed
-    private final float MOUNTED_MAX_SPEED = 7.0f;
-    private final float JUMP_VELOCITY = 8.0f;
+    private final float MOUNTED_MAX_SPEED = 5.0f;
+    private final float JUMP_VELOCITY = 7.0f;
     private final float MOUNTED_JUMP_VELOCITY = 12.0f;
 
     private BodyDef footBodyDef;
@@ -192,6 +192,7 @@ public class Player {
      * @param host
      */
     public void movePlayer(MyGdxGame host) {
+
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             playerBody.applyForceToCenter(new Vector2(MAX_SPEED, 0f), true);
         }
@@ -234,7 +235,7 @@ public class Player {
         playerBody.setLinearVelocity(MAX_SPEED * knobPercentX, playerBody.getLinearVelocity().y);
 
         // playerBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
-        if(knobPercentY > 0.3f) {
+        if(knobPercentY > 0.5f) {
             jump(host);
         }
 
@@ -404,6 +405,11 @@ public class Player {
                 playerBody.getPosition().y - playerSprite.getHeight() / 2);
     }
 
+    /**
+     * When players moving direction changes, flips players texture.
+     *
+     * @param direction     players current direction
+     */
     public void changeDirection(boolean direction) {
         if(direction != playerDirection) {
             playerDirection = direction;

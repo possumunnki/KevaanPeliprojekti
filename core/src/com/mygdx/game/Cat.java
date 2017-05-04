@@ -27,8 +27,8 @@ public class Cat {
     private TextureRegion catRunCurrentFrame;
     private Body catBody;
 
-    private final float CAT_SPEED_1 = 6.0f;
-    private final float CAT_SPEED_2 = 7.0f;
+    private final float CAT_SPEED_1 = 5.0f;
+    private final float CAT_SPEED_2 = 5.0f;
 
     private Vector2 catPosition;
 
