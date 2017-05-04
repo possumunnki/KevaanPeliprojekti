@@ -199,20 +199,20 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private void setGameStage() {
         // if current game stage is 1.
         if(host.getCurrentStage() == 1) {
-            tiledMap = new TmxMapLoader().load("stage1.tmx");
+            tiledMap = new TmxMapLoader().load("stage1nbg.tmx");
             // sets tiles amount on the game stage
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
 
         } else if(host.getCurrentStage() == 2) {
-            tiledMap = new TmxMapLoader().load("stage2.tmx");
+            tiledMap = new TmxMapLoader().load("stage2nbg.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
 
         } else if(host.getCurrentStage() == 3) {
-            tiledMap = new TmxMapLoader().load("stage3.tmx");
+            tiledMap = new TmxMapLoader().load("stage3nbg.tmx");
             tilesAmountWidth = 400;
             tilesAmountHeight = 30;
             // turns rat race on, it changes game control
@@ -224,6 +224,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             tilesAmountHeight = 50;
             // turns rat race on, it changes game control
             host.setGameMode(host.RAT_RACE);
+
+        } else if(host.getCurrentStage() == 5) {
+            tiledMap = new TmxMapLoader().load("stage5.tmx");
+            tilesAmountWidth = 200;
+            tilesAmountHeight = 30;
+            host.setGameMode(host.ADVENTURE);
         }
 
         /**
@@ -234,7 +240,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
 
         Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
-        Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
+
+        if(host.getCurrentStage() != 5) {
+            Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
+        }
 
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
 
@@ -287,7 +296,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
             // If current map is containing rats and voodoo dolls
             if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
-                bodyHandler.callEnemyWalk();
+                bodyHandler.callEnemyWalk(host);
             }
 
 

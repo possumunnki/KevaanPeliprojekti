@@ -252,6 +252,10 @@ public class MapScreen implements Screen {
             host.setCurrentStage(4);
             removeOtherPointActors(stage4Point);
             moveAndZoomAction(stage4Point);
+        } else if(stage5Point.getTouch()) {
+            host.setCurrentStage(5);
+            removeOtherPointActors(stage5Point);
+            moveAndZoomAction(stage5Point);
         }
     }
 

@@ -18,13 +18,6 @@ public class Voodoo {
     private ObjectData vdObject;
     private Texture voodooTex;
 
-
-    /**
-     * Body template for voodoo doll enemy body
-     * Draw-method compares bodies to this, if it's a match, draw bodies
-     * Otherwise the userdata from ground and wall objects interferes this
-     */
-
     private Body testBody1;
     private Body testBody2;
     private Body testBody3;
@@ -37,52 +30,106 @@ public class Voodoo {
     private Body testBody8;
     private Body testBody9;
 
-    private Array<Body> voodooBodyArray = new Array<Body>();
+    private boolean leftTurn = false;
 
+    // STAGE 1 VOODOO POSITIONS
+    private final int[]stage1X = {5, 7, 13, 18, 20, 24, 29, 32, 51};
+    private final int[]stage1Y = {1, 2, 8, 8, 8, 7, 7, 7, 1};
+
+    // STAGE 2 VOODOO POSITIONS
+    private final int[]stage2X = {5, 7, 13, 18, 20, 24, 29, 32, 56};
+    private final int[]stage2Y = {1, 2, 8, 8, 8, 7, 7, 7, 8};
+
+    // STAGE 5 VOODOO POSITIONS
+    // insert here
+    // and here
+
+    private Array<Body> voodooBodyArray = new Array<Body>();
 
     public Voodoo(World world, MyGdxGame host) {
 
-
         voodooTex = new Texture(Gdx.files.internal("voodooNew.png"));
-
         vdObject = new ObjectData(voodooTex, 0.2f, 0.2f, ObjectData.GameObjectType.VOODOO);
-
 
         if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
 
-            int[]stage1XposArray = {5, 7, 13, 18, 20, 24, 29, 32, 35};
 
-            int[]stage1YposArray = {1, 2, 8, 8, 8, 7, 7, 7, 7};
+            if(host.getCurrentStage() == 1) {
+                // Voodoo 1-3
+                testBody1 = createBody(stage1X[0], stage1Y[0], vdObject.width, vdObject.height,
+                        world);
+                testBody1.setUserData(vdObject);
 
-            // Voodoo 1-3
-            testBody1 = createBody(7, 2, vdObject.width, vdObject.height, world);
-            testBody1.setUserData(vdObject);
+                testBody2 = createBody(stage1X[1], stage1Y[1], vdObject.width, vdObject.height,
+                        world);
+                testBody2.setUserData(vdObject);
 
-            testBody2 = createBody(13, 8, vdObject.width, vdObject.height, world);
-            testBody2.setUserData(vdObject);
+                testBody3 = createBody(stage1X[2], stage1Y[2], vdObject.width, vdObject.height,
+                        world);
+                testBody3.setUserData(vdObject);
+                // Voodoo 4-6
+                testBody4 = createBody(stage1X[3], stage1Y[3], vdObject.width, vdObject.height,
+                        world);
+                testBody4.setUserData(vdObject);
 
-            testBody3 = createBody(18, 8, vdObject.width, vdObject.height, world);
-            testBody3.setUserData(vdObject);
+                testBody5 = createBody(stage1X[4], stage1Y[4], vdObject.width, vdObject.height,
+                        world);
+                testBody5.setUserData(vdObject);
 
-            // Voodoo 4-6
-            testBody4 = createBody(20, 8, vdObject.width, vdObject.height, world);
-            testBody4.setUserData(vdObject);
+                testBody6 = createBody(stage1X[5], stage1Y[5], vdObject.width, vdObject.height,
+                        world);
+                testBody6.setUserData(vdObject);
+                // Voodoo 7-9
+                testBody7 = createBody(stage1X[6], stage1Y[6], vdObject.width, vdObject.height,
+                        world);
+                testBody7.setUserData(vdObject);
 
-            testBody5 = createBody(24, 7, vdObject.width, vdObject.height, world);
-            testBody5.setUserData(vdObject);
+                testBody8 = createBody(stage1X[7], stage1Y[7], vdObject.width, vdObject.height,
+                        world);
+                testBody8.setUserData(vdObject);
 
-            testBody6 = createBody(29, 7, vdObject.width, vdObject.height, world);
-            testBody6.setUserData(vdObject);
+                testBody9 = createBody(stage1X[8], stage1Y[8], vdObject.width, vdObject.height,
+                        world);
+                testBody9.setUserData(vdObject);
 
-            // Voodoo 7-9
-            testBody7 = createBody(32, 7, vdObject.width, vdObject.height, world);
-            testBody7.setUserData(vdObject);
+            } else if(host.getCurrentStage() == 2) {
+                // Voodoo 1-3
+                testBody1 = createBody(stage2X[0], stage2Y[0], vdObject.width, vdObject.height,
+                        world);
+                testBody1.setUserData(vdObject);
 
-            testBody8 = createBody(35, 7, vdObject.width, vdObject.height, world);
-            testBody8.setUserData(vdObject);
+                testBody2 = createBody(stage2X[1], stage2Y[1], vdObject.width, vdObject.height,
+                        world);
+                testBody2.setUserData(vdObject);
 
-            testBody9 = createBody(5, 1, vdObject.width, vdObject.height, world);
-            testBody9.setUserData(vdObject);
+                testBody3 = createBody(stage2X[2], stage2Y[2], vdObject.width, vdObject.height,
+                        world);
+                testBody3.setUserData(vdObject);
+                // Voodoo 4-6
+                testBody4 = createBody(stage2X[3], stage2Y[3], vdObject.width, vdObject.height,
+                        world);
+                testBody4.setUserData(vdObject);
+
+                testBody5 = createBody(stage2X[4], stage2Y[4], vdObject.width, vdObject.height,
+                        world);
+                testBody5.setUserData(vdObject);
+
+                testBody6 = createBody(stage2X[5], stage2Y[5], vdObject.width, vdObject.height,
+                        world);
+                testBody6.setUserData(vdObject);
+                // Voodoo 7-9
+                testBody7 = createBody(stage2X[6], stage2Y[6], vdObject.width, vdObject.height,
+                        world);
+                testBody7.setUserData(vdObject);
+
+                testBody8 = createBody(stage2X[7], stage2Y[7], vdObject.width, vdObject.height,
+                        world);
+                testBody8.setUserData(vdObject);
+
+                testBody9 = createBody(stage2X[8], stage2Y[8], vdObject.width, vdObject.height,
+                        world);
+                testBody9.setUserData(vdObject);
+            }
 
             voodooBodyArray.add(testBody1);
             voodooBodyArray.add(testBody2);
@@ -93,7 +140,6 @@ public class Voodoo {
             voodooBodyArray.add(testBody7);
             voodooBodyArray.add(testBody8);
             voodooBodyArray.add(testBody9);
-
         }
     }
 
@@ -140,37 +186,71 @@ public class Voodoo {
     }
 
 
-    /**
-    public void voodooWalk() {
+
+    public void voodooWalk(MyGdxGame host) {
+
+        /**
+         *
+         * Aseta yksi nukke lähelle maalilinjaa, ja laita tämä liikkumaan alkupisteestä x eteen /
+         * taakse. Laita kaikki muut nuket seuraamaan tämän liikettä, ja kääntymään, kun tämä
+         * viimeinen nukke kääntyy. Kun pelaaja on maalin luona, ja viimeinen "template"
+         * tuhotaan, niin aikaisempien nukkejen pysähtymisellä ei ole enää merkitystä!!
+         *
+         */
 
         for(Body body:voodooBodyArray) {
 
-            int i = 1;
+            // STAGE 1 DOLL MOVEMENT
+            if(host.getCurrentStage() == 1 && body.getLinearVelocity().y == 0 ) {
 
-            if(i < voodooBodyArray.size) {
-                i++;
-            }
-            float bodyInitialPos;
+                // set initial speed
+                if(!leftTurn) {
 
-            bodyInitialPos = voodooBodyArray.get(i).getPosition().x;
+                    body.setLinearVelocity(-1, 0);
 
+                    //Gdx.app.log("log1", "body9 " + testBody9.getPosition().x);
+                }
+                // Move to opposite direction when too far from initial position
+                if(testBody9.getPosition().x < (50 - 1)) {
 
-            if(body.getLinearVelocity().y == 0) {
+                    //Gdx.app.log("log", "i" + i);
 
-                Gdx.app.log("log", "i pos" + voodooBodyArray.get(i).getPosition().x);
+                    leftTurn = true;
+                    body.setLinearVelocity(2, 0);
+                    //Gdx.app.log("log2", "body9 " + testBody9.getPosition().x);
+                } else if(testBody9.getPosition().x > (50 + 1)) {
+                    //Gdx.app.log("log", "i" + i);
+                    leftTurn = false;
+                    //body.setLinearVelocity(-1f, 0);
+                    //Gdx.app.log("log3", "body9 " + testBody9.getPosition().x);
+                }
 
-                body.setLinearVelocity(-1f, 0);
+                // STAGE 2 DOLL MOVEMENT
+            } else if(host.getCurrentStage() == 2 && body.getLinearVelocity().y == 0) {
+                // set initial speed
+                if(!leftTurn) {
 
-                if(body.getPosition().x < bodyInitialPos - 4f) {
-                    body.setLinearVelocity(1f, 0);
-                } else if(body.getPosition().x > bodyInitialPos + 4f) {
-                    body.setLinearVelocity(-1f, 0);
+                    body.setLinearVelocity(-1, 0);
+
+                    //Gdx.app.log("log1", "body9 " + testBody9.getPosition().x);
+                }
+                // Move to opposite direction when too far from initial position
+                if(testBody9.getPosition().x < (56 - 1)) {
+
+                    //Gdx.app.log("log", "i" + i);
+
+                    leftTurn = true;
+                    body.setLinearVelocity(2, 0);
+                    //Gdx.app.log("log2", "body9 " + testBody9.getPosition().x);
+                } else if(testBody9.getPosition().x > (56 + 1)) {
+                    //Gdx.app.log("log", "i" + i);
+                    leftTurn = false;
+                    //body.setLinearVelocity(-1f, 0);
+                    //Gdx.app.log("log3", "body9 " + testBody9.getPosition().x);
                 }
             }
-
         }
     }
-     */
 
     public void dispose() {
         voodooTex.dispose();

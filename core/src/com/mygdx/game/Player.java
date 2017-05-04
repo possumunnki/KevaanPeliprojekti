@@ -102,6 +102,9 @@ public class Player {
         } else if(host.getCurrentStage() == 4) {
             playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
                     (host.SCREEN_HEIGHT / 4 + host.SCREEN_HEIGHT * 2f) + 4));
+        } else if(host.getCurrentStage() == 5) {
+            playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2,
+                    host.SCREEN_HEIGHT / 2 + 1));
         }
 
         playerBody.createFixture(getPlayerFixtureDefinition());
@@ -203,6 +206,8 @@ public class Player {
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             playerBody.setLinearVelocity(0, 10f);
+            Gdx.app.log("log", "p1 pos x" + playerBody.getPosition().x);
+
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -229,8 +234,6 @@ public class Player {
         } else {
             isWalking = false;
         }
-
-        //Gdx.app.log("log", "p1 pos x" + playerBody.getPosition().x);
 
         playerBody.setLinearVelocity(MAX_SPEED * knobPercentX, playerBody.getLinearVelocity().y);
 
@@ -320,6 +323,9 @@ public class Player {
         } else if(host.getCurrentStage() == 4) {
             footBodyDef.position.set(playerSprite.getX(),
                     playerSprite.getY() + MyGdxGame.SCREEN_HEIGHT + 5f);// playerBody
+        } else if(host.getCurrentStage() == 5) {
+            footBodyDef.position.set(playerSprite.getX(),
+                    playerSprite.getY());
         }
     }
 

@@ -155,9 +155,9 @@ public class BodyHandler {
     /**
      * Calls movement methods from enemy classes
      */
-    public void callEnemyWalk() {
+    public void callEnemyWalk(MyGdxGame host) {
         rat.ratWalk();
-        //voodoo.voodooWalk();
+        voodoo.voodooWalk(host);
     }
 
     public ObjectData callVoodooGetter() {
