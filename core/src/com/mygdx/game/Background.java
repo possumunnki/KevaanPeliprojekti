@@ -18,7 +18,7 @@ public class Background extends Actor {
 
     public Background(String select) {
 
-        mainmenuBG = new Texture("menuBG.png");
+        mainmenuBG = new Texture("mainScreenBG.png");
         //mapBG = new Texture("mapScreenBG.png");
 
         if(select.equalsIgnoreCase("backGround")) {

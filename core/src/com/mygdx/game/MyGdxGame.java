@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MyGdxGame extends Game {
@@ -37,14 +38,14 @@ public class MyGdxGame extends Game {
     /**
      * amount of unlocked stage
      */
-    private int unlockedStages = 5;
+    private int unlockedStages;
     /**
      * Game modes to change game mechanics depending on current stage.
      */
     private int gameMode;
     public static final int ADVENTURE = 1;
     public static final int RAT_RACE = 2;
-
+    private Preferences prefs;
 	private MainMenuScreen mainMenu;
 
 	public SpriteBatch getSpriteBatch() {
@@ -56,7 +57,9 @@ public class MyGdxGame extends Game {
 		batch = new SpriteBatch();
         currentStage = 1; // Korjaa, kun tehdään muisti osio!
         // !! LEVEL 3 SET TO AVAILABLE FOR TESTING !!
-        availableStage = new boolean[]{AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE};
+        availableStage = new boolean[]{AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE, NOT_AVAILABLE};
+        prefs = Gdx.app.getPreferences("GameData");
+        setUnlockedStages();
 		mainMenu = new MainMenuScreen(this);
 		// moves to main menu
 		setScreen(mainMenu);
@@ -70,7 +73,7 @@ public class MyGdxGame extends Game {
 
 	@Override
 	public void dispose () {
-
+        save(unlockedStages);
         batch.dispose();
         Gdx.app.log("MyGdxGame", "disposed");
 	}
@@ -122,7 +125,8 @@ public class MyGdxGame extends Game {
     }
 
     /**
-     *  returns game mode of current stage to set up the game stage
+     *  Returns game mode of current stage to set up the game stage.
+     *
      * @return game mode of the current stage
      */
     public int getGameMode() {
@@ -130,5 +134,34 @@ public class MyGdxGame extends Game {
     }
     public void setGameMode(int gameMode) {
         this.gameMode = gameMode;
+    }
+
+    public void setUnlockedStages() {
+        int unLockedStages = prefs.getInteger("unLockedStage", 1);
+        this.unlockedStages = unLockedStages;
+    }
+    public void setUnlockedStages(int newUnlockedStage) {
+        int unLockedStages = prefs.getInteger("unLockedStage", 1);
+
+        if(unLockedStages >= newUnlockedStage) {
+            this.unlockedStages = unLockedStages;
+        } else {
+            this.unlockedStages = newUnlockedStage;
+        }
+
+    }
+
+    public void save(int unlockedStages) {
+        prefs.putInteger("unLockedStage", unlockedStages);
+        prefs.flush();
+    }
+
+    /**
+     * Resets game data.
+     */
+    public void reset() {
+        prefs.putInteger("unLockedStage", 1);
+        prefs.flush();
+        unlockedStages = 1;
     }
 }

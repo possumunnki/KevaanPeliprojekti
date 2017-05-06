@@ -51,7 +51,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Makes player immortal to make easy to develop the game.
      */
-    private boolean immortality = ON;
+    private boolean immortality = OFF;
 
     /**
      * Puts touch to jump on
@@ -496,12 +496,16 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         if(host.getCurrentStage() == 2 && exclamationMarkActor.getTouch()) {
             exclamationMarkActor.remove();
+
             host.setScreen(new TalkScreen(host));
         }
 
         if(goal) {
             host.unlocStage(host.getCurrentStage());
             host.setCurrentStage(host.getCurrentStage() + 1);
+            host.save(host.getCurrentStage());
+            host.setUnlockedStages(host.getUnlockedStages());
+
             Gdx.app.log("Current Stage", "" + host.getCurrentStage());
             doHeavyStuff();
             host.setScreen(new MapScreen(host));

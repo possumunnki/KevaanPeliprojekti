@@ -13,10 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
  */
 
 public class FontActor extends Actor {
-    private BitmapFont font;
+    private BitmapFont blackFont;
+    private BitmapFont whiteFont;
     private GlyphLayout fontLayout;
     private String fontString;
     private boolean touch = false;
+    private boolean touchEnter = false;
     private float printX; // the cordinate X where the text will be drawn
     private float printY; // the cordinate Y where the text will be drawn
 
@@ -28,9 +30,10 @@ public class FontActor extends Actor {
         this.printX = printX;
         this.printY = printY;
 
-        font = new BitmapFont(Gdx.files.internal("font.txt"));
+        blackFont = new BitmapFont(Gdx.files.internal("chatfont.txt"));
+        whiteFont = new BitmapFont(Gdx.files.internal("chatFontWhite.txt"));
         // font.getData().setScale(0.01f);
-        fontLayout = new GlyphLayout(font, fontString);
+        fontLayout = new GlyphLayout(blackFont, fontString);
         setWidth(fontLayout.width);
         setHeight(fontLayout.height);
         setBounds(printX - getWidth() / 2 ,printY ,getWidth(), getHeight());
@@ -39,8 +42,16 @@ public class FontActor extends Actor {
     }
 
     public void draw(Batch batch, float alpha) {
-        font.draw(batch, fontString, printX - getWidth() / 2,
-                printY + getHeight());
+        /*font.draw(batch, fontString, printX - getWidth() / 2,
+                printY + getHeight());*/
+
+        if(touchEnter == true || touch == true) {
+            blackFont.draw(batch, fontString, printX - getWidth() / 2,
+                    printY + getHeight());
+        } else {
+            whiteFont.draw(batch, fontString, printX - getWidth() / 2,
+                    printY + getHeight());
+        }
     }
 
     public void act(float delta) {
@@ -52,12 +63,12 @@ public class FontActor extends Actor {
     }
 
     public void dispose() {
-        font.dispose();
+        blackFont.dispose();
         this.remove();
     }
     public void setFontScale(float scale) {
-        font.getData().setScale(scale);
-        fontLayout.setText(font, fontString); // not working
+        blackFont.getData().setScale(scale);
+        fontLayout.setText(blackFont, fontString); // not working
         setBounds(printX - getWidth() / 2 ,printY ,getWidth(), getHeight());
     }
 
@@ -80,6 +91,20 @@ public class FontActor extends Actor {
                             int button) {
             touch = true;
             Gdx.app.log("Example2", "touch done at (" + x + ", " + y + ")");
+        }
+        public void enter(InputEvent event,
+                          float x,
+                          float y,
+                          int pointer,
+                          Actor fromActor) {
+            touchEnter = true;
+        }
+        public void exit(InputEvent event,
+                         float x,
+                         float y,
+                         int pointer,
+                         Actor toActor) {
+            touchEnter = false;
         }
 
 

@@ -21,7 +21,7 @@ public class Speech {
     private String text;
     public Speech(int speaker, String text) {
         this.speaker = speaker;
-        font = new BitmapFont(Gdx.files.internal("font2.txt"));
+        font = new BitmapFont(Gdx.files.internal("chatfont.txt"));
         font.getData().setScale(SCALE);
         this.text = text;
         // sets texture depending on speaker

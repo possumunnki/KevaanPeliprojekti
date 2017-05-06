@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
+import java.awt.Font;
+
 /**
  * Created by possumunnki on 7.3.2017.
  */
@@ -18,11 +20,19 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 public class MainMenuScreen implements Screen {
 
     private MyGdxGame host;
+    /**
+     * Screen's size in pixel
+     */
+    private float screenWidth = host.SCREEN_WIDTH * 100f;
+    private float screenHeight = host.SCREEN_HEIGHT * 100f;
+
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Stage mainMenuStage;
-    private FontActor start;
+    private FontActor newGame;
+    private FontActor continueGame;
     private Background menuBG;
+
 
     public MainMenuScreen(MyGdxGame host) {
 
@@ -31,17 +41,18 @@ public class MainMenuScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
-                MyGdxGame.SCREEN_WIDTH * 100f,
-                MyGdxGame.SCREEN_HEIGHT * 100f);
+                screenWidth,
+                screenHeight);
 
-        mainMenuStage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
+        mainMenuStage = new Stage(new FillViewport(screenWidth, screenHeight), batch);
         // creates "START" text
-        start = new FontActor("START", host.SCREEN_WIDTH * 100f / 2, host.SCREEN_HEIGHT * 100f / 2);
-
+        newGame = new FontActor("NEW GAME", screenWidth * 5 / 8, screenHeight * 2/8);
+        continueGame = new FontActor("CONTINUE", screenWidth * 5 / 8, screenHeight * 0.5f/8);
         // Creates main menu background
         menuBG = new Background("background");
         mainMenuStage.addActor(menuBG);
-        mainMenuStage.addActor(start);
+        mainMenuStage.addActor(newGame);
+        mainMenuStage.addActor(continueGame);
 
         Gdx.input.setInputProcessor(mainMenuStage);
     }
@@ -59,7 +70,10 @@ public class MainMenuScreen implements Screen {
         mainMenuStage.act(Gdx.graphics.getDeltaTime());
         mainMenuStage.draw();
 
-        if (start.getTouch()) {
+        if (newGame.getTouch()) {
+            host.reset();
+            host.setScreen(new TalkScreen(host));
+        } else if(continueGame.getTouch()) {
             host.setScreen(new MapScreen(host));
         }
     }
@@ -86,7 +100,8 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        start.dispose();
+        newGame.dispose();
+        continueGame.dispose();
         menuBG.dispose();
         mainMenuStage.dispose();
         Gdx.app.log("MainMenu", "disposed");

@@ -60,7 +60,7 @@ public class Player {
     // Running speed
     private final float MAX_SPEED = 5.0f;
     // Mounted speed
-    private final float MOUNTED_MAX_SPEED = 5.0f;
+    private final float MOUNTED_MAX_SPEED = 5.3f;
     private final float JUMP_VELOCITY = 7.0f;
     private final float MOUNTED_JUMP_VELOCITY = 12.0f;
 

@@ -146,8 +146,9 @@ public class MapScreen implements Screen {
         backGroundTexture.dispose();
         //mapScreenBG.dispose();
         //nextStage.dispose();
-        stage1Point.dispose();
-        stage2Point.dispose();
+        for(int i = 0; i < pointActors.size(); i++) {
+            pointActors.get(i).dispose();
+        }
         Gdx.app.log("MapScreen", "disposed");
     }
 
@@ -236,6 +237,39 @@ public class MapScreen implements Screen {
      * Whenever pointActor is touched, game moves from Map screen to talk screen or game screen.
      */
     private void moveToStage() {
+        switch (host.getUnlockedStages()) {
+            case 5:
+                if(stage5Point.getTouch()) {
+                    host.setCurrentStage(5);
+                    removeOtherPointActors(stage5Point);
+                    moveAndZoomAction(stage5Point);
+                }
+            case 4:
+                if(stage4Point.getTouch()) {
+                    host.setCurrentStage(4);
+                    removeOtherPointActors(stage4Point);
+                    moveAndZoomAction(stage4Point);
+                }
+            case 3:
+                if(stage3Point.getTouch()) {
+                    host.setCurrentStage(3);
+                    removeOtherPointActors(stage3Point);
+                    moveAndZoomAction(stage3Point);
+                }
+            case 2:
+                if(stage2Point.getTouch()) {
+                    host.setCurrentStage(2);
+                    removeOtherPointActors(stage2Point);
+                    moveAndZoomAction(stage2Point);
+                }
+            case 1:
+                if(stage1Point.getTouch()) {
+                    host.setCurrentStage(1);
+                    removeOtherPointActors(stage1Point);
+                    moveAndZoomAction(stage1Point);
+                }
+        }
+        /*
         if(stage1Point.getTouch()) {
             host.setCurrentStage(1);
             removeOtherPointActors(stage1Point);
@@ -252,11 +286,7 @@ public class MapScreen implements Screen {
             host.setCurrentStage(4);
             removeOtherPointActors(stage4Point);
             moveAndZoomAction(stage4Point);
-        } else if(stage5Point.getTouch()) {
-            host.setCurrentStage(5);
-            removeOtherPointActors(stage5Point);
-            moveAndZoomAction(stage5Point);
-        }
+        }*/
     }
 
     /**

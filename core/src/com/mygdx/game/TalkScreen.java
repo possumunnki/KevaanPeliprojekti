@@ -83,6 +83,10 @@ public class TalkScreen implements Screen {
 
         if(currentSpeech == speeches.size() || skip.getTouch()) {
             if(host.getCurrentStage() == 2){
+                host.unlocStage(host.getCurrentStage());
+                host.setCurrentStage(host.getCurrentStage() + 1);
+                host.save(host.getCurrentStage());
+                host.setUnlockedStages(host.getUnlockedStages());
                 host.setScreen(new MapScreen(host));
             } else {
                 host.setScreen(new GameScreen(host));
