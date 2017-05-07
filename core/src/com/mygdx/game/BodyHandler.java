@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -8,12 +9,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+
 /**
  * Created by Juz3 on 24.3.2017.
  */
 
 public class BodyHandler {
-
+    private MyGdxGame host;
     private Voodoo voodoo;
 
     private Rat rat;
@@ -24,9 +26,11 @@ public class BodyHandler {
 
     private float windowWidth;
     private float windowHeight;
+    private final boolean ON = true;
+    private Sound mobKillSound;
 
     public BodyHandler(World world, MyGdxGame host) {
-
+        this.host = host;
         windowWidth = host.SCREEN_WIDTH;
         windowHeight = host.SCREEN_HEIGHT;
 
@@ -35,7 +39,7 @@ public class BodyHandler {
         rat = new Rat(world, host);
 
         //cat = new Cat(world);
-
+        mobKillSound = Gdx.audio.newSound(Gdx.files.internal("MobKill.wav"));
     }
 
 
@@ -139,6 +143,9 @@ public class BodyHandler {
 
                         // Add the specific body to bodiesToBeDestroyed-list
                         bodiesToBeDestroyed.add(body);
+                        if(host.getSoundEffect() == ON) {
+                            mobKillSound.play(0.5f);
+                        }
                     }
                 }
             }

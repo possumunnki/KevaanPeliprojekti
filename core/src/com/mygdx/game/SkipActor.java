@@ -22,17 +22,16 @@ public class SkipActor extends Actor {
     /**
      * coordinate where the texture will be drawn
      */
-    private float printX;
-    private float printY;
+
     private Sprite skipSprite;
 
     public SkipActor(float printX,
                      float printY) {
         skipTexture = new Texture("skip.png");
         skipSprite = new Sprite(skipTexture);
-        this.printX = printX;
-        this.printY = printY;
 
+        setX(printX);
+        setY(printY);
         setWidth(skipTexture.getWidth());
         setHeight(skipTexture.getHeight());
         addListener(new SkipActor.skipListener());
@@ -57,9 +56,6 @@ public class SkipActor extends Actor {
 
 
     private void faceInFadeOutAction() {
-
-        Action faceInAction = Actions.fadeIn(1.5f);
-        Action fadeOutAction = Actions.fadeOut(1.5f);
         this.addAction( Actions.forever(
                 Actions.sequence(Actions.fadeIn(1.5f),
                         Actions.fadeOut(1.5f)

@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -21,7 +22,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
 public class Player {
     private World world;
-
+    private MyGdxGame host;
     private boolean positionReset = false;
     public boolean gameOver2 = false;
 
@@ -30,6 +31,7 @@ public class Player {
     private Animation<TextureRegion> mummoWalkAnim;
     private TextureRegion mummoWalkCurrentFrame;
 
+    private Sound jumpSound1;
     private boolean isWalking = false;
 
     /**
@@ -72,6 +74,9 @@ public class Player {
 
     public Player(World world, MyGdxGame host) {
         this.world = world;
+        this.host = host;
+
+        jumpSound1 = Gdx.audio.newSound(Gdx.files.internal("Jump.wav"));
 
         mummoTexture = new Texture("mummo1.png");
         playerSprite = new Sprite(mummoTexture);
@@ -302,6 +307,10 @@ public class Player {
                         playerBody.getWorldCenter(), true);
             }
 
+            if(host.getSoundEffect() == true) {
+                jumpSound1.play(0.3f);
+
+            }
             onTheGround = false;
         }
     }

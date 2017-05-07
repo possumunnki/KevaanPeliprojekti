@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -98,7 +100,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private boolean goal;
     private boolean gameOver = false;
 
-
+    private Music gameBGM;
+    private Sound deathSound;
+    private Sound mobKillSound;
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
@@ -145,6 +149,17 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 host.SCREEN_WIDTH,
                 host.SCREEN_HEIGHT);
         viewport = new FitViewport(host.SCREEN_WIDTH, host.SCREEN_HEIGHT, camera);
+
+        if(host.getMusic() == ON) {
+            gameBGM = Gdx.audio.newMusic(Gdx.files.internal("bgm2.mp3"));
+            gameBGM.isLooping();
+        }
+
+        if(host.getSoundEffect() == ON) {
+            deathSound = Gdx.audio.newSound(Gdx.files.internal("MummoDeath.wav"));
+            mobKillSound = Gdx.audio.newSound(Gdx.files.internal("MobKill.wav"));
+        }
+
 
         world = new World(new Vector2(0, -9.8f), true);
         buttonStage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
@@ -276,6 +291,15 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiledMapRenderer.render();
+        if(host.getMusic() == ON){
+            gameBGM.play();
+            if(pause == ON) {
+                gameBGM.setVolume(0.3f);
+            } else if(pause == OFF) {
+                gameBGM.setVolume(1f);
+            }
+        }
+
         if(pause == OFF) {
             if(host.getGameMode() == host.ADVENTURE) {
                 controller1.moveTouchPad();
@@ -492,6 +516,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
             bodyHandler.clearBodies(world, lightDoll);
+
         }
 
         if(host.getCurrentStage() == 2 && exclamationMarkActor.getTouch()) {
@@ -501,15 +526,18 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
 
         if(goal) {
-            host.unlocStage(host.getCurrentStage());
+            host.unlockStage(host.getCurrentStage());
             host.setCurrentStage(host.getCurrentStage() + 1);
-            host.save(host.getCurrentStage());
+            host.saveUnlockedStages(host.getCurrentStage());
             host.setUnlockedStages(host.getUnlockedStages());
 
             Gdx.app.log("Current Stage", "" + host.getCurrentStage());
             doHeavyStuff();
             host.setScreen(new MapScreen(host));
         } else if(gameOver) {
+            if(host.getSoundEffect() == ON) {
+                deathSound.play(0.5f);
+            }
             doHeavyStuff();
             host.setScreen(new GameOverScreen(host));
         }
@@ -825,6 +853,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
 
         kekkonen.dispose();
+        if(host.getMusic() == ON) {
+            gameBGM.dispose();
+        }
+
 
         Gdx.app.log("GameScreen","disposed");
     }

@@ -66,6 +66,7 @@ public class FontActor extends Actor {
         blackFont.dispose();
         this.remove();
     }
+
     public void setFontScale(float scale) {
         blackFont.getData().setScale(scale);
         fontLayout.setText(blackFont, fontString); // not working

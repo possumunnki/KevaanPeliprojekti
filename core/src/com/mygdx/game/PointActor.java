@@ -111,15 +111,6 @@ public class PointActor extends Actor {
         }
     }
 
-    /**
-     * Adds fade in action.
-     * @param time time to fade in totally
-     */
-    public void addFadeInAction(float time) {
-        this.addAction(Actions.sequence(Actions.fadeOut(0f),
-                Actions.fadeIn(time)));
-    }
-
     class PointListener extends InputListener {
         public boolean touchDown(InputEvent event,
                                  float x,
