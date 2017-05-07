@@ -157,7 +157,7 @@ public class Voodoo {
         vdBodyDef.type = BodyDef.BodyType.DynamicBody;
 
         // Initial position is centered up
-        // This position is the CENTER of the shape!
+        // This position is shape's center.
         vdBodyDef.position.set(x, y);
 
         return vdBodyDef;
@@ -186,67 +186,43 @@ public class Voodoo {
     }
 
 
-
+    /**
+     * Moves all voodoo doll bodies according to the last body in the map, so that
+     * when the last one turns, all the other bodies turn too.
+     */
     public void voodooWalk(MyGdxGame host) {
 
-        /**
-         *
-         * Aseta yksi nukke lähelle maalilinjaa, ja laita tämä liikkumaan alkupisteestä x eteen /
-         * taakse. Laita kaikki muut nuket seuraamaan tämän liikettä, ja kääntymään, kun tämä
-         * viimeinen nukke kääntyy. Kun pelaaja on maalin luona, ja viimeinen "template"
-         * tuhotaan, niin aikaisempien nukkejen pysähtymisellä ei ole enää merkitystä!!
-         *
-         */
-
         for(Body body:voodooBodyArray) {
+
+            //Gdx.app.log("log", "vd array size " + voodooBodyArray.size);
 
             // STAGE 1 DOLL MOVEMENT
             if(host.getCurrentStage() == 1 && body.getLinearVelocity().y == 0 ) {
 
                 // set initial speed
                 if(!leftTurn) {
-
                     body.setLinearVelocity(-1, 0);
-
-                    //Gdx.app.log("log1", "body9 " + testBody9.getPosition().x);
                 }
                 // Move to opposite direction when too far from initial position
                 if(testBody9.getPosition().x < (50 - 1)) {
-
-                    //Gdx.app.log("log", "i" + i);
-
                     leftTurn = true;
                     body.setLinearVelocity(2, 0);
-                    //Gdx.app.log("log2", "body9 " + testBody9.getPosition().x);
                 } else if(testBody9.getPosition().x > (50 + 1)) {
-                    //Gdx.app.log("log", "i" + i);
                     leftTurn = false;
-                    //body.setLinearVelocity(-1f, 0);
-                    //Gdx.app.log("log3", "body9 " + testBody9.getPosition().x);
                 }
 
                 // STAGE 2 DOLL MOVEMENT
             } else if(host.getCurrentStage() == 2 && body.getLinearVelocity().y == 0) {
                 // set initial speed
                 if(!leftTurn) {
-
                     body.setLinearVelocity(-1, 0);
-
-                    //Gdx.app.log("log1", "body9 " + testBody9.getPosition().x);
                 }
                 // Move to opposite direction when too far from initial position
                 if(testBody9.getPosition().x < (56 - 1)) {
-
-                    //Gdx.app.log("log", "i" + i);
-
                     leftTurn = true;
                     body.setLinearVelocity(2, 0);
-                    //Gdx.app.log("log2", "body9 " + testBody9.getPosition().x);
                 } else if(testBody9.getPosition().x > (56 + 1)) {
-                    //Gdx.app.log("log", "i" + i);
                     leftTurn = false;
-                    //body.setLinearVelocity(-1f, 0);
-                    //Gdx.app.log("log3", "body9 " + testBody9.getPosition().x);
                 }
             }
         }

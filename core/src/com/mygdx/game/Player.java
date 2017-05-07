@@ -413,6 +413,7 @@ public class Player {
         walkTexture.dispose();
         ratMountTexture.dispose();
         ratRunTexture.dispose();
+        jumpSound1.dispose();
     }
 
     public void setPlayerSpritePosition() {

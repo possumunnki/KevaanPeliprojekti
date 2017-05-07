@@ -14,7 +14,9 @@ public class ObjectData {
 
     public enum GameObjectType {
         VOODOO,
-        RAT
+        RAT,
+        BOSS,
+        FIREBALL
     }
 
 

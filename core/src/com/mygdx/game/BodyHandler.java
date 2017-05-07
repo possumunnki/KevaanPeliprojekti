@@ -29,6 +29,8 @@ public class BodyHandler {
     private final boolean ON = true;
     private Sound mobKillSound;
 
+    private BossMob boss;
+
     public BodyHandler(World world, MyGdxGame host) {
         this.host = host;
         windowWidth = host.SCREEN_WIDTH;
@@ -37,6 +39,8 @@ public class BodyHandler {
         voodoo = new Voodoo(world, host);
 
         rat = new Rat(world, host);
+
+        boss = new BossMob(world, host);
 
         //cat = new Cat(world);
         mobKillSound = Gdx.audio.newSound(Gdx.files.internal("MobKill.wav"));
@@ -96,7 +100,51 @@ public class BodyHandler {
                         rat.objectTexture.getHeight(),      // End drawing y
                         false,                         // flipX
                         false);                        // flipY
+
+            } else if(body.getUserData().equals(boss.getBossObject())) {
+                ObjectData boss = (ObjectData) body.getUserData();
+
+                batch.draw(boss.objectTexture,
+                        body.getPosition().x - boss.width,
+                        body.getPosition().y - boss.height,
+                        boss.width,                   // originX
+                        boss.height,                   // originY
+                        boss.width * 2,               // windowWidth
+                        boss.height * 2,               // windowHeight
+                        1.0f,                          // scaleX
+                        1.0f,                          // scaleY
+                        body.getTransform().getRotation() * MathUtils.radiansToDegrees,
+                        0,                             // Start drawing from x = 0
+                        0,                             // Start drawing from y = 0
+                        boss.objectTexture.getWidth(),       // End drawing x
+                        boss.objectTexture.getHeight(),      // End drawing y
+                        false,                         // flipX
+                        false);                        // flipY
+
             }
+
+            /**
+            else if(body.getUserData().equals(boss.getFireballObject())) {
+                ObjectData fireball = (ObjectData) body.getUserData();
+
+                batch.draw(fireball.objectTexture,
+                        body.getPosition().x - fireball.width,
+                        body.getPosition().y - fireball.height,
+                        fireball.width,                   // originX
+                        fireball.height,                   // originY
+                        fireball.width * 2,               // windowWidth
+                        fireball.height * 2,               // windowHeight
+                        0.5f,                          // scaleX
+                        0.5f,                          // scaleY
+                        body.getTransform().getRotation() * MathUtils.radiansToDegrees,
+                        0,                             // Start drawing from x = 0
+                        0,                             // Start drawing from y = 0
+                        fireball.objectTexture.getWidth(),       // End drawing x
+                        fireball.objectTexture.getHeight(),      // End drawing y
+                        false,                         // flipX
+                        false);                        // flipY
+            }
+             */
         }
     }
 
@@ -117,6 +165,18 @@ public class BodyHandler {
                     bodiesToBeDestroyed.add(body);
                 }
             }
+
+            /**
+            if(body.getUserData().equals(boss.getFireballObject())) {
+
+                // if fireball hits ground and y-speed is 0
+                if(body.getLinearVelocity().y == 0f) {
+                    body.setLinearVelocity(0, 0);
+                    Gdx.app.log("log", "fireball stop");
+                    bodiesToBeDestroyed.add(body);
+                }
+            }
+             */
         }
 
         /**
@@ -167,6 +227,19 @@ public class BodyHandler {
         voodoo.voodooWalk(host);
     }
 
+    public void callBossAction(MyGdxGame host, World world) {
+
+        if(host.getCurrentStage() == 5) {
+            boss.bossWalk(world);
+        }
+    }
+
+    /**
+    public void callBossFire(World world) {
+        boss.fire(world);
+    }
+     */
+
     public ObjectData callVoodooGetter() {
         return voodoo.getVdObject();
     }
@@ -182,6 +255,8 @@ public class BodyHandler {
     public void dispose() {
         voodoo.dispose();
         rat.dispose();
+        boss.dispose();
+        mobKillSound.dispose();
     }
 }
 // end of file

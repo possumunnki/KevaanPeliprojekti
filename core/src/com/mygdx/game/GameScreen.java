@@ -48,7 +48,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Debug renderer setting, set false to disable debug render
      */
-    private boolean isDebugOn = OFF;
+    private boolean isDebugOn = ON;
 
     /**
      * Makes player immortal to make easy to develop the game.
@@ -132,11 +132,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private Texture dialog1;
 
-
-
     private Cat cat;
 
     private Texture kekkonen;
+
 
 
     public GameScreen(MyGdxGame host) {
@@ -200,10 +199,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         dialog1 = new Texture("chatboxWithText.png");
 
-        cat = new Cat(world, host);
-
         kekkonen = new Texture("ukk.png");
 
+        cat = new Cat(world, host);
     }
 
     /**
@@ -234,7 +232,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             host.setGameMode(host.RAT_RACE);
 
         } else if(host.getCurrentStage() == 4) {
-            tiledMap = new TmxMapLoader().load("stage4.tmx");
+            tiledMap = new TmxMapLoader().load("stage4nbg.tmx");
             tilesAmountWidth = 440;
             tilesAmountHeight = 50;
             // turns rat race on, it changes game control
@@ -250,7 +248,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         /**
          * Adds spike bodies to maps which contain spikes
          */
-        if(host.getCurrentStage() == 2 || host.getCurrentStage() == 4) {
+        if(host.getCurrentStage() == 2 ||
+                host.getCurrentStage() == 4 ||
+                host.getCurrentStage() == 5) {
             Utilities.transformWallsToBodies("spike-rectangles", "spike", tiledMap, world);
         }
 
@@ -294,9 +294,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if(host.getMusic() == ON){
             gameBGM.play();
             if(pause == ON) {
-                gameBGM.setVolume(0.3f);
+                gameBGM.setVolume(0.2f);
             } else if(pause == OFF) {
-                gameBGM.setVolume(1f);
+                gameBGM.setVolume(0.5f);
             }
         }
 
@@ -313,14 +313,15 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 player.moveMountedPlayer(host);
             }
 
-
-
             lightDoll.moveLightDoll(player);
-
 
             // If current map is containing rats and voodoo dolls
             if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
                 bodyHandler.callEnemyWalk(host);
+            }
+
+            if(host.getCurrentStage() == 5) {
+                bodyHandler.callBossAction(host, world);
             }
 
 
@@ -340,7 +341,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 debugRenderer.render(world,camera.combined);
             }
             // draw dialog when player touches exclamation mark
-
         }
 
         // shows position of player
@@ -381,7 +381,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         batch.end();
 
         // Render lights
-        lightSetup.render(camera, stepped);
+        lightSetup.render(camera);
 
         buttonStage.act(Gdx.graphics.getDeltaTime());
         buttonStage.draw();
@@ -467,13 +467,16 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                     /**
                      * Cat collision gameover-check
                      */
-                    if(body1.getUserData().equals("player")) {
-                        if(body2.getUserData().equals("cat")) {
-                            //switch to game over screen
-                            Gdx.app.log("log", "gameover");
-                            gameOver = true;
+                    if(immortality == !ON) {
+                        if(body1.getUserData().equals("player")) {
+                            if(body2.getUserData().equals("cat")) {
+                                //switch to game over screen
+                                Gdx.app.log("log", "gameover");
+                                gameOver = true;
+                            }
                         }
                     }
+
 
                     // when player touches goal-rectangle
                     if(body1.getUserData().equals("foot")) {
@@ -503,21 +506,20 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                             goal = true;
 
                         }
-
                     }
                 }
             }
         });
+
+        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+            bodyHandler.clearBodies(world, lightDoll);
+        }
 
         // If player falls down, it's game over (instead of going back to start)
         if(player.getGameOver2()) {
             gameOver = true;
         }
 
-        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
-            bodyHandler.clearBodies(world, lightDoll);
-
-        }
 
         if(host.getCurrentStage() == 2 && exclamationMarkActor.getTouch()) {
             exclamationMarkActor.remove();
@@ -851,6 +853,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if(isDebugOn) {
             debugRenderer.dispose();
         }
+
+        //boss.dispose();
 
         kekkonen.dispose();
         if(host.getMusic() == ON) {

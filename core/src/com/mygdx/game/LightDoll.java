@@ -47,6 +47,9 @@ public class LightDoll {
     //body for light doll
     private Body lightDollBody;
 
+    private float dollDefPosX; // doll's default x coordinate
+    private float dollDefPosY; // doll's default y coordinate
+
 
     public LightDoll(Player player, World world) {
         lightDollTexture = new Texture("lightdoll-2.png");
@@ -68,8 +71,6 @@ public class LightDoll {
         lightDollSprite.draw(sb);
     }
 
-    private float dollDefPosX; // doll's default x coordinate
-    private float dollDefPosY; // doll's default y coordinate
 
     public FixtureDef getFixtureDefinition() {
         FixtureDef dollFixtureDef = new FixtureDef();
@@ -124,21 +125,21 @@ public class LightDoll {
         // Set body position
         lightDollBody.setTransform(dollLocation, 0);
     }
-    private float floatDeph = 0;
+    private float floatDepth = 0;
 
     public void floatDoll(float dollDefPosY) {
 
         if (floatDirection == UP) {
-            floatDeph += FLOATING_SPEED;
-            lightDollSprite.setY(dollDefPosY + floatDeph);
+            floatDepth += FLOATING_SPEED;
+            lightDollSprite.setY(dollDefPosY + floatDepth);
             if (lightDollSprite.getY() - dollDefPosY  > 0f) {
                 floatDirection = DOWN;
             }
         }
 
         if(floatDirection == DOWN) {
-            floatDeph -= FLOATING_SPEED;
-            lightDollSprite.setY(dollDefPosY + floatDeph);
+            floatDepth -= FLOATING_SPEED;
+            lightDollSprite.setY(dollDefPosY + floatDepth);
             if(lightDollSprite.getY() - dollDefPosY  < - 0.2f) {
                 floatDirection = UP;
             }
@@ -209,7 +210,7 @@ public class LightDoll {
                         lightDollSprite.getY() +- 0.01f < dollDefPosY ) {
                     comingBack = false;
                     throwMode = false;
-                    floatDeph = 0;
+                    floatDepth = 0;
                 }
             }
 

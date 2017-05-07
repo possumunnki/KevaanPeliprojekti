@@ -64,7 +64,7 @@ public class MyGdxGame extends Game {
         currentStage = 1; // Korjaa, kun tehdään muisti osio!
         soundEffect = ON;
         // !! LEVEL 3 SET TO AVAILABLE FOR TESTING !!
-        availableStage = new boolean[]{AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE, NOT_AVAILABLE};
+        availableStage = new boolean[]{AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE};
         prefs = Gdx.app.getPreferences("GameData");
         restoreGameData();
         if(unlockAllStages) {
