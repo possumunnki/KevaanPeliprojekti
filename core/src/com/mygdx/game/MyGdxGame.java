@@ -11,6 +11,7 @@ public class MyGdxGame extends Game {
     private final boolean ON = true;
     private final boolean OFF = false;
 
+    private boolean unlockAllStages = ON;
     private boolean music;
     private boolean soundEffect;
 	/**
@@ -66,6 +67,9 @@ public class MyGdxGame extends Game {
         availableStage = new boolean[]{AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE, NOT_AVAILABLE};
         prefs = Gdx.app.getPreferences("GameData");
         restoreGameData();
+        if(unlockAllStages) {
+            setUnlockedStages(5);
+        }
 		mainMenu = new MainMenuScreen(this);
 		// moves to main menu
 		setScreen(mainMenu);
