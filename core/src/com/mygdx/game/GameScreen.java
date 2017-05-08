@@ -316,7 +316,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             lightDoll.moveLightDoll(player);
 
             // If current map is containing rats and voodoo dolls
-            if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+            if(host.getCurrentStage() == 1 ||
+                    host.getCurrentStage() == 2 ||
+                    host.getCurrentStage() == 5) {
                 bodyHandler.callEnemyWalk(host);
             }
 
@@ -511,7 +513,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             }
         });
 
-        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+        if(host.getCurrentStage() == 1 ||
+                host.getCurrentStage() == 2 ||
+                host.getCurrentStage() == 5) {
             bodyHandler.clearBodies(world, lightDoll);
         }
 

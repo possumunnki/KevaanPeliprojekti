@@ -223,8 +223,12 @@ public class BodyHandler {
      * Calls movement methods from enemy classes
      */
     public void callEnemyWalk(MyGdxGame host) {
-        rat.ratWalk();
+
         voodoo.voodooWalk(host);
+
+        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+            rat.ratWalk();
+        }
     }
 
     public void callBossAction(MyGdxGame host, World world) {

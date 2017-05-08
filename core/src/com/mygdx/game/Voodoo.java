@@ -41,6 +41,9 @@ public class Voodoo {
     private final int[]stage2Y = {1, 2, 8, 8, 8, 7, 7, 7, 8};
 
     // STAGE 5 VOODOO POSITIONS
+    private final float[]stage5X = {1.5f, 14, 26, 18, 48};
+    private final float[]stage5Y = {2.5f, 4, 2, 2, 2};
+
     // insert here
     // and here
 
@@ -51,7 +54,9 @@ public class Voodoo {
         voodooTex = new Texture(Gdx.files.internal("voodooNew.png"));
         vdObject = new ObjectData(voodooTex, 0.2f, 0.2f, ObjectData.GameObjectType.VOODOO);
 
-        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+        if(host.getCurrentStage() == 1 ||
+                host.getCurrentStage() == 2 ||
+                host.getCurrentStage() == 5) {
 
 
             if(host.getCurrentStage() == 1) {
@@ -129,19 +134,53 @@ public class Voodoo {
                 testBody9 = createBody(stage2X[8], stage2Y[8], vdObject.width, vdObject.height,
                         world);
                 testBody9.setUserData(vdObject);
+
+            } else if (host.getCurrentStage() == 5) {
+
+                    // Voodoo 1-3
+                    testBody1 = createBody(stage5X[0], stage5Y[0], vdObject.width, vdObject.height,
+                            world);
+                    testBody1.setUserData(vdObject);
+
+                    testBody2 = createBody(stage5X[1], stage5Y[1], vdObject.width, vdObject.height,
+                            world);
+                    testBody2.setUserData(vdObject);
+
+                    testBody3 = createBody(stage5X[2], stage5Y[2], vdObject.width, vdObject.height,
+                            world);
+                    testBody3.setUserData(vdObject);
+                    // Voodoo 4-5
+                    testBody4 = createBody(stage5X[3], stage5Y[3], vdObject.width, vdObject.height,
+                            world);
+                    testBody4.setUserData(vdObject);
+
+                    testBody5 = createBody(stage5X[4], stage5Y[4], vdObject.width, vdObject.height,
+                            world);
+                    testBody5.setUserData(vdObject);
+
+                }
             }
 
-            voodooBodyArray.add(testBody1);
-            voodooBodyArray.add(testBody2);
-            voodooBodyArray.add(testBody3);
-            voodooBodyArray.add(testBody4);
-            voodooBodyArray.add(testBody5);
-            voodooBodyArray.add(testBody6);
-            voodooBodyArray.add(testBody7);
-            voodooBodyArray.add(testBody8);
-            voodooBodyArray.add(testBody9);
-        }
+            if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+                voodooBodyArray.add(testBody1);
+                voodooBodyArray.add(testBody2);
+                voodooBodyArray.add(testBody3);
+                voodooBodyArray.add(testBody4);
+                voodooBodyArray.add(testBody5);
+                voodooBodyArray.add(testBody6);
+                voodooBodyArray.add(testBody7);
+                voodooBodyArray.add(testBody8);
+                voodooBodyArray.add(testBody9);
+            } else if(host.getCurrentStage() == 5) {
+                voodooBodyArray.add(testBody1);
+                voodooBodyArray.add(testBody2);
+                voodooBodyArray.add(testBody3);
+                voodooBodyArray.add(testBody4);
+                voodooBodyArray.add(testBody5);
+            }
+
     }
+
 
     private Body createBody(float x, float y, float width, float height, World world) {
         Body newBody = world.createBody(getDefinitionOfBody(x, y));
@@ -224,6 +263,26 @@ public class Voodoo {
                 } else if(testBody9.getPosition().x > (56 + 1)) {
                     leftTurn = false;
                 }
+
+                // STAGE 5 DOLL MOVEMENT
+            } else if (host.getCurrentStage() == 5 && body.getLinearVelocity().y == 0) {
+                // set initial speed
+                if(!leftTurn) {
+
+                    //Gdx.app.log("log", "stage 5 vd move");
+                    body.setLinearVelocity(-0.75f, 0);
+                }
+                // Move to opposite direction when too far from initial position
+                if(testBody4.getPosition().x < (48 - 0.5f)) {
+                    body.setLinearVelocity(0, 0);
+                    leftTurn = true;
+
+                }
+                /**
+                } else if(testBody4.getPosition().x > (48 + 0.5f)) {
+                    leftTurn = false;
+                }
+                 */
             }
         }
     }
