@@ -85,7 +85,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private float stageHeight = host.SCREEN_HEIGHT * 100f;
 
 
-
     private SpriteBatch batch;
     private World world;
     private OrthographicCamera camera;
@@ -146,7 +145,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Texture kekkonen;
 
 
-
     public GameScreen(MyGdxGame host) {
 
         this.host = host;
@@ -158,12 +156,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 host.SCREEN_HEIGHT);
         viewport = new FitViewport(host.SCREEN_WIDTH, host.SCREEN_HEIGHT, camera);
 
-        if(host.getMusic() == ON) {
+        if (host.getMusic() == ON) {
             gameBGM = Gdx.audio.newMusic(Gdx.files.internal("bgm2.mp3"));
             gameBGM.isLooping();
         }
 
-        if(host.getSoundEffect() == ON) {
+        if (host.getSoundEffect() == ON) {
             deathSound = Gdx.audio.newSound(Gdx.files.internal("MummoDeath.wav"));
             mobKillSound = Gdx.audio.newSound(Gdx.files.internal("MobKill.wav"));
         }
@@ -216,38 +214,37 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Sets tile map, width and height of the game stage depending on current stage.
      * Also transforms tile maps rectangles to bodies and sets gameMode.
-     *
      */
     private void setGameStage() {
         // if current game stage is 1.
-        if(host.getCurrentStage() == 1) {
+        if (host.getCurrentStage() == 1) {
             tiledMap = new TmxMapLoader().load("stage1nbg.tmx");
             // sets tiles amount on the game stage
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
 
-        } else if(host.getCurrentStage() == 2) {
+        } else if (host.getCurrentStage() == 2) {
             tiledMap = new TmxMapLoader().load("stage2nbg.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
 
-        } else if(host.getCurrentStage() == 3) {
+        } else if (host.getCurrentStage() == 3) {
             tiledMap = new TmxMapLoader().load("stage3nbg.tmx");
             tilesAmountWidth = 400;
             tilesAmountHeight = 30;
             // turns rat race on, it changes game control
             host.setGameMode(host.RAT_RACE);
 
-        } else if(host.getCurrentStage() == 4) {
+        } else if (host.getCurrentStage() == 4) {
             tiledMap = new TmxMapLoader().load("stage4nbg.tmx");
             tilesAmountWidth = 440;
             tilesAmountHeight = 50;
             // turns rat race on, it changes game control
             host.setGameMode(host.RAT_RACE);
 
-        } else if(host.getCurrentStage() == 5) {
+        } else if (host.getCurrentStage() == 5) {
             tiledMap = new TmxMapLoader().load("stage5.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
@@ -257,7 +254,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         /**
          * Adds spike bodies to maps which contain spikes
          */
-        if(host.getCurrentStage() == 2 ||
+        if (host.getCurrentStage() == 2 ||
                 host.getCurrentStage() == 4 ||
                 host.getCurrentStage() == 5) {
             Utilities.transformWallsToBodies("spike-rectangles", "spike", tiledMap, world);
@@ -265,13 +262,13 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         Utilities.transformWallsToBodies("wall-rectangles", "wall", tiledMap, world);
 
-        if(host.getCurrentStage() != 5) {
+        if (host.getCurrentStage() != 5) {
             Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
         }
 
-        tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1/100f);
+        tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1 / 100f);
 
-        worldWidthPixels = tilesAmountWidth  * TILE_WIDTH;
+        worldWidthPixels = tilesAmountWidth * TILE_WIDTH;
         worldHeightPixels = tilesAmountHeight * TILE_HEIGHT;
     }
 
@@ -279,11 +276,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
      * Creates actors and stage for pause menu
      */
     private void createPauseMenu() {
-        pauseStage =  new Stage(new FillViewport(stageWidth, stageHeight), batch);
+        pauseStage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
 
-        resume = new FontActor("RESUME", stageWidth*1/2, stageHeight * 4/8);
-        restart = new FontActor("RESTART", stageWidth*1/2, stageHeight * 3/8);
-        backToMap = new FontActor("BACK TO MAP", stageWidth*1/2, stageHeight * 2/8);
+        resume = new FontActor("RESUME", stageWidth * 1 / 2, stageHeight * 4 / 8);
+        restart = new FontActor("RESTART", stageWidth * 1 / 2, stageHeight * 3 / 8);
+        backToMap = new FontActor("BACK TO MAP", stageWidth * 1 / 2, stageHeight * 2 / 8);
 
         pauseStage.addActor(resume);
         pauseStage.addActor(restart);
@@ -291,11 +288,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     }
 
     public void setGameController() {
-        if(host.getGameMode() == host.ADVENTURE) {
+        if (host.getGameMode() == host.ADVENTURE) {
             // adds game on pad in the game
             controller1 = new Controller1(host, 0, 0);
             buttonStage.addActor(controller1.getTouchpad());
-        } else if(host.getGameMode() == host.RAT_RACE) {
+        } else if (host.getGameMode() == host.RAT_RACE) {
 
         }
     }
@@ -303,6 +300,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     public World getWorld() {
         return world;
     }
+
     @Override
     public void show() {
 
@@ -325,19 +323,19 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
 
 
-        if(pause == ON) {
+        if (pause == ON) {
             pauseStage.act();
             pauseStage.draw();
 
-        } else if(pause == OFF) {
-            if(host.getGameMode() == host.ADVENTURE) {
+        } else if (pause == OFF) {
+            if (host.getGameMode() == host.ADVENTURE) {
                 controller1.moveTouchPad();
                 // enables player to move with game on pad
                 player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
-                                  controller1.getTouchpad().getKnobPercentY(), host);
+                        controller1.getTouchpad().getKnobPercentY(), host);
                 // enables player to move with arrow key
                 player.movePlayer(host);
-            } else if(host.getGameMode() == host.RAT_RACE) {
+            } else if (host.getGameMode() == host.RAT_RACE) {
                 // enables player to move automatically
                 player.moveMountedPlayer(host);
             }
@@ -345,13 +343,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             lightDoll.moveLightDoll(player);
 
             // If current map is containing rats and voodoo dolls
-            if(host.getCurrentStage() == 1 ||
-                    host.getCurrentStage() == 2 ||
-                    host.getCurrentStage() == 5) {
+            if (host.getCurrentStage() == 1 ||
+                    host.getCurrentStage() == 2) {
                 bodyHandler.callEnemyWalk(host);
             }
 
-            if(host.getCurrentStage() == 5) {
+            if (host.getCurrentStage() == 5) {
                 bodyHandler.callBossAction(host, world);
             }
 
@@ -368,19 +365,17 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             world.getBodies(bodyHandler.getBodies());
 
             // uses debug renderer if boolean value is true
-            if(isDebugOn) {
-                debugRenderer.render(world,camera.combined);
+            if (isDebugOn) {
+                debugRenderer.render(world, camera.combined);
             }
             // draw dialog when player touches exclamation mark
         }
 
         // shows position of player
-        if(Gdx.input.isKeyPressed(Input.Keys.P)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
             Gdx.app.log("Player body posX", "" + player.getPlayerBody().getPosition().x);
             Gdx.app.log("Player body posY", "" + player.getPlayerBody().getPosition().y);
         }
-
-
 
 
         activatePause();
@@ -399,7 +394,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         /**
          * Draws Urho Kekkonen-doll to the end of stage 2
          */
-        if(host.getCurrentStage() == 2) {
+        if (host.getCurrentStage() == 2) {
 
             batch.draw(kekkonen, 61.5f, 4.5f, 0.5f, 1f);
         }
@@ -407,15 +402,14 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         batch.end();
 
         // Render lights
-        lightSetup.render(camera);
+        lightSetup.render(camera, true);
 
         buttonStage.act(Gdx.graphics.getDeltaTime());
         buttonStage.draw();
 
 
-
-        if(pause == OFF) {
-            if(player.getPlayerBody().getPosition().x > 60f &&
+        if (pause == OFF) {
+            if (player.getPlayerBody().getPosition().x > 60f &&
                     player.getPlayerBody().getPosition().x < 62f &&
                     host.getCurrentStage() == 2) {
                 exclamationStage.act();
@@ -463,7 +457,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 Body body2 = contact.getFixtureB().getBody();
 
 
-                if (body1.getUserData() != null ) {
+                if (body1.getUserData() != null) {
 
                     // When player touches the goal area.
                     if (body1.getUserData().equals("player")) {
@@ -474,11 +468,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                     }
 
                     // If the immortality hack is not used.
-                    if(immortality == !ON) {
+                    if (immortality == !ON) {
                         // when player touches an enemy
                         if (body1.getUserData().equals(bodyHandler.callVoodooGetter()) ||
                                 body1.getUserData().equals(bodyHandler.callRatGetter())) {
-                            if(body2.getUserData().equals("player")) {
+                            if (body2.getUserData().equals("player")) {
                                 //switch to game over screen
                                 Gdx.app.log("log", "gameover");
                                 gameOver = true;
@@ -486,8 +480,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                         }
 
                         // when players foots touches an enemy
-                        if(body1.getUserData().equals("foot")) {
-                            if(body2.getUserData().equals("spike")) {
+                        if (body1.getUserData().equals("foot")) {
+                            if (body2.getUserData().equals("spike")) {
                                 //switch to game over screen
                                 Gdx.app.log("log", "gameover");
                                 gameOver = true;
@@ -499,9 +493,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                     /**
                      * Cat collision gameover-check
                      */
-                    if(immortality == !ON) {
-                        if(body1.getUserData().equals("player")) {
-                            if(body2.getUserData().equals("cat")) {
+                    if (immortality == !ON) {
+                        if (body1.getUserData().equals("player")) {
+                            if (body2.getUserData().equals("cat")) {
                                 //switch to game over screen
                                 Gdx.app.log("log", "gameover");
                                 gameOver = true;
@@ -510,8 +504,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                     }
 
                     // when player touches the wall.
-                    if(body1.getUserData().equals("foot")) {
-                        if(body2.getUserData().equals("wall")) {
+                    if (body1.getUserData().equals("foot")) {
+                        if (body2.getUserData().equals("wall")) {
                             player.setOnTheGround(true);
                         }
                     }
@@ -532,7 +526,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
                     if (body2.getUserData().equals("player")) {
                         Gdx.app.log("collision2.1", "Dump");
-                        if(body1.getUserData().equals("goal")) {
+                        if (body1.getUserData().equals("goal")) {
                             Gdx.app.log("collision2.2", "Dump");
                             goal = true;
 
@@ -543,58 +537,59 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             }
         });
 
-        if(host.getCurrentStage() == 1 ||
+        if (host.getCurrentStage() == 1 ||
                 host.getCurrentStage() == 2 ||
                 host.getCurrentStage() == 5) {
             bodyHandler.clearBodies(world, lightDoll);
         }
 
         // If player falls down, it's game over (instead of going back to start)
-        if(player.getGameOver2()) {
+        if (player.getGameOver2()) {
             gameOver = true;
         }
 
 
-        }
-        if(exclamationMarkActor.getTouch()) {
-            if(host.getCurrentStage() == 2 && exclamationButton) {
-                exclamationMarkActor.remove();
+    if(exclamationMarkActor.getTouch())
+    {
+        if (host.getCurrentStage() == 2 && exclamationButton) {
+            exclamationMarkActor.remove();
 
-                host.setScreen(new TalkScreen(host));
-            } else {
-                exclamationMarkActor.setTouch(false);
-            }
-
+            host.setScreen(new TalkScreen(host));
+        } else {
+            exclamationMarkActor.setTouch(false);
         }
 
-        detectPauseMenuButtons();
-
-        if(goal) {
-            host.unlockStage(host.getCurrentStage());
-            host.setCurrentStage(host.getCurrentStage() + 1);
-            host.saveUnlockedStages(host.getCurrentStage());
-            host.setUnlockedStages(host.getUnlockedStages());
-
-            Gdx.app.log("Current Stage", "" + host.getCurrentStage());
-            doHeavyStuff();
-            host.setScreen(new MapScreen(host));
-        } else if(gameOver) {
-            if(host.getSoundEffect() == ON) {
-                deathSound.play(0.5f);
-            }
-            doHeavyStuff();
-            host.setScreen(new GameOverScreen(host));
-        }
     }
 
+    detectPauseMenuButtons();
 
+    if(goal)
+    {
+        host.unlockStage(host.getCurrentStage());
+        host.setCurrentStage(host.getCurrentStage() + 1);
+        host.saveUnlockedStages(host.getCurrentStage());
+        host.setUnlockedStages(host.getUnlockedStages());
 
+        Gdx.app.log("Current Stage", "" + host.getCurrentStage());
+        doHeavyStuff();
+        host.setScreen(new MapScreen(host));
+    }
+
+    else if(gameOver)
+    {
+        if (host.getSoundEffect() == ON) {
+            deathSound.play(0.5f);
+        }
+        doHeavyStuff();
+        host.setScreen(new GameOverScreen(host));
+    }
+}
 
     /**
      * When pause is ON, buttons of menu detects touches and resumes game or moves to another
      * screen.
      */
-    private void detectPauseMenuButtons() {
+    public void detectPauseMenuButtons() {
         if(pause == ON) {
             // when RESUME -button is touched
             if(resume.getTouch()) {
