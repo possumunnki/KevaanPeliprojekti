@@ -452,10 +452,18 @@ public class Player {
     }
 
     public void dispose() {
+
         mummoTexture.dispose();
         walkTexture.dispose();
         ratMountTexture.dispose();
         ratRunTexture.dispose();
+        jumpSound1.dispose();
+        jumpSound2.dispose();
+        jumpSound3.dispose();
+        jumpSound4.dispose();
+        jumpSound5.dispose();
+        jumpSound6.dispose();
+        jumpSound7.dispose();
     }
 
     public void setPlayerSpritePosition() {
