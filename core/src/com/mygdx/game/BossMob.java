@@ -44,7 +44,7 @@ public class BossMob {
 
         bossTexture = new Texture("boss1.png");
         fireball = new Texture("fireball.png");
-        bossLocation = new Vector2(58.75f, 1.5f);
+        bossLocation = new Vector2(62f, 1.5f);
 
         bossObject = new ObjectData(bossTexture,
                 bossTexture.getWidth() / 90f,
@@ -141,9 +141,9 @@ public class BossMob {
         if(bossBody.getLinearVelocity().y == 0) {
 
             if(!bossRight) {
-                bossBody.setLinearVelocity(1.0f, 0);
+                bossBody.setLinearVelocity(-1.35f, 0);
 
-                if(bossBody.getPosition().x > bossLocation.x + 0.15f) {
+                if(bossBody.getPosition().x < bossLocation.x - 5f) {
                     bossBody.setLinearVelocity(0, 0);
                     bossRight = true;
 
@@ -153,7 +153,7 @@ public class BossMob {
                     //fire(world);
                 }
             } else if(bossRight) {
-                bossBody.setLinearVelocity(-1.0f, 0);
+                bossBody.setLinearVelocity(1.35f, 0);
 
                 if(bossBody.getPosition().x < bossLocation.x - 0.11f) {
                     bossRight = false;
