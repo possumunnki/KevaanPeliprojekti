@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -15,6 +16,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+
+import java.util.Random;
+
+import sun.rmi.runtime.Log;
 
 /**
  * Created by possumunnki on 7.3.2017.
@@ -31,7 +36,7 @@ public class Player {
     private Animation<TextureRegion> mummoWalkAnim;
     private TextureRegion mummoWalkCurrentFrame;
 
-    private Sound jumpSound1;
+    private Sound jumpSound1, jumpSound2, jumpSound3, jumpSound4, jumpSound5, jumpSound6, jumpSound7;
     private boolean isWalking = false;
 
     /**
@@ -76,7 +81,13 @@ public class Player {
         this.world = world;
         this.host = host;
 
-        jumpSound1 = Gdx.audio.newSound(Gdx.files.internal("Jump.wav"));
+        jumpSound1 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_001.wav"));
+        jumpSound2 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_002.wav"));
+        jumpSound3 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_003.wav"));
+        jumpSound4 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_004.wav"));
+        jumpSound5 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_005.wav"));
+        jumpSound6 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_006.wav"));
+        jumpSound7 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_007.wav"));
 
         mummoTexture = new Texture("mummo1.png");
         playerSprite = new Sprite(mummoTexture);
@@ -220,13 +231,14 @@ public class Player {
             jump(host);
         }
 
+
         setPlayerSpritePosition();
         setFootBodyPos(host);
     }
 
     public void movePlayer(float knobPercentX, float knobPercentY, MyGdxGame host) {
 
-
+        boolean jumped = false;
             // playerBody.applyForceToCenter(new Vector2(2.5f, 0f), true);
 
         if(knobPercentX > 0) {
@@ -243,8 +255,9 @@ public class Player {
         playerBody.setLinearVelocity(MAX_SPEED * knobPercentX, playerBody.getLinearVelocity().y);
 
         // playerBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
-        if(knobPercentY > 0.5f) {
+        if(jumped == false && knobPercentY > 0.5f) {
             jump(host);
+            jumped = true;
         }
 
         // If player falls below screen
@@ -308,10 +321,40 @@ public class Player {
             }
 
             if(host.getSoundEffect() == true) {
-                jumpSound1.play(0.3f);
 
+                //int jumpRandom = (int)Math.random() * 7 + 1;
+                int jumpRandom = (int)Math.floor(Math.random()*7) + 1;
+
+                Gdx.app.log("jumprandom:", "" + jumpRandom);
+                //Gdx.app.log("ontheground:", "" + onTheGround);
+
+
+                switch(jumpRandom){
+                    case 1:
+                        jumpSound1.play(1f);
+                        break;
+                    case 2:
+                        jumpSound2.play(1f);
+                        break;
+                    case 3:
+                        jumpSound3.play(1f);
+                        break;
+                    case 4:
+                        jumpSound4.play(1f);
+                        break;
+                    case 5:
+                        jumpSound5.play(1f);
+                        break;
+                    case 6:jumpSound6.play(1f);
+                        break;
+                    case 7:jumpSound7.play(1f);
+                        break;
+                    default:
+                        Gdx.app.log("Error with sounds", "something went wrong with playing the jumpsound");
+                }
             }
-            onTheGround = false;
+
+            setOnTheGround(false);
         }
     }
 
@@ -413,7 +456,6 @@ public class Player {
         walkTexture.dispose();
         ratMountTexture.dispose();
         ratRunTexture.dispose();
-        jumpSound1.dispose();
     }
 
     public void setPlayerSpritePosition() {
@@ -435,8 +477,8 @@ public class Player {
     }
 
 
-    public void setOnTheGround() {
-        this.onTheGround = true;
+    public void setOnTheGround(boolean b) {
+        this.onTheGround = b;
     }
 
     public World getWorld() {

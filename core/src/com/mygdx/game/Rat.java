@@ -25,7 +25,7 @@ public class Rat {
 
     public Rat(World world, MyGdxGame host) {
 
-        ratTex = new Texture("rat256.png");
+        ratTex = new Texture(Gdx.files.internal("rat256.png"));
 
         ratObject = new ObjectData(ratTex, 1.2f, 0.5f, ObjectData.GameObjectType.RAT);
 
@@ -56,7 +56,7 @@ public class Rat {
         vdBodyDef.type = BodyDef.BodyType.DynamicBody;
 
         // Initial position is centered up
-        // This position is shape's center.
+        // This position is the CENTER of the shape!
         vdBodyDef.position.set(x, y);
 
         return vdBodyDef;

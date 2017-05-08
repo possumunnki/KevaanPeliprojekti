@@ -45,7 +45,7 @@ public class FontActor extends Actor {
         /*font.draw(batch, fontString, printX - getWidth() / 2,
                 printY + getHeight());*/
 
-        if(touchEnter == true || touch == true) {
+        if(touchEnter == true) {
             blackFont.draw(batch, fontString, printX - getWidth() / 2,
                     printY + getHeight());
         } else {
@@ -67,6 +67,10 @@ public class FontActor extends Actor {
         this.remove();
     }
 
+    public void setTouch(boolean touch) {
+        this.touch = touch;
+    }
+
     public void setFontScale(float scale) {
         blackFont.getData().setScale(scale);
         fontLayout.setText(blackFont, fontString); // not working
@@ -80,7 +84,7 @@ public class FontActor extends Actor {
                                  int pointer,
                                  int button) {
             touch = true;
-            Gdx.app.log("Example1", "touch done at (" + x + ", " + y + ")");
+            Gdx.app.log(fontString, "touch done");
 
             return false;
         }
@@ -91,7 +95,7 @@ public class FontActor extends Actor {
                             int pointer,
                             int button) {
             touch = true;
-            Gdx.app.log("Example2", "touch done at (" + x + ", " + y + ")");
+            Gdx.app.log(fontString, "touch done at (" + x + ", " + y + ")");
         }
         public void enter(InputEvent event,
                           float x,

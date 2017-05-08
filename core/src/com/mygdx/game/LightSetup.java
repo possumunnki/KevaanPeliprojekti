@@ -30,8 +30,12 @@ public class LightSetup {
 
     // The distance that light will travel
     private float LIGHT_DISTANCE = 4.5f;
+    private float RADIUS = 1f;
     private RayHandler rayHandler;
     private ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
+
+    // for directional (sun)light
+    private float sunDirection = -90f;
 
 
     public LightSetup(World world, LightDoll doll, Player player) {
@@ -42,16 +46,13 @@ public class LightSetup {
         rayHandler = new RayHandler(world);
 
         // Ambient light-setting, (RED, GREEN, BLUE, ALPHA)
-
-        // 0-255 values:           30.6, 73.95, 112.2, n/a;
-        //rayHandler.setAmbientLight(0.12f, 0.29f, 0.44f, 0.55f);
-        rayHandler.setAmbientLight(0.05f, 0.12f, 0.18f, 0.55f);
+        rayHandler.setAmbientLight(0.12f, 0.29f, 0.44f, 0.55f);
         rayHandler.setBlurNum(3);
 
-        initPointLights(doll);
+        initPointLights(doll, player);
     }
 
-    public void render(OrthographicCamera cam) {
+    public void render(OrthographicCamera cam, boolean stepped) {
 
         rayHandler.setCombinedMatrix(cam);
         rayHandler.update();
@@ -61,7 +62,7 @@ public class LightSetup {
     /**
      * Box2Dlights light-adding method
      */
-    private void initPointLights(LightDoll lightDoll) {
+    private void initPointLights(LightDoll lightDoll, Player player) {
         clearLights();
         for (int i = 0; i < BALLSNUM; i++) {
 
@@ -75,6 +76,7 @@ public class LightSetup {
                     0.43f,
                     0.15f);
             lights.add(DollLight);
+
 
             // Test for different type of light
             /**
@@ -94,6 +96,7 @@ public class LightSetup {
     /**
      * Box2Dlights light-removal method
      */
+    // Template for light-removal method
     private void clearLights() {
         if (lights.size() > 0) {
             for (Light light : lights) {
