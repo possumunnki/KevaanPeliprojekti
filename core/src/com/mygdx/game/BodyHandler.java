@@ -31,6 +31,9 @@ public class BodyHandler {
 
     private BossMob boss;
 
+    // hit counter for boss kill, needs five hits to finish.
+    private int hitCount = 0;
+
     public BodyHandler(World world, MyGdxGame host) {
         this.host = host;
         windowWidth = host.SCREEN_WIDTH;
@@ -185,11 +188,13 @@ public class BodyHandler {
 
         // Iterate all voodooDolls
         for (Body body : bodies) {
-            // If it equals voodoo template
-            if (body.getUserData().equals(voodoo.getVdObject())) {
+            // If it equals voodoo objectData
+            if (body.getUserData().equals(voodoo.getVdObject()) ||
+                    body.getUserData().equals(boss.getBossObject())) {
                 ObjectData info = (ObjectData) body.getUserData();
                 // If it is a voodoo doll, then mark it to be removed.
-                if (info.type == ObjectData.GameObjectType.VOODOO) {
+                if (info.type == ObjectData.GameObjectType.VOODOO ||
+                        info.type == ObjectData.GameObjectType.BOSS) {
 
                     // Check when the light doll is near enemy body
                     if(lightDoll.getLightDollBody().getPosition().x >
@@ -201,10 +206,30 @@ public class BodyHandler {
                             lightDoll.getLightDollBody().getPosition().y <
                                     (body.getPosition().y + 0.4f)) {
 
-                        // Add the specific body to bodiesToBeDestroyed-list
-                        bodiesToBeDestroyed.add(body);
-                        if(host.getSoundEffect() == ON) {
-                            mobKillSound.play(0.5f);
+                        if (body.getUserData().equals(voodoo.getVdObject())) {
+                            // Add the specific body to bodiesToBeDestroyed-list
+                            bodiesToBeDestroyed.add(body);
+                            if (host.getSoundEffect() == ON) {
+                                mobKillSound.play(0.5f);
+                            }
+                        }
+
+                        // If light doll hits the boss mob
+                        if (body.getUserData().equals(boss.getBossObject())) {
+
+                            Gdx.app.log("log", "boss is hit!");
+
+                            // play mob kill sfx every time the boss is hit
+                            if (host.getSoundEffect() == ON) {
+                                mobKillSound.play(0.5f);
+                            }
+
+                            hitCount++;
+
+                            // when boss is hit 5 times, destroy boss
+                            if(hitCount > 5) {
+                                bodiesToBeDestroyed.add(body);
+                            }
                         }
                     }
                 }
@@ -246,6 +271,10 @@ public class BodyHandler {
 
     public ObjectData callRatGetter() {
         return rat.getRatObject();
+    }
+
+    public ObjectData callBossGetter() {
+        return boss.getBossObject();
     }
 
     public Array<Body> getBodies() {

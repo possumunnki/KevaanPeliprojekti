@@ -85,6 +85,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private float stageHeight = host.SCREEN_HEIGHT * 100f;
 
 
+
     private SpriteBatch batch;
     private World world;
     private OrthographicCamera camera;
@@ -102,6 +103,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Music gameBGM;
     private Sound deathSound;
     private Sound mobKillSound;
+    private Sound bossCallSound;
+
+    private boolean playBossSoundOnce = false;
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
@@ -136,13 +140,14 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private Texture dialog1;
 
+    private Cat cat;
+
+    private Texture kekkonen;
+
     private FontActor resume;
     private FontActor restart;
     private FontActor backToMap;
 
-    private Cat cat;
-
-    private Texture kekkonen;
 
 
     public GameScreen(MyGdxGame host) {
@@ -164,6 +169,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if (host.getSoundEffect() == ON) {
             deathSound = Gdx.audio.newSound(Gdx.files.internal("MummoDeath.wav"));
             mobKillSound = Gdx.audio.newSound(Gdx.files.internal("MobKill.wav"));
+            bossCallSound = Gdx.audio.newSound(Gdx.files.internal("GitDbossCall01.wav"));
         }
 
 
@@ -402,11 +408,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         batch.end();
 
         // Render lights
-        lightSetup.render(camera, true);
+        lightSetup.render(camera);
 
         buttonStage.act(Gdx.graphics.getDeltaTime());
         buttonStage.draw();
-
 
         if (pause == OFF) {
             if (player.getPlayerBody().getPosition().x > 60f &&
@@ -471,8 +476,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                     if (immortality == !ON) {
                         // when player touches an enemy
                         if (body1.getUserData().equals(bodyHandler.callVoodooGetter()) ||
-                                body1.getUserData().equals(bodyHandler.callRatGetter())) {
-                            if (body2.getUserData().equals("player")) {
+                                body1.getUserData().equals(bodyHandler.callRatGetter()) ||
+                                body1.getUserData().equals(bodyHandler.callBossGetter())) {
+                            if(body2.getUserData().equals("player")) {
                                 //switch to game over screen
                                 Gdx.app.log("log", "gameover");
                                 gameOver = true;
@@ -480,136 +486,104 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                         }
 
                         // when players foots touches an enemy
+                        if(body1.getUserData().equals("foot")) {
+                            if(body2.getUserData().equals("spike")) {
+                                //switch to game over screen
+                                Gdx.app.log("log", "gameover");
+                                gameOver = true;
+                            }
+                        }
+                    }
+
+
+                        /**
+                         * Cat collision gameover-check
+                         */
+                        if(body1.getUserData().equals("player")) {
+                            if(body2.getUserData().equals("cat")) {
+                                //switch to game over screen
+                                Gdx.app.log("log", "gameover");
+                                gameOver = true;
+                            }
+                        }
+
+                        // when player touches the wall.
                         if (body1.getUserData().equals("foot")) {
-                            if (body2.getUserData().equals("spike")) {
-                                //switch to game over screen
-                                Gdx.app.log("log", "gameover");
-                                gameOver = true;
+                            if (body2.getUserData().equals("wall")) {
+                                player.setOnTheGround(true);
                             }
                         }
-                    }
+                    } else if (body2.getUserData() != null) {
 
+                        if (body2.getUserData().equals("player")) {
+                            Gdx.app.log("collision2.1", "Dump");
+                            /*if(body1.getUserData().equals("ground")) {
+                                //jump = false;
+                                //doubleJump = false;
+                                Gdx.app.log("collision2.2", "Dump");
+                                //player.setOnTheGround();
+                            }*/
 
-                    /**
-                     * Cat collision gameover-check
-                     */
-                    if (immortality == !ON) {
-                        if (body1.getUserData().equals("player")) {
-                            if (body2.getUserData().equals("cat")) {
-                                //switch to game over screen
-                                Gdx.app.log("log", "gameover");
-                                gameOver = true;
+                        }
+
+                        if (body2.getUserData().equals("player")) {
+                            Gdx.app.log("collision2.1", "Dump");
+                            if(body1.getUserData().equals("goal")) {
+                                Gdx.app.log("collision2.2", "Dump");
+                                goal = true;
+
                             }
                         }
-                    }
-
-                    // when player touches the wall.
-                    if (body1.getUserData().equals("foot")) {
-                        if (body2.getUserData().equals("wall")) {
-                            player.setOnTheGround(true);
-                        }
-                    }
-
-
-                } else if (body2.getUserData() != null) {
-
-                    if (body2.getUserData().equals("player")) {
-                        Gdx.app.log("collision2.1", "Dump");
-                        /*if(body1.getUserData().equals("ground")) {
-                            //jump = false;
-                            //doubleJump = false;
-                            Gdx.app.log("collision2.2", "Dump");
-                            //player.setOnTheGround();
-                        }*/
-
-                    }
-
-                    if (body2.getUserData().equals("player")) {
-                        Gdx.app.log("collision2.1", "Dump");
-                        if (body1.getUserData().equals("goal")) {
-                            Gdx.app.log("collision2.2", "Dump");
-                            goal = true;
-
-                        }
-
-                    }
                 }
             }
         });
 
-        if (host.getCurrentStage() == 1 ||
+        if(host.getCurrentStage() == 1 ||
                 host.getCurrentStage() == 2 ||
                 host.getCurrentStage() == 5) {
             bodyHandler.clearBodies(world, lightDoll);
         }
 
         // If player falls down, it's game over (instead of going back to start)
-        if (player.getGameOver2()) {
+        if(player.getGameOver2()) {
             gameOver = true;
         }
 
 
-    if(exclamationMarkActor.getTouch())
-    {
-        if (host.getCurrentStage() == 2 && exclamationButton) {
+        if(host.getCurrentStage() == 2 && exclamationMarkActor.getTouch()) {
             exclamationMarkActor.remove();
 
             host.setScreen(new TalkScreen(host));
-        } else {
-            exclamationMarkActor.setTouch(false);
         }
 
-    }
+        // play boss shout sound effect at stage 5 start
+        if(host.getCurrentStage() == 5 && host.getSoundEffect() == ON && (player.getPlayerBody()
+                .getPosition().x > 10f && player.getPlayerBody().getPosition().x < 12f)) {
 
-    detectPauseMenuButtons();
-
-    if(goal)
-    {
-        host.unlockStage(host.getCurrentStage());
-        host.setCurrentStage(host.getCurrentStage() + 1);
-        host.saveUnlockedStages(host.getCurrentStage());
-        host.setUnlockedStages(host.getUnlockedStages());
-
-        Gdx.app.log("Current Stage", "" + host.getCurrentStage());
-        doHeavyStuff();
-        host.setScreen(new MapScreen(host));
-    }
-
-    else if(gameOver)
-    {
-        if (host.getSoundEffect() == ON) {
-            deathSound.play(0.5f);
-        }
-        doHeavyStuff();
-        host.setScreen(new GameOverScreen(host));
-    }
-}
-
-    /**
-     * When pause is ON, buttons of menu detects touches and resumes game or moves to another
-     * screen.
-     */
-    public void detectPauseMenuButtons() {
-        if(pause == ON) {
-            // when RESUME -button is touched
-            if(resume.getTouch()) {
-                pause = OFF;
-                pauseResumeButtonActor.setStatus(pause);
-                // when RESTART -button is touched
-            } else if(restart.getTouch()) {
-                host.setScreen(new GameScreen(host));
-                // when BACK TO MAP -button is touched
-            } else if(backToMap.getTouch()) {
-                host.setScreen(new MapScreen(host));
+            if(!playBossSoundOnce) {
+                bossCallSound.play(0.4f);
+                playBossSoundOnce = true;
             }
-        } else if(pause == OFF){
-            // sets touches false because otherwise actors detects touches and sets touch true
-            resume.setTouch(false);
-            restart.setTouch(false);
-            backToMap.setTouch(false);
         }
 
+        if(goal) {
+            host.unlockStage(host.getCurrentStage());
+            host.setCurrentStage(host.getCurrentStage() + 1);
+            host.saveUnlockedStages(host.getCurrentStage());
+            host.setUnlockedStages(host.getUnlockedStages());
+
+            Gdx.app.log("Current Stage", "" + host.getCurrentStage());
+            doHeavyStuff();
+            host.setScreen(new MapScreen(host));
+        } else if(gameOver) {
+            if(host.getSoundEffect() == ON) {
+                deathSound.play(0.5f);
+            }
+            doHeavyStuff();
+            host.setScreen(new GameOverScreen(host));
+        }
     }
+
 
     private double accumulator = 0;
     private float TIME_STEP = 1 / 60f;
@@ -846,6 +820,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if(host.getGameMode() == host.RAT_RACE) {
             player.jump(host);
         }
+        Gdx.app.log("gesture tap", "detected");
         return false;
     }
 
@@ -923,6 +898,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         kekkonen.dispose();
         if(host.getMusic() == ON) {
             gameBGM.dispose();
+            deathSound.dispose();
+            bossCallSound.dispose();
         }
 
 
