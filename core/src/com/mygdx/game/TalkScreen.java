@@ -124,27 +124,57 @@ public class TalkScreen implements Screen {
     }
 
     private void addTalk() {
-        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
-            text = "Herran pieksut! Mitä ihmettä tapahtui? Miksi kaikki on niin valtavaa?";
+        if(host.getCurrentStage() == 1) {
+            text = "Herran pieksut!\nMitä ihmettä tapahtui?\nMiksi kaikki on niin valtavaa?";
             speeches.add(new Speech(GRANDMA, text));
 
             text = "Huminaa muminaa";
             speeches.add(new Speech(LIGHT_DOLL, text));
 
-            text = "KÄÄK! Hetkinen, etkös sinä ole se minkä takia minä tähän kartanoon murtauduin?";
+            text = "Kääk! Hetkinen,etkös sinä \n ole se minkä takia minä\n tähän kartanoon murtauduin?";
             speeches.add(new Speech(GRANDMA, text));
 
             text = "Hums mums";
             speeches.add(new Speech(LIGHT_DOLL, text));
 
-            text = "Sinähän leijut! Ja puhut! Tai mumiset.. " +
-                    "Joko tämä tönö on kirottu tai unohdin sittenkin ottaa lääkkeeni.";
+            text = "Sinähän leijut! Ja puhut!\nTai mumiset.. ";
+            speeches.add(new Speech(GRANDMA, text));
+
+            text = "Joko tämä tönö on kirottu\ntai unohdin sittenkin \nottaa lääkkeeni.";
             speeches.add(new Speech(GRANDMA, text));
 
             text = "...";
             speeches.add(new Speech(BOTH, text));
 
-            text = "Eiköhän lähdetä kiireen vilkkaa pois täältä.";
+            text = "Eiköhän lähdetä\n kiireen vilkkaa pois täältä.";
+            speeches.add(new Speech(GRANDMA, text));
+
+        } else if(host.getCurrentStage() == 2) {
+            text = "Mitä juuri tapahtui?\n Olo on kuin mankeloidulla";
+            speeches.add(new Speech(GRANDMA, text));
+
+            text = "Missähän me nyt mahdamme \nluurata?";
+            speeches.add(new Speech(GRANDMA, text));
+
+            text = "Kaikki näyttää pimeässä ja\n rotan kokoisena ihan \nsamalta.";
+            speeches.add(new Speech(GRANDMA, text));
+
+            text = "Hum—";
+            speeches.add(new Speech(LIGHT_DOLL, text));
+
+            text = "Hys nyt mumiseva paperipaino!\n Kuuletko tuon myhäilyn?";
+            speeches.add(new Speech(GRANDMA, text));
+
+            text = "Leijuvia auringonjumalia, \nvihaisia voodoo-nukkeja, \nepämääräistä käkätystä...";
+            speeches.add(new Speech(GRANDMA, text));
+
+            text = "Miksi minä edes tulin tänne?";
+            speeches.add(new Speech(GRANDMA, text));
+
+            text = "...";
+            speeches.add(new Speech(LIGHT_DOLL, text));
+
+            text = "Ai niin...";
             speeches.add(new Speech(GRANDMA, text));
         }
     }

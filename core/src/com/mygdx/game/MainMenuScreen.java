@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
@@ -41,7 +42,7 @@ public class MainMenuScreen implements Screen {
     private SoundIconActor bgmActor;
     private Background menuBG;
     private Music mainMenuBGM;
-
+    private Sound jumpSound1, jumpSound2, jumpSound3;
 
     public MainMenuScreen(MyGdxGame host) {
 
@@ -53,6 +54,11 @@ public class MainMenuScreen implements Screen {
                 screenWidth,
                 screenHeight);
         mainMenuBGM = Gdx.audio.newMusic(Gdx.files.internal("bgm1.mp3"));
+        mainMenuBGM.setVolume(0.4f);
+
+        jumpSound1 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_001.wav"));
+        jumpSound2 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_002.wav"));
+        jumpSound3 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_003.wav"));
 
         mainMenuStage = new Stage(new FillViewport(screenWidth, screenHeight), batch);
         // creates "START" text
@@ -97,6 +103,10 @@ public class MainMenuScreen implements Screen {
             mainMenuBGM.pause();
         }
 
+        if(host.getSoundEffect() == ON) {
+
+        }
+
         mainMenuStage.act(Gdx.graphics.getDeltaTime());
         mainMenuStage.draw();
 
@@ -136,6 +146,9 @@ public class MainMenuScreen implements Screen {
         mainMenuStage.dispose();
         Gdx.app.log("MainMenu", "disposed");
         mainMenuBGM.dispose();
+        jumpSound1.dispose();
+        jumpSound2.dispose();
+        jumpSound3.dispose();
     }
 
     /**
@@ -146,6 +159,21 @@ public class MainMenuScreen implements Screen {
         if(soundEffectActor.getTouch()) {
             host.setSoundEffect();
             soundEffectActor.setTouchFalse();
+            if(host.getSoundEffect() ){
+                int jumpRandom = (int) Math.floor(Math.random() * 3) + 1;
+
+                switch (jumpRandom) {
+                    case 1:
+                        jumpSound1.play(1f);
+                        break;
+                    case 2:
+                        jumpSound2.play(1f);
+                        break;
+                    case 3:
+                        jumpSound3.play(1f);
+                        break;
+                }
+            }
         }
 
         soundEffectActor.setSound(host.getSoundEffect());
