@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.GameScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -28,6 +28,18 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.FontActor;
+import com.mygdx.game.GameOverScreen.GameOverScreen;
+import com.mygdx.game.GameScreen.Allies.Controller1;
+import com.mygdx.game.GameScreen.Allies.LightDoll;
+import com.mygdx.game.GameScreen.Allies.LightSetup;
+import com.mygdx.game.GameScreen.Allies.Player;
+import com.mygdx.game.GameScreen.Enemies.BodyHandler;
+import com.mygdx.game.GameScreen.Enemies.Cat;
+import com.mygdx.game.MapScreen.MapScreen;
+import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.TalkScreen.TalkScreen;
+import com.mygdx.game.Utilities;
 
 /**
  * Created by possumunnki on 7.3.2017.
@@ -104,23 +116,35 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private TiledMap tiledMap;
 
     /**
-     * Stage where is all the buttons / controllers at the beginning
+     * Stage and actors of buttons / controllers.
      */
-    private Stage buttonStage;
+    private Stage controllerStage;
+    private Controller1 controller1;
+    private JumpButtonActor jumpButtonActor;
 
     /**
-     * stage for exclamation mark actor.
+     * stage and actor for exclamation mark actor.
      */
     private Stage exclamationStage;
-
+    private ExclamationMarkActor exclamationMarkActor;
     private boolean exclamationButton = false;
+
     /**
-     * stage for pause menu
+     * Stage and actors fot pause -menu.
      */
     private Stage pauseStage;
-    private Controller1 controller1;
-    private ExclamationMarkActor exclamationMarkActor;
+    private FontActor resume;
+    private FontActor restart;
+    private FontActor backToMap;
+
+    /**
+     * Stage and actor fot pause/resume -button.
+     */
+    private Stage pauseResumeStage;
     private PauseResumeButtonActor pauseResumeButtonActor;
+
+
+
 
 
     private LightSetup lightSetup;
@@ -133,9 +157,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private Texture dialog1;
 
-    private FontActor resume;
-    private FontActor restart;
-    private FontActor backToMap;
+
 
     private Cat cat;
 
@@ -163,9 +185,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             mobKillSound = Gdx.audio.newSound(Gdx.files.internal("MobKill.wav"));
         }
 
-
         world = new World(new Vector2(0, -9.8f), true);
-        buttonStage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
 
         bodyHandler = new BodyHandler(world, host);
         debugRenderer = new Box2DDebugRenderer();
@@ -176,27 +196,28 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         createPauseMenu();
         setGameStage();
+
+        controllerStage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
         setGameController();
 
-        exclamationMarkActor = new ExclamationMarkActor();
-        // creates pause/resume button and adds on the game screen
-        pauseResumeButtonActor = new PauseResumeButtonActor(host);
-        buttonStage.addActor(pauseResumeButtonActor);
-        //Create a Stage and add TouchPad
-
-
+        // creates exclamation button and adds on the stage
         exclamationStage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
+        exclamationMarkActor = new ExclamationMarkActor();
         exclamationStage.addActor(exclamationMarkActor);
 
+        // creates pause/resume button and adds on stage
+        pauseResumeStage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
+        pauseResumeButtonActor = new PauseResumeButtonActor(host);
+        pauseResumeStage.addActor(pauseResumeButtonActor);
 
         // allows to set multiple input processors
         inputMultiplexer = new InputMultiplexer();
-        // adds touchpad
 
         inputMultiplexer.addProcessor(new GestureDetector(this));
-        inputMultiplexer.addProcessor(buttonStage);
+        inputMultiplexer.addProcessor(controllerStage);
         inputMultiplexer.addProcessor(exclamationStage);
         inputMultiplexer.addProcessor(pauseStage);
+        inputMultiplexer.addProcessor(pauseResumeStage);
         // adds gesture detector
 
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -288,9 +309,13 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if(host.getGameMode() == host.ADVENTURE) {
             // adds game on pad in the game
             controller1 = new Controller1(host, 0, 0);
-            buttonStage.addActor(controller1.getTouchpad());
-        } else if(host.getGameMode() == host.RAT_RACE) {
+            // adds jump-button on the game
+            jumpButtonActor = new JumpButtonActor(host);
 
+            controllerStage.addActor(controller1.getTouchpad());
+            controllerStage.addActor(jumpButtonActor);
+        } else if(host.getGameMode() == host.RAT_RACE) {
+            jumpButtonActor = new JumpButtonActor(host);
         }
     }
 
@@ -314,7 +339,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             if (pause == ON) {
                 gameBGM.setVolume(0.1f);
             } else if (pause == OFF) {
-                gameBGM.setVolume(1f);
+                gameBGM.setVolume(0.4f);
             }
         }
 
@@ -324,22 +349,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             pauseStage.draw();
 
         } else if(pause == OFF) {
-            if(host.getGameMode() == host.ADVENTURE) {
-                controller1.moveTouchPad();
-                // enables player to move with game on pad
-                player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
-                                  controller1.getTouchpad().getKnobPercentY(), host);
-                // enables player to move with arrow key
-                player.movePlayer(host);
-            } else if(host.getGameMode() == host.RAT_RACE) {
-                // enables player to move automatically
-                player.moveMountedPlayer(host);
-            }
 
-
-
-            lightDoll.moveLightDoll(player);
-
+            controlCharacter();
 
             // If current map is containing rats and voodoo dolls
             if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
@@ -372,21 +383,15 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             Gdx.app.log("Player body posY", "" + player.getPlayerBody().getPosition().y);
         }
 
-
-
-
         activatePause();
         cat.moveCat(host, player, world);
 
         batch.begin();
         player.draw(batch, stateTime, host);
         lightDoll.draw(batch);
-
         bodyHandler.drawAllBodies(batch);
 
-
         cat.draw(batch, stateTime, host, player);
-
 
         /**
          * Draws Urho Kekkonen-doll to the end of stage 2
@@ -400,10 +405,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         // Render lights
         lightSetup.render(camera, stepped);
-
-        buttonStage.act(Gdx.graphics.getDeltaTime());
-        buttonStage.draw();
-
+        pauseResumeStage.act();
+        pauseResumeStage.draw();
 
 
         if(pause == OFF) {
@@ -417,6 +420,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 exclamationButton = false;
             }
 
+            controllerStage.act(Gdx.graphics.getDeltaTime());
+            controllerStage.draw();
             doPhysicsStep(deltaTime);
         }
 
@@ -574,7 +579,26 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     }
 
 
+    private void controlCharacter() {
+        if(host.getGameMode() == host.ADVENTURE) {
+            controller1.moveTouchPad();
+            // enables player to move with game on pad
+            player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
+                    controller1.getTouchpad().getKnobPercentY(), host);
+            // enables player to move with arrow key
+            player.movePlayer(host);
+        } else if(host.getGameMode() == host.RAT_RACE) {
+            // enables player to move automatically
+            player.moveMountedPlayer(host);
+        }
 
+        // whenever player touches jump button, grandma jumps
+        if(jumpButtonActor.getTouch()) {
+            player.jump(host);
+            jumpButtonActor.setTouch(false);
+        }
+        lightDoll.moveLightDoll(player);
+    }
 
     /**
      * When pause is ON, buttons of menu detects touches and resumes game or moves to another
@@ -648,7 +672,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     @Override
     public void resize(int width, int height) {
         viewport.update(width,height);
-        buttonStage.getViewport().update(width, height, false);
+        controllerStage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -889,7 +913,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             controller1.dispose();
         }
         player.dispose();
-        buttonStage.dispose();
+        controllerStage.dispose();
 
         lightDoll.dispose();
         bodyHandler.dispose();

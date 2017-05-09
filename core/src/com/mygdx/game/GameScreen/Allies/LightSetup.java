@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.GameScreen.Allies;
 
 /**
  * Created by Juz3 on 16.3.2017.
@@ -10,9 +10,6 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
 
-import box2dLight.ChainLight;
-import box2dLight.ConeLight;
-import box2dLight.DirectionalLight;
 import box2dLight.Light;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;

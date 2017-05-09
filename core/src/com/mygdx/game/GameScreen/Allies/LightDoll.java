@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.GameScreen.Allies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.Utilities;
 
 /**
  * Created by possumunnki on 14.3.2017.

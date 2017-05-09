@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.GameScreen.Allies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,6 +16,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Utilities;
 
 import java.util.Random;
 
@@ -66,9 +68,9 @@ public class Player {
     private boolean onTheGround = true;
     // Running speed
     private final float MAX_SPEED = 5.0f;
+    private final float JUMP_VELOCITY = 10.0f;
     // Mounted speed
     private final float MOUNTED_MAX_SPEED = 5.3f;
-    private final float JUMP_VELOCITY = 7.0f;
     private final float MOUNTED_JUMP_VELOCITY = 12.0f;
 
     private BodyDef footBodyDef;
@@ -239,26 +241,15 @@ public class Player {
     public void movePlayer(float knobPercentX, float knobPercentY, MyGdxGame host) {
 
         boolean jumped = false;
-            // playerBody.applyForceToCenter(new Vector2(2.5f, 0f), true);
+        setDirectionAndWalk(knobPercentX);
 
-        if(knobPercentX > 0) {
-            changeDirection(RIGHT);
-            isWalking = true;
-
-        } else if(knobPercentX < 0) {
-            changeDirection(LEFT);
-            isWalking = true;
-        } else {
-            isWalking = false;
-        }
 
         playerBody.setLinearVelocity(MAX_SPEED * knobPercentX, playerBody.getLinearVelocity().y);
 
-        // playerBody.applyForceToCenter(new Vector2(-2.5f, 0f), true);
-        if(jumped == false && knobPercentY > 0.5f) {
+        /*if(jumped == false && knobPercentY > 0.5f) {
             jump(host);
             jumped = true;
-        }
+        }*/
 
         // If player falls below screen
         if(playerBody.getPosition().y < -1) {
@@ -303,6 +294,27 @@ public class Player {
             footBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
                     .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
              */
+        }
+    }
+
+    /**
+     * Sets grandma's direction and also whether she is walking or not.
+     * Changes affects on draw-method so that it draws grandma texture in right way.
+     *
+     * @param knobPercentX position of game on pad in x-line
+     */
+    public void setDirectionAndWalk(float knobPercentX) {
+        // whenever game on pad is moved to right.
+        if(knobPercentX > 0) {
+            changeDirection(RIGHT);
+            isWalking = true;
+        // whenever game on pad is moved to left.
+        } else if(knobPercentX < 0) {
+            changeDirection(LEFT);
+            isWalking = true;
+        // whenever geme on pad is not moved
+        } else {
+            isWalking = false;
         }
     }
 
