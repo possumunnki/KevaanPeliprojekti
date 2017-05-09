@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.GameOverScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -8,6 +8,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.mygdx.game.FontActor;
+import com.mygdx.game.GameScreen.GameScreen;
+import com.mygdx.game.MainMenuScreen.MainMenuScreen;
+import com.mygdx.game.MyGdxGame;
 
 /**
  * Created by possumunnki on 28.3.2017.

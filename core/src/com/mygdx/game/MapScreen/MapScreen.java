@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.MapScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -9,7 +9,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.mygdx.game.MainMenu2.MapBorderActor;
+import com.mygdx.game.FontActor;
+import com.mygdx.game.GameScreen.GameScreen;
+import com.mygdx.game.MainMenuScreen.MainMenuScreen;
+import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.TalkScreen.TalkScreen;
 
 import java.util.ArrayList;
 

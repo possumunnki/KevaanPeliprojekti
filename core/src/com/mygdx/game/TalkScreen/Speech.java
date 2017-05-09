@@ -1,8 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.TalkScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
@@ -18,12 +19,15 @@ public class Speech {
     private final int LIGHT_DOLL = 2;
     private final float SCALE = 0.5f;
     private BitmapFont font;
+    private GlyphLayout bounds;
     private String text;
     public Speech(int speaker, String text) {
         this.speaker = speaker;
         font = new BitmapFont(Gdx.files.internal("chatfont.txt"));
         font.getData().setScale(SCALE);
         this.text = text;
+        bounds = new GlyphLayout(font, text);
+
         // sets texture depending on speaker
         if(speaker == BOTH) {
             speakingTexture = new Texture("chatbox3.png");
