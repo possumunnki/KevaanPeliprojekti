@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.CreditScreen.CreditScreen;
 import com.mygdx.game.FontActor;
 import com.mygdx.game.GameOverScreen.GameOverScreen;
 import com.mygdx.game.GameScreen.Allies.Controller1;
@@ -340,6 +341,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 bodyHandler.callEnemyWalk(host);
             }
 
+            if (host.getCurrentStage() == 5) {
+                bodyHandler.callBossAction(host, world);
+            }
 
             exclamationMarkActor.setExclamationMarkPosition(player, worldWidthPixels, worldHeightPixels);
 
@@ -459,7 +463,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                     if(immortality == !ON) {
                         // when player touches an enemy
                         if (body1.getUserData().equals(bodyHandler.callVoodooGetter()) ||
-                                body1.getUserData().equals(bodyHandler.callRatGetter())) {
+                                body1.getUserData().equals(bodyHandler.callRatGetter()) ||
+                                body1.getUserData().equals(bodyHandler.callBossGetter())) {
                             if(body2.getUserData().equals("player")) {
                                 //switch to game over screen
                                 Gdx.app.log("log", "gameover");
@@ -528,7 +533,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             gameOver = true;
         }
 
-        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+        if(host.getCurrentStage() == 1 ||
+                host.getCurrentStage() == 2 ||
+                host.getCurrentStage() == 5) {
             bodyHandler.clearBodies(world, lightDoll);
 
         }
@@ -569,6 +576,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             }
             doHeavyStuff();
             host.setScreen(new GameOverScreen(host));
+        }
+
+        if(bodyHandler.getSetVictory()) {
+            host.setScreen(new CreditScreen(host));
         }
     }
 

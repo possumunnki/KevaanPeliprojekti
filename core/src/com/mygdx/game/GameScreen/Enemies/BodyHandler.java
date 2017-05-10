@@ -20,27 +20,22 @@ import com.mygdx.game.MyGdxGame;
 public class BodyHandler {
     private MyGdxGame host;
     private Voodoo voodoo;
-
     private Rat rat;
-
-    //private Cat cat;
 
     private Array<Body> bodies = new Array<Body>();
 
-    private float windowWidth;
-    private float windowHeight;
     private final boolean ON = true;
     private Sound mobKillSound;
 
     private BossMob boss;
+
+    private boolean setVictory = false;
 
     // hit counter for boss kill, needs five hits to finish.
     private int hitCount = 0;
 
     public BodyHandler(World world, MyGdxGame host) {
         this.host = host;
-        windowWidth = host.SCREEN_WIDTH;
-        windowHeight = host.SCREEN_HEIGHT;
 
         voodoo = new Voodoo(world, host);
 
@@ -128,29 +123,6 @@ public class BodyHandler {
                         false);                        // flipY
 
             }
-
-            /**
-             else if(body.getUserData().equals(boss.getFireballObject())) {
-             ObjectData fireball = (ObjectData) body.getUserData();
-
-             batch.draw(fireball.objectTexture,
-             body.getPosition().x - fireball.width,
-             body.getPosition().y - fireball.height,
-             fireball.width,                   // originX
-             fireball.height,                   // originY
-             fireball.width * 2,               // windowWidth
-             fireball.height * 2,               // windowHeight
-             0.5f,                          // scaleX
-             0.5f,                          // scaleY
-             body.getTransform().getRotation() * MathUtils.radiansToDegrees,
-             0,                             // Start drawing from x = 0
-             0,                             // Start drawing from y = 0
-             fireball.objectTexture.getWidth(),       // End drawing x
-             fireball.objectTexture.getHeight(),      // End drawing y
-             false,                         // flipX
-             false);                        // flipY
-             }
-             */
         }
     }
 
@@ -232,6 +204,8 @@ public class BodyHandler {
                             // when boss is hit 5 times, destroy boss
                             if(hitCount > 5) {
                                 bodiesToBeDestroyed.add(body);
+                                setVictory = true;
+
                             }
                         }
                     }
@@ -260,6 +234,10 @@ public class BodyHandler {
         if(host.getCurrentStage() == 5) {
             boss.bossWalk(world);
         }
+    }
+
+    public Boolean getSetVictory() {
+        return setVictory;
     }
 
     /**

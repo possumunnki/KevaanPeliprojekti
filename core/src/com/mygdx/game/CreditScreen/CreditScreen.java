@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.FontActor;
-import com.mygdx.game.GameScreen.GameScreen;
 import com.mygdx.game.MainMenuScreen.MainMenuScreen;
 import com.mygdx.game.MyGdxGame;
 
@@ -18,6 +17,7 @@ import com.mygdx.game.MyGdxGame;
  */
 
 public class CreditScreen implements Screen {
+
     private MyGdxGame host;
     private SpriteBatch batch;
     private OrthographicCamera camera;
@@ -25,13 +25,13 @@ public class CreditScreen implements Screen {
     private FontActor quit;
 
     private Stage stage;
-    private Texture gameOverTexture;
+    private Texture creditBG;
 
     public CreditScreen(MyGdxGame host) {
         this.host = host;
         batch = host.getSpriteBatch();
 
-        //creditBG = new Texture("gameoverScreen.png");
+        creditBG = new Texture("victoryScreen.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
@@ -44,9 +44,6 @@ public class CreditScreen implements Screen {
 
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
 
-        //mapScreenBG = new Background("mapScreenBG");
-
-        //stage.addActor(mapScreenBG);
         stage.addActor(quit);
 
         Gdx.input.setInputProcessor(stage);
@@ -64,9 +61,9 @@ public class CreditScreen implements Screen {
 
 
         batch.begin();
-        batch.draw(gameOverTexture, 0, 0,
-                gameOverTexture.getWidth(),
-                gameOverTexture.getHeight());
+        batch.draw(creditBG, 0, 0,
+                creditBG.getWidth(),
+                creditBG.getHeight());
 
         batch.end();
 
@@ -100,7 +97,7 @@ public class CreditScreen implements Screen {
 
     @Override
     public void dispose() {
-        //creditBG.dispose();
+        creditBG.dispose();
         quit.dispose();
         stage.dispose();
     }
