@@ -1,19 +1,19 @@
 package com.mygdx.game.GameScreen.Enemies;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.GameScreen.Allies.Player;
-import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.Utilities;
+        import com.badlogic.gdx.Gdx;
+        import com.badlogic.gdx.graphics.Texture;
+        import com.badlogic.gdx.graphics.g2d.Animation;
+        import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+        import com.badlogic.gdx.graphics.g2d.TextureRegion;
+        import com.badlogic.gdx.math.Vector2;
+        import com.badlogic.gdx.physics.box2d.Body;
+        import com.badlogic.gdx.physics.box2d.BodyDef;
+        import com.badlogic.gdx.physics.box2d.FixtureDef;
+        import com.badlogic.gdx.physics.box2d.PolygonShape;
+        import com.badlogic.gdx.physics.box2d.World;
+        import com.mygdx.game.GameScreen.Allies.Player;
+        import com.mygdx.game.MyGdxGame;
+        import com.mygdx.game.Utilities;
 
 /**
  * Created by Juz3 on 20.4.2017.
@@ -121,13 +121,13 @@ public class Cat {
             // This is a failed attempt to reset cat back to start and get it running again
             // Instead if player falls down in stage 3, it is game over.
             /**
-            // RESET CAT BACK TO START IF PLAYER RESETS BACK TO START BY FALLING DOWN
-            if(player.getPositionReset()) {
-                catBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2,
-                        MyGdxGame.SCREEN_HEIGHT), 0);
-            } else {
-                catBody.setLinearVelocity(CAT_SPEED_1, 0);
-            }
+             // RESET CAT BACK TO START IF PLAYER RESETS BACK TO START BY FALLING DOWN
+             if(player.getPositionReset()) {
+             catBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2,
+             MyGdxGame.SCREEN_HEIGHT), 0);
+             } else {
+             catBody.setLinearVelocity(CAT_SPEED_1, 0);
+             }
              */
 
             catBody.setLinearVelocity(CAT_SPEED_1, 0);
@@ -173,7 +173,6 @@ public class Cat {
                     //world.destroyBody(catBody);
                 }
             }
-
         }
     }
 

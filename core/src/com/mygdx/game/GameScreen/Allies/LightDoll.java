@@ -222,10 +222,10 @@ public class LightDoll {
                     lightDollSprite.getY() - deltaY / STEPS);
             // when light doll reaches to the target point, it goes back towards player
             if(leftDown) {
-              if(lightDollSprite.getX() +- 0.01f < targetPointX  &&
-                      lightDollSprite.getY() +- 0.01f < targetPointY ) {
-                  comingBack = true;
-              }
+                if(lightDollSprite.getX() +- 0.01f < targetPointX  &&
+                        lightDollSprite.getY() +- 0.01f < targetPointY ) {
+                    comingBack = true;
+                }
             } else {
                 if (lightDollSprite.getX() > targetPointX +- 0.01f &&
                         lightDollSprite.getY() > targetPointY +- 0.01f) {
@@ -250,5 +250,4 @@ public class LightDoll {
     public void dispose() {
         lightDollTexture.dispose();
     }
-
 }

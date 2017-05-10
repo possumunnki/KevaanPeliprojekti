@@ -1,4 +1,4 @@
-package com.mygdx.game.GameOverScreen;
+package com.mygdx.game.CreditScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -14,32 +14,30 @@ import com.mygdx.game.MainMenuScreen.MainMenuScreen;
 import com.mygdx.game.MyGdxGame;
 
 /**
- * Created by possumunnki on 28.3.2017.
+ * Created by JZ on 10/05/2017.
  */
 
-public class GameOverScreen implements Screen {
+public class CreditScreen implements Screen {
     private MyGdxGame host;
     private SpriteBatch batch;
     private OrthographicCamera camera;
-    private FontActor retry;
+
     private FontActor quit;
 
     private Stage stage;
     private Texture gameOverTexture;
 
-    public GameOverScreen(MyGdxGame host) {
+    public CreditScreen(MyGdxGame host) {
         this.host = host;
         batch = host.getSpriteBatch();
 
-        gameOverTexture = new Texture("gameoverScreen.png");
+        //creditBG = new Texture("gameoverScreen.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
                 host.SCREEN_WIDTH,
                 host.SCREEN_HEIGHT);
-        retry = new FontActor("RETRY",
-                host.SCREEN_WIDTH * 1/2 * 100f,
-                host.SCREEN_HEIGHT * 2/4 * 100f);
+
         quit = new FontActor("QUIT",
                 host.SCREEN_WIDTH  * 1/2 * 100f,
                 host.SCREEN_HEIGHT * 1/4 * 100f);
@@ -49,7 +47,6 @@ public class GameOverScreen implements Screen {
         //mapScreenBG = new Background("mapScreenBG");
 
         //stage.addActor(mapScreenBG);
-        stage.addActor(retry);
         stage.addActor(quit);
 
         Gdx.input.setInputProcessor(stage);
@@ -76,10 +73,7 @@ public class GameOverScreen implements Screen {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        if (retry.getTouch()) {
-            host.setScreen(new GameScreen(host)
-            );
-        } else if(quit.getTouch()) {
+        if(quit.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
         }
     }
@@ -106,8 +100,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void dispose() {
-        gameOverTexture.dispose();
-        retry.dispose();
+        //creditBG.dispose();
         quit.dispose();
         stage.dispose();
     }

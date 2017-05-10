@@ -120,6 +120,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private Music gameBGM;
     private Sound deathSound;
+    private Sound bossCallSound;
+    private boolean playBossSoundOnce = false;
 
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
@@ -172,6 +174,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         if(host.getSoundEffect() == ON) {
             deathSound = Gdx.audio.newSound(Gdx.files.internal("MummoDeath.wav"));
+            bossCallSound = Gdx.audio.newSound(Gdx.files.internal("GitDbossCall01.wav"));
         }
 
         world = new World(new Vector2(0, -9.8f), true);
@@ -181,7 +184,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         player = new Player(world, host);
         lightDoll = new LightDoll(player, world);
         lightSetup = new LightSetup(world, lightDoll, player);
-
 
         createPauseMenu();
         setGameStage();
@@ -211,8 +213,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-
-
         cat = new Cat(world, host);
 
         kekkonen = new Texture("ukk.png");
@@ -222,39 +222,38 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     /**
      * Sets tile map, width and height of the game stage depending on current stage.
      * Also transforms tile maps rectangles to bodies and sets gameMode.
-     *
      */
     private void setGameStage() {
         // if current game stage is 1.
         if(host.getCurrentStage() == 1) {
-            tiledMap = new TmxMapLoader().load("stage1nbg.tmx");
+            tiledMap = new TmxMapLoader().load("maps/stage1.tmx");
             // sets tiles amount on the game stage
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
 
         } else if(host.getCurrentStage() == 2) {
-            tiledMap = new TmxMapLoader().load("stage2nbg.tmx");
+            tiledMap = new TmxMapLoader().load("maps/stage2.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
 
         } else if(host.getCurrentStage() == 3) {
-            tiledMap = new TmxMapLoader().load("stage3nbg.tmx");
+            tiledMap = new TmxMapLoader().load("maps/stage3.tmx");
             tilesAmountWidth = 400;
             tilesAmountHeight = 30;
             // turns rat race on, it changes game control
             host.setGameMode(host.RAT_RACE);
 
         } else if(host.getCurrentStage() == 4) {
-            tiledMap = new TmxMapLoader().load("stage4.tmx");
+            tiledMap = new TmxMapLoader().load("maps/stage4.tmx");
             tilesAmountWidth = 440;
             tilesAmountHeight = 50;
             // turns rat race on, it changes game control
             host.setGameMode(host.RAT_RACE);
 
         } else if(host.getCurrentStage() == 5) {
-            tiledMap = new TmxMapLoader().load("stage5.tmx");
+            tiledMap = new TmxMapLoader().load("maps/stage5.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
@@ -393,7 +392,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         batch.end();
 
         // Render lights
-        lightSetup.render(camera, stepped);
+        lightSetup.render(camera);
         pauseResumeStage.act();
         pauseResumeStage.draw();
 
@@ -544,7 +543,16 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             } else {
                 exclamationMarkActor.setTouch(false);
             }
+        }
 
+        // play boss shout sound effect at stage 5 start
+        if(host.getCurrentStage() == 5 && host.getSoundEffect() == ON && (player.getPlayerBody()
+                .getPosition().x > 10f && player.getPlayerBody().getPosition().x < 12f)) {
+
+            if(!playBossSoundOnce) {
+                bossCallSound.play(0.4f);
+                playBossSoundOnce = true;
+            }
         }
 
         detectPauseMenuButtons();
@@ -811,6 +819,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         kekkonen.dispose();
         if(host.getMusic() == ON) {
             gameBGM.dispose();
+            bossCallSound.dispose();
         }
         deathSound.dispose();
 
@@ -828,7 +837,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         pauseResumeButtonActor.dispose();
         pauseResumeStage.dispose();
-
 
         Gdx.app.log("GameScreen","disposed");
     }
