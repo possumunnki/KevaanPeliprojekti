@@ -332,12 +332,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
 
 
-        if(pause == ON) {
-            pauseStage.act();
-            pauseStage.draw();
-
-        } else if(pause == OFF) {
-
+        if(pause == OFF) {
             controlCharacter();
 
             // If current map is containing rats and voodoo dolls
@@ -393,11 +388,13 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         // Render lights
         lightSetup.render(camera);
+
         pauseResumeStage.act();
         pauseResumeStage.draw();
-
-
-        if(pause == OFF) {
+        if(pause == ON) {
+            pauseStage.act();
+            pauseStage.draw();
+        } else if(pause == OFF) {
             if(player.getPlayerBody().getPosition().x > 60f &&
                     player.getPlayerBody().getPosition().x < 62f &&
                     host.getCurrentStage() == 2) {
