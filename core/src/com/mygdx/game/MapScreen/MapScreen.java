@@ -153,7 +153,9 @@ public class MapScreen implements Screen {
         for(int i = 0; i < pointActors.size(); i++) {
             pointActors.get(i).dispose();
         }
-        Gdx.app.log("MapScreen", "disposed");
+        pointStage.dispose();
+        mapBorderActor.dispose();
+        mapBorderStage.dispose();
     }
 
     /**

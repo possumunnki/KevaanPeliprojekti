@@ -119,6 +119,8 @@ public class TalkScreen implements Screen {
         for(int i = 0; i < speeches.size(); i++) {
             speeches.get(i).dispose();
         }
+        skip.dispose();
+        skipStage.dispose();
         Gdx.app.log("TalkScreen", "disposed");
     }
 

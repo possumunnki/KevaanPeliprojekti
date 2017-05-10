@@ -74,6 +74,7 @@ public class PauseResumeButtonActor extends Actor {
     public void dispose() {
         pauseButtonTexture.dispose();
         resumeButtonTexture.dispose();
+        this.remove();
     }
 
     //public void setEx

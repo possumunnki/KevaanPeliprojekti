@@ -108,5 +108,6 @@ public class GameOverScreen implements Screen {
         gameOverTexture.dispose();
         retry.dispose();
         quit.dispose();
+        stage.dispose();
     }
 }

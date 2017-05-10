@@ -147,12 +147,13 @@ public class MainMenuScreen implements Screen {
         newGame.dispose();
         continueGame.dispose();
         menuBG.dispose();
-        mainMenuStage.dispose();
-        Gdx.app.log("MainMenu", "disposed");
+
         mainMenuBGM.dispose();
         jumpSound1.dispose();
         jumpSound2.dispose();
         jumpSound3.dispose();
+        soundEffectActor.dispose();
+        mainMenuStage.dispose();
     }
 
     /**

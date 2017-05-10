@@ -28,9 +28,6 @@ public class PointActor extends Actor {
     private Texture enterTexture;
 
     private Texture dottedLine;
-    private Texture dottedLine23;
-    private Texture dottedLine34;
-    private Texture dottedLine45;
     /**
      * The number of the level that the point corresponds to.
      * It is need for drawing dotted line in right position.
@@ -94,11 +91,17 @@ public class PointActor extends Actor {
         this.touch = touch;
     }
     public void dispose() {
+        if(stage != 1) {
+            dottedLine.dispose();
+        }
         enterTexture.dispose();
         exitTexture.dispose();
+        this.remove();
     }
 
-
+    /**
+     * Sets dotted line texture depending on the number of the level that the point corresponds to.
+     */
     private void setDottedLine() {
         if(stage == 2) {
             dottedLine = new Texture("reitti1-2.png");

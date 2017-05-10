@@ -31,11 +31,6 @@ public class BodyHandler {
     private final boolean ON = true;
     private Sound mobKillSound;
 
-    private BossMob boss;
-
-    // hit counter for boss kill, needs five hits to finish.
-    private int hitCount = 0;
-
     public BodyHandler(World world, MyGdxGame host) {
         this.host = host;
         windowWidth = host.SCREEN_WIDTH;
@@ -44,8 +39,6 @@ public class BodyHandler {
         voodoo = new Voodoo(world, host);
 
         rat = new Rat(world, host);
-
-        boss = new BossMob(world, host);
 
         //cat = new Cat(world);
         mobKillSound = Gdx.audio.newSound(Gdx.files.internal("MobKill.wav"));
@@ -105,51 +98,7 @@ public class BodyHandler {
                         rat.objectTexture.getHeight(),      // End drawing y
                         false,                         // flipX
                         false);                        // flipY
-
-            } else if(body.getUserData().equals(boss.getBossObject())) {
-                ObjectData boss = (ObjectData) body.getUserData();
-
-                batch.draw(boss.objectTexture,
-                        body.getPosition().x - boss.width,
-                        body.getPosition().y - boss.height,
-                        boss.width,                   // originX
-                        boss.height,                   // originY
-                        boss.width * 2,               // windowWidth
-                        boss.height * 2,               // windowHeight
-                        1.0f,                          // scaleX
-                        1.0f,                          // scaleY
-                        body.getTransform().getRotation() * MathUtils.radiansToDegrees,
-                        0,                             // Start drawing from x = 0
-                        0,                             // Start drawing from y = 0
-                        boss.objectTexture.getWidth(),       // End drawing x
-                        boss.objectTexture.getHeight(),      // End drawing y
-                        false,                         // flipX
-                        false);                        // flipY
-
             }
-
-            /**
-             else if(body.getUserData().equals(boss.getFireballObject())) {
-             ObjectData fireball = (ObjectData) body.getUserData();
-
-             batch.draw(fireball.objectTexture,
-             body.getPosition().x - fireball.width,
-             body.getPosition().y - fireball.height,
-             fireball.width,                   // originX
-             fireball.height,                   // originY
-             fireball.width * 2,               // windowWidth
-             fireball.height * 2,               // windowHeight
-             0.5f,                          // scaleX
-             0.5f,                          // scaleY
-             body.getTransform().getRotation() * MathUtils.radiansToDegrees,
-             0,                             // Start drawing from x = 0
-             0,                             // Start drawing from y = 0
-             fireball.objectTexture.getWidth(),       // End drawing x
-             fireball.objectTexture.getHeight(),      // End drawing y
-             false,                         // flipX
-             false);                        // flipY
-             }
-             */
         }
     }
 
@@ -170,18 +119,6 @@ public class BodyHandler {
                     bodiesToBeDestroyed.add(body);
                 }
             }
-
-            /**
-             if(body.getUserData().equals(boss.getFireballObject())) {
-
-             // if fireball hits ground and y-speed is 0
-             if(body.getLinearVelocity().y == 0f) {
-             body.setLinearVelocity(0, 0);
-             Gdx.app.log("log", "fireball stop");
-             bodiesToBeDestroyed.add(body);
-             }
-             }
-             */
         }
 
         /**
@@ -190,13 +127,11 @@ public class BodyHandler {
 
         // Iterate all voodooDolls
         for (Body body : bodies) {
-            // If it equals voodoo objectData
-            if (body.getUserData().equals(voodoo.getVdObject()) ||
-                    body.getUserData().equals(boss.getBossObject())) {
+            // If it equals voodoo template
+            if (body.getUserData().equals(voodoo.getVdObject())) {
                 ObjectData info = (ObjectData) body.getUserData();
                 // If it is a voodoo doll, then mark it to be removed.
-                if (info.type == ObjectData.GameObjectType.VOODOO ||
-                        info.type == ObjectData.GameObjectType.BOSS) {
+                if (info.type == ObjectData.GameObjectType.VOODOO) {
 
                     // Check when the light doll is near enemy body
                     if(lightDoll.getLightDollBody().getPosition().x >
@@ -208,30 +143,10 @@ public class BodyHandler {
                             lightDoll.getLightDollBody().getPosition().y <
                                     (body.getPosition().y + 0.4f)) {
 
-                        if (body.getUserData().equals(voodoo.getVdObject())) {
-                            // Add the specific body to bodiesToBeDestroyed-list
-                            bodiesToBeDestroyed.add(body);
-                            if (host.getSoundEffect() == ON) {
-                                mobKillSound.play(0.5f);
-                            }
-                        }
-
-                        // If light doll hits the boss mob
-                        if (body.getUserData().equals(boss.getBossObject())) {
-
-                            Gdx.app.log("log", "boss is hit!");
-
-                            // play mob kill sfx every time the boss is hit
-                            if (host.getSoundEffect() == ON) {
-                                mobKillSound.play(0.5f);
-                            }
-
-                            hitCount++;
-
-                            // when boss is hit 5 times, destroy boss
-                            if(hitCount > 5) {
-                                bodiesToBeDestroyed.add(body);
-                            }
+                        // Add the specific body to bodiesToBeDestroyed-list
+                        bodiesToBeDestroyed.add(body);
+                        if(host.getSoundEffect() == ON) {
+                            mobKillSound.play(0.5f);
                         }
                     }
                 }
@@ -254,19 +169,6 @@ public class BodyHandler {
         voodoo.voodooWalk(host);
     }
 
-    public void callBossAction(MyGdxGame host, World world) {
-
-        if(host.getCurrentStage() == 5) {
-            boss.bossWalk(world);
-        }
-    }
-
-    /**
-     public void callBossFire(World world) {
-     boss.fire(world);
-     }
-     */
-
     public ObjectData callVoodooGetter() {
         return voodoo.getVdObject();
     }
@@ -275,19 +177,14 @@ public class BodyHandler {
         return rat.getRatObject();
     }
 
-    public ObjectData callBossGetter() {
-        return boss.getBossObject();
-    }
-
     public Array<Body> getBodies() {
         return bodies;
     }
 
     public void dispose() {
         voodoo.dispose();
-        rat.dispose();
-        boss.dispose();
         mobKillSound.dispose();
+        rat.dispose();
     }
 }
 // end of file

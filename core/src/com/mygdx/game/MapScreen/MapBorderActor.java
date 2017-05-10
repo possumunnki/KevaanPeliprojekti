@@ -51,6 +51,7 @@ public class MapBorderActor extends Actor {
 
     public void dispose() {
         mapBorderTexture.dispose();
+        this.remove();
     }
 
 

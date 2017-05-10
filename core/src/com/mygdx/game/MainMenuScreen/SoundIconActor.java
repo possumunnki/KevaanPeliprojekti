@@ -80,6 +80,7 @@ public class SoundIconActor extends Actor {
     public void dispose() {
         onTexture.dispose();
         offTexture.dispose();
+        this.remove();
     }
 
     public void setSound(boolean soundEffect) {

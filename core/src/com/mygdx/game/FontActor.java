@@ -64,6 +64,7 @@ public class FontActor extends Actor {
 
     public void dispose() {
         blackFont.dispose();
+        whiteFont.dispose();
         this.remove();
     }
 

@@ -50,6 +50,11 @@ public class JumpButtonActor extends Actor {
         this.touch = touch;
     }
 
+    public void dispose() {
+        jumpButtonTexture.dispose();
+        this.remove();
+    }
+
     class touchListener extends InputListener {
         public boolean touchDown(InputEvent event,
                                  float x,

@@ -70,6 +70,7 @@ public class SkipActor extends Actor {
 
     public void dispose() {
         skipTexture.dispose();
+        this.remove();
     }
 
 

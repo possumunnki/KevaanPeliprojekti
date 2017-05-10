@@ -117,6 +117,7 @@ public class ExclamationMarkActor extends Actor {
 
     public void dispose() {
         exclamationTexture.dispose();
+        this.remove();
     }
 
     public void setTouch(boolean touch){

@@ -54,7 +54,7 @@ public class Speech {
 
     public void dispose() {
         speakingTexture.dispose();
-
+        font.dispose();
     }
 
 }
