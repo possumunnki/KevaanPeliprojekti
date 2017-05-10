@@ -94,7 +94,8 @@ public class LogoScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        logo1Actor.dispose();
+        logo2Actor.dispose();
     }
 
     private void addFadeAction() {
