@@ -30,9 +30,9 @@ public class LogoActor extends Actor {
 
     public void setLogoTexture() {
         if (logoType == LOGO1) {
-            logoTexture = new Texture("njaaLogo.png");
+            logoTexture = new Texture("logo/logo1.png");
         } else if (logoType == LOGO2) {
-            logoTexture = new Texture("tamkLogo.png");
+            logoTexture = new Texture("logo/logo2.png");
         }
     }
 

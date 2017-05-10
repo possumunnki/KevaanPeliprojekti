@@ -74,26 +74,12 @@ public class LightSetup {
                     0.15f);
             lights.add(DollLight);
 
-
-            // Test for different type of light
-            /**
-             ConeLight testRoomLight = new ConeLight(
-             rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 6, 1, 90, 180);
-             testRoomLight.attachToBody(player.getPlayerBody());
-             testRoomLight.setColor(
-             0.15f,
-             0.3f,
-             0.19f,
-             0.7f);
-             lights.add(testRoomLight);
-             */
         }
     }
 
     /**
      * Box2Dlights light-removal method
      */
-    // Template for light-removal method
     private void clearLights() {
         if (lights.size() > 0) {
             for (Light light : lights) {
