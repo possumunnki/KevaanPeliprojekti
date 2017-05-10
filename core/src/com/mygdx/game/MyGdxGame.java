@@ -53,7 +53,7 @@ public class MyGdxGame extends Game {
     public static final int ADVENTURE = 1;
     public static final int RAT_RACE = 2;
     private Preferences prefs;
-	private MainMenuScreen mainMenu;
+	private LogoScreen logoScreen;
 
 	public SpriteBatch getSpriteBatch() {
 		return batch;
@@ -71,9 +71,9 @@ public class MyGdxGame extends Game {
         if(unlockAllStages) {
             setUnlockedStages(5);
         }
-		mainMenu = new MainMenuScreen(this);
-		// moves to main menu
-		setScreen(mainMenu);
+		logoScreen = new LogoScreen(this);
+		// moves to logo screen
+		setScreen(logoScreen);
 	}
 
 	@Override

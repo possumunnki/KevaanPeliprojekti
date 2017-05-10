@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -11,30 +12,27 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class LogoActor extends Actor {
     private Texture logoTexture;
 
-    private String logoType;
-    private final String njaa = "njaa";
-    private final String tamk = "tamk";
-    private final String tiko = "tiko";
-    private final String vapriikki = "vapriikki";
+    //private String logoType;
+    private int logoType;
+    private final int LOGO1 = 1;
+    private final int LOGO2 = 2;
 
-    public LogoActor(String logoType, float posX, float posY) {
-        setLogoTexture();
+
+    public LogoActor(int logoType, float posX, float posY) {
         this.logoType = logoType;
         setPosition(posX, posY);
-        setWidth(200f);
-        setHeight(50f);
+        setLogoTexture();
+
+        setWidth(logoTexture.getWidth());
+        setHeight(logoTexture.getHeight());
 
     }
 
     public void setLogoTexture() {
-        if(logoType.equals(njaa)) {
-            logoTexture = new Texture("logo/njaaLogo");
-        } else if(logoType.equals(tamk)) {
-            logoTexture = new Texture("logo/tamkLogo");
-        } else if(logoType.equals(tiko)) {
-            logoTexture = new Texture("logo/tikoLogo");
-        } else if(logoType.equals(vapriikki)) {
-            logoTexture =  new Texture("logo/vapriikkiLogo");
+        if (logoType == LOGO1) {
+            logoTexture = new Texture("njaaLogo.png");
+        } else if (logoType == LOGO2) {
+            logoTexture = new Texture("tamkLogo.png");
         }
     }
 
@@ -43,11 +41,16 @@ public class LogoActor extends Actor {
     }
 
     public void draw(Batch batch, float alpha) {
+        Color color = getColor();
+        batch.setColor(color.r, color.g, color.b, color.a * alpha);
+
         batch.draw(logoTexture,
                 getX(),
                 getY(),
                 getWidth(),
                 getHeight());
+
+        batch.setColor(color.r, color.g, color.b, 1f);
     }
 
     public void dispose() {
