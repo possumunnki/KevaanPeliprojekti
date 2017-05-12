@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+
 import fi.tamk.tiko.gitd.GameScreen.Allies.LightDoll;
 
 import fi.tamk.tiko.gitd.MyGdxGame;
@@ -57,7 +58,7 @@ public class BodyHandler {
         for (Body body : bodies) {
 
             // Draw all bodies with  voodoo doll user data (ground is not drawn)
-            if(body.getUserData().equals(voodoo.getVdObject())) {   // > voodoo getter!
+            if (body.getUserData().equals(voodoo.getVdObject())) {   // > voodoo getter!
 
                 body.setFixedRotation(true);
 
@@ -103,7 +104,7 @@ public class BodyHandler {
                         false,                         // flipX
                         false);                        // flipY
 
-            } else if(body.getUserData().equals(boss.getBossObject())) {
+            } else if (body.getUserData().equals(boss.getBossObject())) {
                 ObjectData boss = (ObjectData) body.getUserData();
 
                 batch.draw(boss.objectTexture,
@@ -173,7 +174,7 @@ public class BodyHandler {
                         info.type == ObjectData.GameObjectType.BOSS) {
 
                     // Check when the light doll is near enemy body
-                    if(lightDoll.getLightDollBody().getPosition().x >
+                    if (lightDoll.getLightDollBody().getPosition().x >
                             (body.getPosition().x - 0.5f) &&
                             lightDoll.getLightDollBody().getPosition().x <
                                     (body.getPosition().x + 0.3f) &&
@@ -203,7 +204,7 @@ public class BodyHandler {
                             hitCount++;
 
                             // when boss is hit 5 times, destroy boss
-                            if(hitCount > 5) {
+                            if (hitCount > 5) {
                                 bodiesToBeDestroyed.add(body);
                                 setVictory = true;
 
@@ -232,7 +233,7 @@ public class BodyHandler {
 
     public void callBossAction(MyGdxGame host, World world) {
 
-        if(host.getCurrentStage() == 5) {
+        if (host.getCurrentStage() == 5) {
             boss.bossWalk(world);
         }
     }
@@ -242,9 +243,9 @@ public class BodyHandler {
     }
 
     /**
-     public void callBossFire(World world) {
-     boss.fire(world);
-     }
+     * public void callBossFire(World world) {
+     * boss.fire(world);
+     * }
      */
 
     public ObjectData callVoodooGetter() {

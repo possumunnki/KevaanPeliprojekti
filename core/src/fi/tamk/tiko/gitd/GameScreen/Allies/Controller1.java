@@ -13,7 +13,7 @@ import fi.tamk.tiko.gitd.MyGdxGame;
  * Created by possumunnki on 11.3.2017.
  */
 
-public class Controller1 extends Actor{
+public class Controller1 extends Actor {
 
     private int direction;
     private MyGdxGame host;
@@ -61,7 +61,7 @@ public class Controller1 extends Actor{
 
         setWidth(DIAMETER);
         setHeight(DIAMETER);
-        touchpad.setPosition(positionX,positionY);
+        touchpad.setPosition(positionX, positionY);
 
     }
 
@@ -84,10 +84,9 @@ public class Controller1 extends Actor{
             direction = MyGdxGame.RIGHT;
         }
 
-        if(touchpad.getKnobPercentX() < 0) {
+        if (touchpad.getKnobPercentX() < 0) {
             direction = MyGdxGame.LEFT;
         }
-
 
 
         if (touchpad.getKnobPercentX() == 0) {
@@ -97,7 +96,7 @@ public class Controller1 extends Actor{
     }
 
     public int getDirection() {
-       return direction;
+        return direction;
     }
 
 

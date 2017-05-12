@@ -57,7 +57,7 @@ public class BossMob {
                 fireball.getHeight() / 100f,
                 ObjectData.GameObjectType.FIREBALL);
 
-        if(host.getCurrentStage() == 5) {
+        if (host.getCurrentStage() == 5) {
 
             bossBody = createBody(bossLocation.x,
                     bossLocation.y,
@@ -112,39 +112,40 @@ public class BossMob {
     }
 
     // 2nd fire method, gives fatal error
+
     /**
-     public void fire(World world) {
-
-     if(!shootOnce) {
-     fireballBody = createBody(bossBody.getPosition().x,
-     bossBody.getPosition().y + 4f,
-     fireballObject.width / 2,
-     fireballObject.height / 2,
-     fireballDensity,
-     world);
-
-     fireballBody.setFixedRotation(true);
-     fireballBody.setUserData(fireballObject);
-
-     fireballArray.add(fireballBody);
-
-     Gdx.app.log("log", "array size " + fireballArray.size);
-
-     //shootOnce = true;
-     }
-     }
+     * public void fire(World world) {
+     * <p>
+     * if(!shootOnce) {
+     * fireballBody = createBody(bossBody.getPosition().x,
+     * bossBody.getPosition().y + 4f,
+     * fireballObject.width / 2,
+     * fireballObject.height / 2,
+     * fireballDensity,
+     * world);
+     * <p>
+     * fireballBody.setFixedRotation(true);
+     * fireballBody.setUserData(fireballObject);
+     * <p>
+     * fireballArray.add(fireballBody);
+     * <p>
+     * Gdx.app.log("log", "array size " + fireballArray.size);
+     * <p>
+     * //shootOnce = true;
+     * }
+     * }
      */
 
     public void bossWalk(World world) {
 
         //Gdx.app.log("log", "boss loc " + bossBody.getPosition().x);
 
-        if(bossBody.getLinearVelocity().y == 0) {
+        if (bossBody.getLinearVelocity().y == 0) {
 
-            if(!bossRight) {
+            if (!bossRight) {
                 bossBody.setLinearVelocity(-1.35f, 0);
 
-                if(bossBody.getPosition().x < bossLocation.x - 5f) {
+                if (bossBody.getPosition().x < bossLocation.x - 5f) {
                     bossBody.setLinearVelocity(0, 0);
                     bossRight = true;
 
@@ -153,10 +154,10 @@ public class BossMob {
                      */
                     //fire(world);
                 }
-            } else if(bossRight) {
+            } else if (bossRight) {
                 bossBody.setLinearVelocity(1.35f, 0);
 
-                if(bossBody.getPosition().x > bossLocation.x) {
+                if (bossBody.getPosition().x > bossLocation.x) {
                     bossRight = false;
                 }
             }
@@ -164,29 +165,30 @@ public class BossMob {
     }
 
     // 1st fire method, gives fatal error
+
     /**
-     public void shoot(World world) {
-
-     fireballObject = new ObjectData(fireball, fireball.getWidth() / 130f,
-     fireball.getHeight() / 130f, ObjectData.GameObjectType.FIREBALL);
-
-     float fireballXpos = MathUtils.random(-2f, 2f);
-
-     fireballBody = createBody(bossBody.getPosition().x + fireballXpos,
-     bossBody.getPosition().y + 4f,
-     fireballObject.width,
-     fireballObject.height,
-     world);
-     //fireballBody.setBullet(true);
-
-     fireballBody.setUserData(fireballObject);
-
-     if(fireballBody.getPosition().y < 2f) {
-
-     Gdx.app.log("log", "destroy 0y");
-     world.destroyBody(fireballBody);
-     }
-     }
+     * public void shoot(World world) {
+     * <p>
+     * fireballObject = new ObjectData(fireball, fireball.getWidth() / 130f,
+     * fireball.getHeight() / 130f, ObjectData.GameObjectType.FIREBALL);
+     * <p>
+     * float fireballXpos = MathUtils.random(-2f, 2f);
+     * <p>
+     * fireballBody = createBody(bossBody.getPosition().x + fireballXpos,
+     * bossBody.getPosition().y + 4f,
+     * fireballObject.width,
+     * fireballObject.height,
+     * world);
+     * //fireballBody.setBullet(true);
+     * <p>
+     * fireballBody.setUserData(fireballObject);
+     * <p>
+     * if(fireballBody.getPosition().y < 2f) {
+     * <p>
+     * Gdx.app.log("log", "destroy 0y");
+     * world.destroyBody(fireballBody);
+     * }
+     * }
      */
 
 

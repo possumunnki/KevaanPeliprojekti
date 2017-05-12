@@ -31,7 +31,6 @@ public class LightSetup {
     private ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
 
 
-
     public LightSetup(World world, LightDoll doll, Player player) {
 
         RayHandler.setGammaCorrection(true);

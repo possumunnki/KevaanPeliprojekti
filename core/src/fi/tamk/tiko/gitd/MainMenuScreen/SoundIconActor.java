@@ -31,10 +31,10 @@ public class SoundIconActor extends Actor {
                           float printY,
                           boolean sound,
                           int type) {
-        if(type == BGM) {
+        if (type == BGM) {
             onTexture = new Texture("BGM_ON.png");
             offTexture = new Texture("BGM_OFF.png");
-        } else if(type == SOUND_EFFECT) {
+        } else if (type == SOUND_EFFECT) {
             onTexture = new Texture("SoundEffect_ON.png");
             offTexture = new Texture("SoundEffect_OFF.png");
         }
@@ -49,13 +49,13 @@ public class SoundIconActor extends Actor {
     }
 
     public void draw(Batch batch, float alpha) {
-        if(sound == ON) {
+        if (sound == ON) {
             batch.draw(onTexture,
                     getX(),
                     getY(),
                     getWidth(),
                     getHeight());
-        } else if(sound == OFF) {
+        } else if (sound == OFF) {
             batch.draw(offTexture,
                     getX(),
                     getY(),

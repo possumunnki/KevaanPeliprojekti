@@ -6,7 +6,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MyGdxGame extends Game {
-	SpriteBatch batch;
+    SpriteBatch batch;
 
     private final boolean ON = true;
     private final boolean OFF = false;
@@ -14,15 +14,15 @@ public class MyGdxGame extends Game {
     private boolean unlockAllStages = OFF;
     private boolean music;
     private boolean soundEffect;
-	/**
-	 * Screen width in meters
-	 */
-	public static final float SCREEN_WIDTH = 8.0f;
+    /**
+     * Screen width in meters
+     */
+    public static final float SCREEN_WIDTH = 8.0f;
 
-	/**
-	 * Screen height in meters
-	 */
-	public static final float SCREEN_HEIGHT = 4.8f;
+    /**
+     * Screen height in meters
+     */
+    public static final float SCREEN_HEIGHT = 4.8f;
 
     public static final int STOP = 0;
     public static final int RIGHT = 1;
@@ -52,44 +52,45 @@ public class MyGdxGame extends Game {
     public static final int ADVENTURE = 1;
     public static final int RAT_RACE = 2;
     private Preferences prefs;
-	private LogoScreen logoScreen;
+    private LogoScreen logoScreen;
 
-	public SpriteBatch getSpriteBatch() {
-		return batch;
-	}
+    public SpriteBatch getSpriteBatch() {
+        return batch;
+    }
 
-	@Override
-	public void create () {
-		batch = new SpriteBatch();
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
         currentStage = 1; // Korjaa, kun tehdään muisti osio!
         soundEffect = ON;
         // !! LEVEL 3 SET TO AVAILABLE FOR TESTING !!
         availableStage = new boolean[]{AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE, NOT_AVAILABLE};
         prefs = Gdx.app.getPreferences("GameData");
         restoreGameData();
-        if(unlockAllStages) {
+        if (unlockAllStages) {
             setUnlockedStages(5);
         }
-		logoScreen = new LogoScreen(this);
-		// moves to logo screen
-		setScreen(logoScreen);
-	}
+        logoScreen = new LogoScreen(this);
+        // moves to logo screen
+        setScreen(logoScreen);
+    }
 
-	@Override
-	public void render () {
-		super.render();
+    @Override
+    public void render() {
+        super.render();
 
-	}
+    }
 
-	@Override
-	public void dispose () {
+    @Override
+    public void dispose() {
         save();
         batch.dispose();
         Gdx.app.log("MyGdxGame", "disposed");
-	}
+    }
 
     /**
      * returns amount of unlocked stages to print right number of points on map screen
+     *
      * @return amount of unlocked stages
      */
     public int getUnlockedStages() {
@@ -99,8 +100,7 @@ public class MyGdxGame extends Game {
     /**
      * Sets current stage.
      *
-     * @param stage     stage number that will be set as a current stage
-     *
+     * @param stage stage number that will be set as a current stage
      */
     public void setCurrentStage(int stage) {
         currentStage = stage;
@@ -118,7 +118,7 @@ public class MyGdxGame extends Game {
     /**
      * Returns current stage
      *
-     * @param nextStage     stage that will be unlocked
+     * @param nextStage stage that will be unlocked
      */
     public void unlockStage(int nextStage) {
         availableStage[nextStage] = AVAILABLE;
@@ -127,21 +127,22 @@ public class MyGdxGame extends Game {
     /**
      * Checks is the stage currently able to play or not.
      *
-     * @param stageNumber   stage number wanted to check
-     * @return              whether the stage is unlocked or not
+     * @param stageNumber stage number wanted to check
+     * @return whether the stage is unlocked or not
      */
     public boolean getStageAvailability(int stageNumber) {
-        return availableStage[stageNumber -1];
+        return availableStage[stageNumber - 1];
     }
 
     /**
-     *  Returns game mode of current stage to set up the game stage.
+     * Returns game mode of current stage to set up the game stage.
      *
      * @return game mode of the current stage
      */
     public int getGameMode() {
         return gameMode;
     }
+
     public void setGameMode(int gameMode) {
         this.gameMode = gameMode;
     }
@@ -165,7 +166,7 @@ public class MyGdxGame extends Game {
     public void setUnlockedStages(int newUnlockedStage) {
         int unLockedStages = prefs.getInteger("unLockedStage", 1);
 
-        if(unLockedStages >= newUnlockedStage) {
+        if (unLockedStages >= newUnlockedStage) {
             this.unlockedStages = unLockedStages;
         } else {
             this.unlockedStages = newUnlockedStage;
@@ -188,6 +189,7 @@ public class MyGdxGame extends Game {
 
     /**
      * Saves unlocked stages amount, so that player could continue the game.
+     *
      * @param unlockedStages
      */
     public void saveUnlockedStages(int unlockedStages) {
@@ -220,9 +222,9 @@ public class MyGdxGame extends Game {
      * When player touches bgm -icon, this method will be call.
      */
     public void setMusic() {
-        if(this.music == ON) {
+        if (this.music == ON) {
             music = OFF;
-        } else if(this.music == OFF) {
+        } else if (this.music == OFF) {
             music = ON;
         }
 
@@ -237,9 +239,9 @@ public class MyGdxGame extends Game {
      * When player touches sound effect -icon, this method will be call.
      */
     public void setSoundEffect() {
-        if(this.soundEffect == ON) {
+        if (this.soundEffect == ON) {
             soundEffect = OFF;
-        } else if(this.soundEffect == OFF) {
+        } else if (this.soundEffect == OFF) {
             soundEffect = ON;
         }
     }

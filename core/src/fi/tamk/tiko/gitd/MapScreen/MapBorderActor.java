@@ -20,7 +20,7 @@ public class MapBorderActor extends Actor {
 
         setWidth(mapBorderTexture.getWidth());
         setHeight(mapBorderTexture.getHeight());
-        setScale(1,1);
+        setScale(1, 1);
         // setOrigin(getWidth()/2, getHeight()/2);
         //fadeInAction();
     }
@@ -30,14 +30,14 @@ public class MapBorderActor extends Actor {
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * alpha);
         batch.draw(mapBorderSprite,
-                   getX(),
-                   getY(),
-                   getOriginX(),
-                   getOriginY(),
-                   getWidth() * getScaleX(),
-                   getHeight() * getScaleY(),
-                   getScaleX(),
-                   getScaleY(),
+                getX(),
+                getY(),
+                getOriginX(),
+                getOriginY(),
+                getWidth() * getScaleX(),
+                getHeight() * getScaleY(),
+                getScaleX(),
+                getScaleY(),
                 getRotation());
         batch.setColor(color.r, color.g, color.b, 1f);
 
@@ -53,7 +53,6 @@ public class MapBorderActor extends Actor {
         mapBorderTexture.dispose();
         this.remove();
     }
-
 
 
 }

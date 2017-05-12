@@ -32,7 +32,7 @@ public class Rat {
         ratObject = new ObjectData(ratTex, 1.2f, 0.5f, ObjectData.GameObjectType.RAT);
 
 
-        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+        if (host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
             // Rat bodies
             ratTemplate = createBody(12.9f, 3, ratObject.width, ratObject.height, world);
             ratTemplate.setUserData(ratObject);
@@ -90,41 +90,41 @@ public class Rat {
     public void ratWalk() {
 
 
-        if(ratTemplate.getLinearVelocity().y == 0) {
+        if (ratTemplate.getLinearVelocity().y == 0) {
 
-            if(!ratRight) {
+            if (!ratRight) {
                 ratTemplate.setLinearVelocity(2f, 0);
                 //Gdx.app.log("log", "rat1 x " + ratTemplate.getPosition().x);
 
-                if(ratTemplate.getPosition().x > 20.5f) {
+                if (ratTemplate.getPosition().x > 20.5f) {
                     ratTemplate.setLinearVelocity(0, 0);
                     ratRight = true;
                 }
-            } else if(ratRight) {
+            } else if (ratRight) {
                 ratTemplate.setLinearVelocity(-2f, 0);
                 //Gdx.app.log("log", "rat1 x " + ratTemplate.getPosition().x);
 
-                if(ratTemplate.getPosition().x < 15.0f) {
+                if (ratTemplate.getPosition().x < 15.0f) {
                     ratRight = false;
                 }
             }
         }
 
-        if(ratBody2.getLinearVelocity().y == 0) {
+        if (ratBody2.getLinearVelocity().y == 0) {
 
-            if(!ratRight) {
+            if (!ratRight) {
                 ratBody2.setLinearVelocity(2f, 0);
                 //Gdx.app.log("log", "rat2 x " + ratBody2.getPosition().x);
 
-                if(ratBody2.getPosition().x > 40.5f) {
+                if (ratBody2.getPosition().x > 40.5f) {
                     ratBody2.setLinearVelocity(0, 0);
                     ratRight = true;
                 }
-            } else if(ratRight) {
+            } else if (ratRight) {
                 ratBody2.setLinearVelocity(-2f, 0);
                 //Gdx.app.log("log", "rat2 x " + ratBody2.getPosition().x);
 
-                if(ratBody2.getPosition().x < 35.0f) {
+                if (ratBody2.getPosition().x < 35.0f) {
                     ratRight = false;
                 }
             }

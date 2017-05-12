@@ -52,6 +52,7 @@ public class LogoScreen implements Screen {
         logoStage.addActor(logo2Actor);
         addFadeAction();
     }
+
     @Override
     public void show() {
 
@@ -106,11 +107,11 @@ public class LogoScreen implements Screen {
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
-                               logo2Actor.addAction(
-                                    Actions.sequence(
-                                        Actions.fadeOut(0f),
-                                        Actions.fadeIn(1.0f)
-                                       ));
+                                logo2Actor.addAction(
+                                        Actions.sequence(
+                                                Actions.fadeOut(0f),
+                                                Actions.fadeIn(1.0f)
+                                        ));
                             }
                         })));
     }

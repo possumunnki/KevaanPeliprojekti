@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+
 import fi.tamk.tiko.gitd.FontActor;
 import fi.tamk.tiko.gitd.MyGdxGame;
 
@@ -16,6 +17,8 @@ import fi.tamk.tiko.gitd.MainMenuScreen.MainMenuScreen;
 
 /**
  * Created by possumunnki on 28.3.2017.
+ *
+ * @author
  */
 
 public class GameOverScreen implements Screen {
@@ -39,11 +42,11 @@ public class GameOverScreen implements Screen {
                 host.SCREEN_WIDTH,
                 host.SCREEN_HEIGHT);
         retry = new FontActor("RETRY",
-                host.SCREEN_WIDTH * 1/2 * 100f,
-                host.SCREEN_HEIGHT * 2/4 * 100f);
+                host.SCREEN_WIDTH * 1 / 2 * 100f,
+                host.SCREEN_HEIGHT * 2 / 4 * 100f);
         quit = new FontActor("QUIT",
-                host.SCREEN_WIDTH  * 1/2 * 100f,
-                host.SCREEN_HEIGHT * 1/4 * 100f);
+                host.SCREEN_WIDTH * 1 / 2 * 100f,
+                host.SCREEN_HEIGHT * 1 / 4 * 100f);
 
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
 
@@ -55,6 +58,7 @@ public class GameOverScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
     }
+
     @Override
     public void show() {
 
@@ -64,7 +68,6 @@ public class GameOverScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 
 
         batch.begin();
@@ -80,7 +83,7 @@ public class GameOverScreen implements Screen {
         if (retry.getTouch()) {
             host.setScreen(new GameScreen(host)
             );
-        } else if(quit.getTouch()) {
+        } else if (quit.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
         }
     }

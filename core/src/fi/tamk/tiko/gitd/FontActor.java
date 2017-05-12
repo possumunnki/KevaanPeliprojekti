@@ -36,7 +36,7 @@ public class FontActor extends Actor {
         fontLayout = new GlyphLayout(blackFont, fontString);
         setWidth(fontLayout.width);
         setHeight(fontLayout.height);
-        setBounds(printX - getWidth() / 2 ,printY ,getWidth(), getHeight());
+        setBounds(printX - getWidth() / 2, printY, getWidth(), getHeight());
         addListener(new FontListener());
 
     }
@@ -45,7 +45,7 @@ public class FontActor extends Actor {
         /*font.draw(batch, fontString, printX - getWidth() / 2,
                 printY + getHeight());*/
 
-        if(touchEnter == true) {
+        if (touchEnter == true) {
             blackFont.draw(batch, fontString, printX - getWidth() / 2,
                     printY + getHeight());
         } else {
@@ -75,7 +75,7 @@ public class FontActor extends Actor {
     public void setFontScale(float scale) {
         blackFont.getData().setScale(scale);
         fontLayout.setText(blackFont, fontString); // not working
-        setBounds(printX - getWidth() / 2 ,printY ,getWidth(), getHeight());
+        setBounds(printX - getWidth() / 2, printY, getWidth(), getHeight());
     }
 
     class FontListener extends InputListener {
@@ -98,6 +98,7 @@ public class FontActor extends Actor {
             touch = true;
             Gdx.app.log(fontString, "touch done at (" + x + ", " + y + ")");
         }
+
         public void enter(InputEvent event,
                           float x,
                           float y,
@@ -105,6 +106,7 @@ public class FontActor extends Actor {
                           Actor fromActor) {
             touchEnter = true;
         }
+
         public void exit(InputEvent event,
                          float x,
                          float y,

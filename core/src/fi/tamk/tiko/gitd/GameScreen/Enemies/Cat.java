@@ -1,20 +1,20 @@
 package fi.tamk.tiko.gitd.GameScreen.Enemies;
 
-        import com.badlogic.gdx.Gdx;
-        import com.badlogic.gdx.graphics.Texture;
-        import com.badlogic.gdx.graphics.g2d.Animation;
-        import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-        import com.badlogic.gdx.graphics.g2d.TextureRegion;
-        import com.badlogic.gdx.math.Vector2;
-        import com.badlogic.gdx.physics.box2d.Body;
-        import com.badlogic.gdx.physics.box2d.BodyDef;
-        import com.badlogic.gdx.physics.box2d.FixtureDef;
-        import com.badlogic.gdx.physics.box2d.PolygonShape;
-        import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 
-        import fi.tamk.tiko.gitd.GameScreen.Allies.Player;
-        import fi.tamk.tiko.gitd.Utilities;
-        import fi.tamk.tiko.gitd.MyGdxGame;
+import fi.tamk.tiko.gitd.GameScreen.Allies.Player;
+import fi.tamk.tiko.gitd.Utilities;
+import fi.tamk.tiko.gitd.MyGdxGame;
 
 /**
  * Created by Juz3 on 20.4.2017.
@@ -40,13 +40,12 @@ public class Cat {
 
         catStillTexture = new Texture("catSprite1.png");
         catRunTexture = new Texture("catRunAnim2.png");
-        catRunAnim = new Animation<TextureRegion>(1/8f,
+        catRunAnim = new Animation<TextureRegion>(1 / 8f,
                 Utilities.transformToFrames(catRunTexture, 4, 2));
         catPosition = new Vector2(24f, 1.75f);
 
 
-
-        if(host.getGameMode() == host.RAT_RACE) {
+        if (host.getGameMode() == host.RAT_RACE) {
             catBody = world.createBody(getDefinitionOfBody());
             catBody.createFixture(getFixtureDefinition());
             catBody.setUserData("cat");
@@ -63,7 +62,7 @@ public class Cat {
         myBodyDef.type = BodyDef.BodyType.KinematicBody;
         // Initial position is centered up
         // This position is the CENTER of the shape!
-        myBodyDef.position.set( MyGdxGame.SCREEN_WIDTH / 2,
+        myBodyDef.position.set(MyGdxGame.SCREEN_WIDTH / 2,
                 MyGdxGame.SCREEN_HEIGHT / 2);
 
         return myBodyDef;
@@ -94,13 +93,13 @@ public class Cat {
 
         catRunCurrentFrame = catRunAnim.getKeyFrame(stateTime, true);
 
-        if(host.getGameMode() == host.RAT_RACE && host.getCurrentStage() == 3) {
+        if (host.getGameMode() == host.RAT_RACE && host.getCurrentStage() == 3) {
             sb.draw(catRunCurrentFrame,
                     catBody.getPosition().x - catStillTexture.getWidth() / 200,
                     catBody.getPosition().y - catStillTexture.getHeight() / 200,
                     4.5f,
                     2.8f);
-        } else if(host.getGameMode() == host.RAT_RACE && host.getCurrentStage() == 4) {
+        } else if (host.getGameMode() == host.RAT_RACE && host.getCurrentStage() == 4) {
             sb.draw(catRunCurrentFrame,
                     catBody.getPosition().x - catStillTexture.getWidth() / 200,
                     catBody.getPosition().y - catStillTexture.getHeight() / 200,
@@ -114,9 +113,9 @@ public class Cat {
      *
      * @param host
      */
-    public void moveCat(MyGdxGame host, Player player, World world)  {
+    public void moveCat(MyGdxGame host, Player player, World world) {
 
-        if(host.getGameMode() == host.RAT_RACE && player.getPlayerBody().getPosition().x > 10) {
+        if (host.getGameMode() == host.RAT_RACE && player.getPlayerBody().getPosition().x > 10) {
 
 
             // This is a failed attempt to reset cat back to start and get it running again
@@ -135,8 +134,8 @@ public class Cat {
 
             //Gdx.app.log("log", "cat pos x" + catBody.getPosition().x);
 
-            if(catBody.getPosition().x > 30 && catBody.getPosition().x < 100) {
-                if(!speedPrintOnce1) {
+            if (catBody.getPosition().x > 30 && catBody.getPosition().x < 100) {
+                if (!speedPrintOnce1) {
                     Gdx.app.log("log:", "speed 2");
                 }
                 speedPrintOnce1 = true;
@@ -144,9 +143,9 @@ public class Cat {
                 catBody.setLinearVelocity(CAT_SPEED_2, 0);
             }
             // If cat is at the finish line, stop and remove
-            if(host.getCurrentStage() == 3) {
-                if(catBody.getPosition().x > 120) {
-                    if(!catFinishPrint) {
+            if (host.getCurrentStage() == 3) {
+                if (catBody.getPosition().x > 120) {
+                    if (!catFinishPrint) {
                         Gdx.app.log("log:", "cat @ finish line, removal");
                     }
                     catFinishPrint = true;
@@ -154,18 +153,17 @@ public class Cat {
                     catBody.setLinearVelocity(0, 0);
                     //world.destroyBody(catBody);
                 }
-            } else if(host.getCurrentStage() == 4) {
+            } else if (host.getCurrentStage() == 4) {
 
 
                 //When at the stairs near stage 4 finish, set y-velocity for cat
-                if(catBody.getPosition().x > 115) {
+                if (catBody.getPosition().x > 115) {
                     catBody.setLinearVelocity(CAT_SPEED_1, 2.7f);
                 }
 
 
-
-                if(catBody.getPosition().x > 135) {
-                    if(!catFinishPrint) {
+                if (catBody.getPosition().x > 135) {
+                    if (!catFinishPrint) {
                         Gdx.app.log("log:", "cat @ finish line, removal");
                     }
                     catFinishPrint = true;

@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+
 import fi.tamk.tiko.gitd.GameScreen.Allies.Player;
 import fi.tamk.tiko.gitd.MyGdxGame;
 
@@ -37,7 +38,7 @@ public class ExclamationMarkActor extends Actor {
     public void draw(Batch batch, float alpha) {
         batch.draw(exclamationSprite,
                 getX(),
-                getY(),getOriginX(),
+                getY(), getOriginX(),
                 getOriginY(),
                 getWidth(),
                 getHeight(),
@@ -57,7 +58,7 @@ public class ExclamationMarkActor extends Actor {
     private void scaleAction() {
         Action scaleUpAction = Actions.scaleTo(2f, 2f, 0.5f);
         Action scaleDownAction = Actions.scaleTo(1f, 1f, 0.5f);
-       addAction( Actions.forever(
+        addAction(Actions.forever(
                 Actions.sequence(
                         scaleUpAction,
                         scaleDownAction
@@ -67,8 +68,8 @@ public class ExclamationMarkActor extends Actor {
 
     /**
      * Sets Exclamation-mark's position so that it will appear right up of the player.
-     * @param player In this method, used to get players position and width of the player texture.
      *
+     * @param player     In this method, used to get players position and width of the player texture.
      * @param worldWidth World's width in pixel
      */
     public void setExclamationMarkPosition(Player player, float worldWidth, float worldHeight) {
@@ -88,26 +89,26 @@ public class ExclamationMarkActor extends Actor {
         printX = screenWidth / 2 + distanceWidth;
         // whenever player is near the left world wall
         if (playerPositionX < screenWidth / 2) {
-            printX = playerPositionX  + distanceWidth;
+            printX = playerPositionX + distanceWidth;
         }
         // whenever player is near the right world wall
         if (playerPositionX > worldWidth - screenWidth / 2) {
-            printX = screenWidth - (worldWidth - playerPositionX ) + distanceWidth;
+            printX = screenWidth - (worldWidth - playerPositionX) + distanceWidth;
         }
 
         // when camera is centralized on player
         printY = screenHeight / 2 + distanceHeight;
         // whenever player is near the ground
-        if(playerPositionY < screenHeight / 2) {
+        if (playerPositionY < screenHeight / 2) {
             printY = playerPositionY + distanceHeight;
         }
         // whenever player is near the world roof
-        if(playerPositionY > worldHeight - screenHeight / 2) {
+        if (playerPositionY > worldHeight - screenHeight / 2) {
             printY = screenHeight - (worldHeight - playerPositionY) + distanceHeight;
         }
 
         setPosition(printX, printY);
-        setBounds(getX(), getY() ,getWidth(), getHeight());
+        setBounds(getX(), getY(), getWidth(), getHeight());
 
     }
 
@@ -120,7 +121,7 @@ public class ExclamationMarkActor extends Actor {
         this.remove();
     }
 
-    public void setTouch(boolean touch){
+    public void setTouch(boolean touch) {
         this.touch = touch;
     }
     //public void setEx

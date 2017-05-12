@@ -40,8 +40,8 @@ public class CreditScreen implements Screen {
                 host.SCREEN_HEIGHT);
 
         quit = new FontActor("QUIT",
-                host.SCREEN_WIDTH  * 1/2 * 100f,
-                host.SCREEN_HEIGHT * 1/4 * 100f);
+                host.SCREEN_WIDTH * 1 / 2 * 100f,
+                host.SCREEN_HEIGHT * 1 / 4 * 100f);
 
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
 
@@ -49,6 +49,7 @@ public class CreditScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
     }
+
     @Override
     public void show() {
 
@@ -58,7 +59,6 @@ public class CreditScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 
 
         batch.begin();
@@ -71,7 +71,7 @@ public class CreditScreen implements Screen {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        if(quit.getTouch()) {
+        if (quit.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
         }
     }

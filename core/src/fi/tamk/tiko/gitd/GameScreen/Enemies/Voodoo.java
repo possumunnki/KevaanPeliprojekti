@@ -35,16 +35,16 @@ public class Voodoo {
     private boolean leftTurn = false;
 
     // STAGE 1 VOODOO POSITIONS
-    private final int[]stage1X = {5, 7, 13, 18, 20, 24, 29, 32, 51};
-    private final int[]stage1Y = {1, 2, 8, 8, 8, 7, 7, 7, 1};
+    private final int[] stage1X = {5, 7, 13, 18, 20, 24, 29, 32, 51};
+    private final int[] stage1Y = {1, 2, 8, 8, 8, 7, 7, 7, 1};
 
     // STAGE 2 VOODOO POSITIONS
-    private final int[]stage2X = {5, 7, 13, 18, 20, 24, 29, 32, 56};
-    private final int[]stage2Y = {1, 2, 8, 8, 8, 7, 7, 7, 8};
+    private final int[] stage2X = {5, 7, 13, 18, 20, 24, 29, 32, 56};
+    private final int[] stage2Y = {1, 2, 8, 8, 8, 7, 7, 7, 8};
 
     // STAGE 5 VOODOO POSITIONS
-    private final float[]stage5X = {1.5f, 14, 26, 18, 48};
-    private final float[]stage5Y = {2.5f, 4, 2, 2, 2};
+    private final float[] stage5X = {1.5f, 14, 26, 18, 48};
+    private final float[] stage5Y = {2.5f, 4, 2, 2, 2};
 
     // insert here
     // and here
@@ -56,12 +56,12 @@ public class Voodoo {
         voodooTex = new Texture(Gdx.files.internal("voodooNew.png"));
         vdObject = new ObjectData(voodooTex, 0.2f, 0.2f, ObjectData.GameObjectType.VOODOO);
 
-        if(host.getCurrentStage() == 1 ||
+        if (host.getCurrentStage() == 1 ||
                 host.getCurrentStage() == 2 ||
                 host.getCurrentStage() == 5) {
 
 
-            if(host.getCurrentStage() == 1) {
+            if (host.getCurrentStage() == 1) {
                 // Voodoo 1-3
                 testBody1 = createBody(stage1X[0], stage1Y[0], vdObject.width, vdObject.height,
                         world);
@@ -99,7 +99,7 @@ public class Voodoo {
                         world);
                 testBody9.setUserData(vdObject);
 
-            } else if(host.getCurrentStage() == 2) {
+            } else if (host.getCurrentStage() == 2) {
                 // Voodoo 1-3
                 testBody1 = createBody(stage2X[0], stage2Y[0], vdObject.width, vdObject.height,
                         world);
@@ -163,7 +163,7 @@ public class Voodoo {
             }
         }
 
-        if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+        if (host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
             voodooBodyArray.add(testBody1);
             voodooBodyArray.add(testBody2);
             voodooBodyArray.add(testBody3);
@@ -173,7 +173,7 @@ public class Voodoo {
             voodooBodyArray.add(testBody7);
             voodooBodyArray.add(testBody8);
             voodooBodyArray.add(testBody9);
-        } else if(host.getCurrentStage() == 5) {
+        } else if (host.getCurrentStage() == 5) {
             voodooBodyArray.add(testBody1);
             voodooBodyArray.add(testBody2);
             voodooBodyArray.add(testBody3);
@@ -227,7 +227,6 @@ public class Voodoo {
     }
 
 
-
     public void voodooWalk(MyGdxGame host) {
 
         /**
@@ -239,27 +238,27 @@ public class Voodoo {
          *
          */
 
-        for(Body body:voodooBodyArray) {
+        for (Body body : voodooBodyArray) {
 
             // STAGE 1 DOLL MOVEMENT
-            if(host.getCurrentStage() == 1 && body.getLinearVelocity().y == 0 ) {
+            if (host.getCurrentStage() == 1 && body.getLinearVelocity().y == 0) {
 
                 // set initial speed
-                if(!leftTurn) {
+                if (!leftTurn) {
 
                     body.setLinearVelocity(-1, 0);
 
                     //Gdx.app.log("log1", "body9 " + testBody9.getPosition().x);
                 }
                 // Move to opposite direction when too far from initial position
-                if(testBody9.getPosition().x < (50 - 1)) {
+                if (testBody9.getPosition().x < (50 - 1)) {
 
                     //Gdx.app.log("log", "i" + i);
 
                     leftTurn = true;
                     body.setLinearVelocity(2, 0);
                     //Gdx.app.log("log2", "body9 " + testBody9.getPosition().x);
-                } else if(testBody9.getPosition().x > (50 + 1)) {
+                } else if (testBody9.getPosition().x > (50 + 1)) {
                     //Gdx.app.log("log", "i" + i);
                     leftTurn = false;
                     //body.setLinearVelocity(-1f, 0);
@@ -267,23 +266,23 @@ public class Voodoo {
                 }
 
                 // STAGE 2 DOLL MOVEMENT
-            } else if(host.getCurrentStage() == 2 && body.getLinearVelocity().y == 0) {
+            } else if (host.getCurrentStage() == 2 && body.getLinearVelocity().y == 0) {
                 // set initial speed
-                if(!leftTurn) {
+                if (!leftTurn) {
 
                     body.setLinearVelocity(-1, 0);
 
                     //Gdx.app.log("log1", "body9 " + testBody9.getPosition().x);
                 }
                 // Move to opposite direction when too far from initial position
-                if(testBody9.getPosition().x < (56 - 1)) {
+                if (testBody9.getPosition().x < (56 - 1)) {
 
                     //Gdx.app.log("log", "i" + i);
 
                     leftTurn = true;
                     body.setLinearVelocity(2, 0);
                     //Gdx.app.log("log2", "body9 " + testBody9.getPosition().x);
-                } else if(testBody9.getPosition().x > (56 + 1)) {
+                } else if (testBody9.getPosition().x > (56 + 1)) {
                     //Gdx.app.log("log", "i" + i);
                     leftTurn = false;
                     //body.setLinearVelocity(-1f, 0);
@@ -293,13 +292,13 @@ public class Voodoo {
                 // STAGE 5 DOLL MOVEMENT
             } else if (host.getCurrentStage() == 5 && body.getLinearVelocity().y == 0) {
                 // set initial speed
-                if(!leftTurn) {
+                if (!leftTurn) {
 
                     //Gdx.app.log("log", "stage 5 vd move");
                     body.setLinearVelocity(-0.75f, 0);
                 }
                 // Move to opposite direction when too far from initial position
-                if(testBody4.getPosition().x < (48 - 0.5f)) {
+                if (testBody4.getPosition().x < (48 - 0.5f)) {
                     body.setLinearVelocity(0, 0);
                     leftTurn = true;
 
