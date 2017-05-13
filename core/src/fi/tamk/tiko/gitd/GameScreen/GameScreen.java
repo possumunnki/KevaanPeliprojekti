@@ -68,7 +68,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
      */
     private boolean immortality = OFF;
 
-
     /**
      * Tile amount in the world.
      */
@@ -263,7 +262,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         /**
          * Adds spike bodies to maps which contain spikes
          */
-        if(host.getCurrentStage() == 2 || host.getCurrentStage() == 4) {
+        if(host.getCurrentStage() == 1 ||
+                host.getCurrentStage() == 2 ||
+                host.getCurrentStage() == 4 ||
+                host.getCurrentStage() == 5) {
             Utilities.transformWallsToBodies("spike-rectangles", "spike", tiledMap, world);
         }
 
@@ -332,17 +334,18 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             }
         }
 
-
         if(pause == OFF) {
             controlCharacter();
 
             // If current map is containing rats and voodoo dolls
-            if(host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+            if(host.getCurrentStage() == 1
+                    || host.getCurrentStage() == 2
+                    || host.getCurrentStage() == 5) {
                 bodyHandler.callEnemyWalk(host);
             }
 
             if (host.getCurrentStage() == 5) {
-                bodyHandler.callBossAction(host, world);
+                bodyHandler.callBossAction(host);
             }
 
             exclamationMarkActor.setExclamationMarkPosition(player, worldWidthPixels, worldHeightPixels);
@@ -376,7 +379,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         batch.begin();
         player.draw(batch, stateTime, host);
         lightDoll.draw(batch);
-        bodyHandler.drawAllBodies(batch);
+        bodyHandler.drawAllBodies(batch, stateTime, player);
 
         cat.draw(batch, stateTime, host, player);
 
@@ -501,7 +504,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                         }
                     }
 
-
                 } else if (body2.getUserData() != null) {
 
                     if (body2.getUserData().equals("player")) {
@@ -522,7 +524,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                             goal = true;
 
                         }
-
                     }
                 }
             }
@@ -579,6 +580,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
 
         if(bodyHandler.getSetVictory()) {
+            doHeavyStuff();
             host.setScreen(new CreditScreen(host));
         }
     }

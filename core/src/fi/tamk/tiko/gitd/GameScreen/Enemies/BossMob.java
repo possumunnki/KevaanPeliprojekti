@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import fi.tamk.tiko.gitd.MyGdxGame;
 
 /**
+ * Boss monster class
  * Created by Juz3 on 7.5.2017.
  */
 
@@ -40,7 +41,12 @@ public class BossMob {
 
     private boolean shootOnce = false;
 
-
+    /**
+     * Constructs the bossmob object
+     *
+     * @param world is phys2d world object
+     * @param host is extension of libgdx game-class
+     */
     public BossMob(World world, MyGdxGame host) {
 
         bossTexture = new Texture("boss1.png");
@@ -71,7 +77,6 @@ public class BossMob {
         }
     }
 
-
     private Body createBody(float x, float y, float width, float height, float density, World
             world) {
         Body newBody = world.createBody(getDefinitionOfBody(x, y));
@@ -101,7 +106,7 @@ public class BossMob {
         // How bouncy object? [0,1]
         FixDef.restitution = 0.1f;
         // How slipper object? [0,1]
-        FixDef.friction = 0.02f;
+        FixDef.friction = 0.01f;
         // Create polygon shape
         PolygonShape polyShape = new PolygonShape();
         polyShape.setAsBox(width, height);
@@ -135,14 +140,17 @@ public class BossMob {
      }
      */
 
-    public void bossWalk(World world) {
+    /**
+     * Walks the boss back and forth in the last room of stage 5
+     */
+    public void bossWalk() {
 
         //Gdx.app.log("log", "boss loc " + bossBody.getPosition().x);
 
         if(bossBody.getLinearVelocity().y == 0) {
 
             if(!bossRight) {
-                bossBody.setLinearVelocity(-1.35f, 0);
+                bossBody.setLinearVelocity(-1.75f, 0);
 
                 if(bossBody.getPosition().x < bossLocation.x - 5f) {
                     bossBody.setLinearVelocity(0, 0);
@@ -154,7 +162,7 @@ public class BossMob {
                     //fire(world);
                 }
             } else if(bossRight) {
-                bossBody.setLinearVelocity(1.35f, 0);
+                bossBody.setLinearVelocity(1.75f, 0);
 
                 if(bossBody.getPosition().x > bossLocation.x) {
                     bossRight = false;
@@ -162,33 +170,6 @@ public class BossMob {
             }
         }
     }
-
-    // 1st fire method, gives fatal error
-    /**
-     public void shoot(World world) {
-
-     fireballObject = new ObjectData(fireball, fireball.getWidth() / 130f,
-     fireball.getHeight() / 130f, ObjectData.GameObjectType.FIREBALL);
-
-     float fireballXpos = MathUtils.random(-2f, 2f);
-
-     fireballBody = createBody(bossBody.getPosition().x + fireballXpos,
-     bossBody.getPosition().y + 4f,
-     fireballObject.width,
-     fireballObject.height,
-     world);
-     //fireballBody.setBullet(true);
-
-     fireballBody.setUserData(fireballObject);
-
-     if(fireballBody.getPosition().y < 2f) {
-
-     Gdx.app.log("log", "destroy 0y");
-     world.destroyBody(fireballBody);
-     }
-     }
-     */
-
 
     public ObjectData getBossObject() {
         return bossObject;
@@ -198,8 +179,12 @@ public class BossMob {
         return fireballObject;
     }
 
+    /**
+     * disposes bossmob-related stuff
+     */
     public void dispose() {
         bossTexture.dispose();
         fireball.dispose();
     }
 }
+// end of file

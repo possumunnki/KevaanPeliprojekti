@@ -1,18 +1,18 @@
 package fi.tamk.tiko.gitd.GameScreen.Allies;
 
-/**
- * Created by Juz3 on 16.3.2017.
- */
-
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.World;
-
 import java.util.ArrayList;
 
 import box2dLight.Light;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
+
+/**
+ * light class, which uses the "Box2Dlights"-library
+ * Main use is to light up the light doll and set dark ambient "light" elsewhere
+ * Created by Juz3 on 16.3.2017.
+ */
 
 public class LightSetup {
 
@@ -31,7 +31,13 @@ public class LightSetup {
     private ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
 
 
-
+    /**
+     * Constructs the lightsetup object
+     *
+     * @param world phys2d world object
+     * @param doll lightdoll object
+     * @param player player object
+     */
     public LightSetup(World world, LightDoll doll, Player player) {
 
         RayHandler.setGammaCorrection(true);
@@ -46,6 +52,11 @@ public class LightSetup {
         initPointLights(doll);
     }
 
+    /**
+     * box2dlights-renderer method
+     *
+     * @param cam camera
+     */
     public void render(OrthographicCamera cam) {
 
         rayHandler.setCombinedMatrix(cam);
@@ -55,6 +66,8 @@ public class LightSetup {
 
     /**
      * Box2Dlights light-adding method
+     *
+     * @param lightDoll the lightdoll object, where the light is bound to
      */
     private void initPointLights(LightDoll lightDoll) {
         clearLights();
@@ -86,6 +99,9 @@ public class LightSetup {
         }
     }
 
+    /**
+     * disposes the lights
+     */
     public void dispose() {
         rayHandler.dispose();
     }

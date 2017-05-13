@@ -14,7 +14,8 @@ import fi.tamk.tiko.gitd.MainMenuScreen.MainMenuScreen;
 import fi.tamk.tiko.gitd.MyGdxGame;
 
 /**
- * Created by JZ on 10/05/2017.
+ * Credit screen-class, only used in the ending of the last stage
+ * Created by Juz3 on 10/05/2017.
  */
 
 public class CreditScreen implements Screen {
@@ -28,6 +29,11 @@ public class CreditScreen implements Screen {
     private Stage stage;
     private Texture creditBG;
 
+    /**
+     *
+     *
+     * @param host extension of libgdx game-class, needed for current stage-check
+     */
     public CreditScreen(MyGdxGame host) {
         this.host = host;
         batch = host.getSpriteBatch();
@@ -41,7 +47,7 @@ public class CreditScreen implements Screen {
 
         quit = new FontActor("QUIT",
                 host.SCREEN_WIDTH  * 1/2 * 100f,
-                host.SCREEN_HEIGHT * 1/4 * 100f);
+                host.SCREEN_HEIGHT * 10/25 * 100f);
 
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
 

@@ -203,6 +203,7 @@ public class LightDoll {
                         lightDollSprite.getY()  > dollDefPosY +- 0.01f ) {
 
                     comingBack = false;
+                    Gdx.app.log("log", "coming back: " + comingBack);
                     throwMode = false;
                     leftDown = false;
                 }
@@ -210,6 +211,7 @@ public class LightDoll {
                 if (lightDollSprite.getX() +- 0.01f < dollDefPosX  &&
                         lightDollSprite.getY() +- 0.01f < dollDefPosY ) {
                     comingBack = false;
+                    Gdx.app.log("log", "coming back: " + comingBack);
                     throwMode = false;
                     floatDeph = 0;
                 }
@@ -226,12 +228,14 @@ public class LightDoll {
                 if(lightDollSprite.getX() +- 0.01f < targetPointX  &&
                         lightDollSprite.getY() +- 0.01f < targetPointY ) {
                     comingBack = true;
+                    Gdx.app.log("log", "coming back: " + comingBack);
                 }
             } else {
                 if (lightDollSprite.getX() > targetPointX +- 0.01f &&
                         lightDollSprite.getY() > targetPointY +- 0.01f) {
 
                     comingBack = true;
+                    Gdx.app.log("log", "coming back: " + comingBack);
                 }
             }
         }
@@ -242,10 +246,14 @@ public class LightDoll {
         lightDollBody.setTransform(dollLocation, 0);
     }
     /**
-     * Box2DLight-related getter
+     * Box2DLight-related body getter
      */
     public Body getLightDollBody() {
         return lightDollBody;
+    }
+
+    public Boolean getComingBack() {
+        return comingBack;
     }
 
     public void dispose() {

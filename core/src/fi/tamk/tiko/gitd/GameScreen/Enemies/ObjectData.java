@@ -3,6 +3,7 @@ package fi.tamk.tiko.gitd.GameScreen.Enemies;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
+ * object data container helper class
  * Created by Juz3 on 24.3.2017.
  */
 
@@ -19,7 +20,6 @@ public class ObjectData {
         BOSS
     }
 
-
     ObjectData.GameObjectType type;
 
     public ObjectData(Texture texture, float x, float y, ObjectData.GameObjectType
@@ -30,3 +30,4 @@ public class ObjectData {
         type = gameObjectType;
     }
 }
+// end of file

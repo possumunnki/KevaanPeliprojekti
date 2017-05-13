@@ -1,22 +1,23 @@
 package fi.tamk.tiko.gitd.GameScreen.Enemies;
 
-        import com.badlogic.gdx.Gdx;
-        import com.badlogic.gdx.graphics.Texture;
-        import com.badlogic.gdx.graphics.g2d.Animation;
-        import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-        import com.badlogic.gdx.graphics.g2d.TextureRegion;
-        import com.badlogic.gdx.math.Vector2;
-        import com.badlogic.gdx.physics.box2d.Body;
-        import com.badlogic.gdx.physics.box2d.BodyDef;
-        import com.badlogic.gdx.physics.box2d.FixtureDef;
-        import com.badlogic.gdx.physics.box2d.PolygonShape;
-        import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 
-        import fi.tamk.tiko.gitd.GameScreen.Allies.Player;
-        import fi.tamk.tiko.gitd.Utilities;
-        import fi.tamk.tiko.gitd.MyGdxGame;
+import fi.tamk.tiko.gitd.GameScreen.Allies.Player;
+import fi.tamk.tiko.gitd.Utilities;
+import fi.tamk.tiko.gitd.MyGdxGame;
 
 /**
+ * Cat enemy class
  * Created by Juz3 on 20.4.2017.
  */
 
@@ -36,6 +37,12 @@ public class Cat {
 
     private Vector2 catPosition;
 
+    /**
+     * Constructs the cat enemy object.
+     *
+     * @param world is phys2d world object
+     * @param host is extension of LibGdx Game-class.
+     */
     public Cat(World world, MyGdxGame host) {
 
         catStillTexture = new Texture("catSprite1.png");
@@ -44,19 +51,15 @@ public class Cat {
                 Utilities.transformToFrames(catRunTexture, 4, 2));
         catPosition = new Vector2(24f, 1.75f);
 
-
-
         if(host.getGameMode() == host.RAT_RACE) {
             catBody = world.createBody(getDefinitionOfBody());
             catBody.createFixture(getFixtureDefinition());
             catBody.setUserData("cat");
             catBody.setFixedRotation(true);
         }
-
-
     }
 
-    public static BodyDef getDefinitionOfBody() {
+    private static BodyDef getDefinitionOfBody() {
         // Body Definition
         BodyDef myBodyDef = new BodyDef();
         // It's a body that moves
@@ -69,7 +72,7 @@ public class Cat {
         return myBodyDef;
     }
 
-    public FixtureDef getFixtureDefinition() {
+    private FixtureDef getFixtureDefinition() {
         FixtureDef catFixtureDef = new FixtureDef();
 
         // Mass per square meter (kg^m2)
@@ -177,7 +180,9 @@ public class Cat {
         }
     }
 
-
+    /**
+     * Disposes cat-related stuff
+     */
     public void dispose() {
         catRunTexture.dispose();
         catStillTexture.dispose();

@@ -2,6 +2,8 @@ package fi.tamk.tiko.gitd.GameScreen.Enemies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -10,8 +12,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import fi.tamk.tiko.gitd.MyGdxGame;
+import fi.tamk.tiko.gitd.Utilities;
 
 /**
+ * Voodoo doll enemy class
  * Created by Juz3 on 17.4.2017.
  */
 
@@ -19,6 +23,13 @@ public class Voodoo {
 
     private ObjectData vdObject;
     private Texture voodooTex;
+
+    /**
+    // Voodoo doll walk animation
+    private Texture walkTexture;
+    private Animation<TextureRegion> voodooWalkAnim;
+    private TextureRegion voodooWalkCurrentFrame;
+     */
 
     private Body testBody1;
     private Body testBody2;
@@ -43,7 +54,7 @@ public class Voodoo {
     private final int[]stage2Y = {1, 2, 8, 8, 8, 7, 7, 7, 8};
 
     // STAGE 5 VOODOO POSITIONS
-    private final float[]stage5X = {1.5f, 14, 26, 18, 48};
+    private final float[]stage5X = {1.2f, 14, 26, 18, 48};
     private final float[]stage5Y = {2.5f, 4, 2, 2, 2};
 
     // insert here
@@ -51,6 +62,12 @@ public class Voodoo {
 
     private Array<Body> voodooBodyArray = new Array<Body>();
 
+    /**
+     * Constructs the voodoo enemy object.
+     *
+     * @param world is phys2d world object
+     * @param host is extension of LibGdx Game-class.
+     */
     public Voodoo(World world, MyGdxGame host) {
 
         voodooTex = new Texture(Gdx.files.internal("voodooNew.png"));
@@ -59,7 +76,6 @@ public class Voodoo {
         if(host.getCurrentStage() == 1 ||
                 host.getCurrentStage() == 2 ||
                 host.getCurrentStage() == 5) {
-
 
             if(host.getCurrentStage() == 1) {
                 // Voodoo 1-3
@@ -159,7 +175,6 @@ public class Voodoo {
                 testBody5 = createBody(stage5X[4], stage5Y[4], vdObject.width, vdObject.height,
                         world);
                 testBody5.setUserData(vdObject);
-
             }
         }
 
@@ -180,16 +195,31 @@ public class Voodoo {
             voodooBodyArray.add(testBody4);
             voodooBodyArray.add(testBody5);
         }
-
     }
 
-
+    /**
+     * Creates phys2d body.
+     *
+     * @param x x-position
+     * @param y y-position
+     * @param width X-size of the body
+     * @param height Y-size of the body
+     * @param world phys2d world object
+     * @return returns this new body
+     */
     private Body createBody(float x, float y, float width, float height, World world) {
         Body newBody = world.createBody(getDefinitionOfBody(x, y));
         newBody.createFixture(getFixtureDefinition(width, height));
         return newBody;
     }
 
+    /**
+     * creates phys2d related body definition.
+     *
+     * @param x center X-pos of body def
+     * @param y center Y-pos of body def
+     * @return returns this body definition
+     */
     private BodyDef getDefinitionOfBody(float x, float y) {
         // Voodoo doll body definition
         BodyDef vdBodyDef = new BodyDef();
@@ -204,6 +234,13 @@ public class Voodoo {
         return vdBodyDef;
     }
 
+    /**
+     * Creates and returns fixture definition for a body.
+     *
+     * @param width the width of corresponding fixture definition
+     * @param height the height of corresponding fixture definition
+     * @return returns the fixdef
+     */
     private FixtureDef getFixtureDefinition(float width, float height) {
         FixtureDef vdFixDef = new FixtureDef();
 
@@ -226,18 +263,15 @@ public class Voodoo {
         return vdFixDef;
     }
 
-
-
+    /**
+     * Moves the voodoo dolls in a way that all the dolls in each map follow the movement of
+     * the last one. if the last one, with greatest x position, is destroyed, every doll stops
+     * This does not matter, because there is no need to go backwards in any map.
+     *
+     * @param host is extension of LibGdx Game-class. Needed for current stage -check
+     */
     public void voodooWalk(MyGdxGame host) {
 
-        /**
-         *
-         * Aseta yksi nukke lähelle maalilinjaa, ja laita tämä liikkumaan alkupisteestä x eteen /
-         * taakse. Laita kaikki muut nuket seuraamaan tämän liikettä, ja kääntymään, kun tämä
-         * viimeinen nukke kääntyy. Kun pelaaja on maalin luona, ja viimeinen "template"
-         * tuhotaan, niin aikaisempien nukkejen pysähtymisellä ei ole enää merkitystä!!
-         *
-         */
 
         for(Body body:voodooBodyArray) {
 
@@ -302,22 +336,24 @@ public class Voodoo {
                 if(testBody4.getPosition().x < (48 - 0.5f)) {
                     body.setLinearVelocity(0, 0);
                     leftTurn = true;
-
                 }
-                /**
-                 } else if(testBody4.getPosition().x > (48 + 0.5f)) {
-                 leftTurn = false;
-                 }
-                 */
             }
         }
     }
 
-    public void dispose() {
-        voodooTex.dispose();
+    public Boolean getLeftTurn() {
+        return leftTurn;
     }
 
     public ObjectData getVdObject() {
         return vdObject;
     }
+
+    /**
+     * Disposes voodoo-related stuff
+     */
+    public void dispose() {
+        voodooTex.dispose();
+    }
 }
+// end of file

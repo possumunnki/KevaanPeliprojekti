@@ -19,6 +19,7 @@ import fi.tamk.tiko.gitd.Utilities;
 import fi.tamk.tiko.gitd.MyGdxGame;
 
 /**
+ * Creates and handles the player object and it's functions.
  * Created by possumunnki on 7.3.2017.
  */
 
@@ -107,7 +108,7 @@ public class Player {
             playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2,
                     host.SCREEN_HEIGHT / 2));
         } else if(host.getCurrentStage() == 2) {
-            playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2 - 2,
+            playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2 - 4f,
                     host.SCREEN_HEIGHT / 2 + host.SCREEN_HEIGHT * 1.5f));
         } else if(host.getCurrentStage() == 3) {
             playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
@@ -374,7 +375,7 @@ public class Player {
             footBodyDef.position.set(playerSprite.getX(),
                     playerSprite.getY());
         } else if(host.getCurrentStage() == 2) {
-            footBodyDef.position.set(playerSprite.getX(),
+            footBodyDef.position.set(playerSprite.getX() -0.6f,
                     playerSprite.getY() + MyGdxGame.SCREEN_HEIGHT); // position of Y must be bit lower than
         } else if(host.getCurrentStage() == 3) {
             footBodyDef.position.set(playerSprite.getX(),
