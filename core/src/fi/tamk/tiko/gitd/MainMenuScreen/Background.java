@@ -1,4 +1,5 @@
 package fi.tamk.tiko.gitd.MainMenuScreen;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -21,19 +22,19 @@ public class Background extends Actor {
         mainmenuBG = new Texture("mainScreenBG.png");
         //mapBG = new Texture("mapScreenBG.png");
 
-        if(select.equalsIgnoreCase("backGround")) {
+        if (select.equalsIgnoreCase("backGround")) {
             mainMenu = true;
             mapMenu = false;
             setWidth(mainmenuBG.getWidth());
             setHeight(mainmenuBG.getHeight());
         }
         /**
-        else if(select.equalsIgnoreCase("mapScreenBG")) {
-            mapMenu = true;
-            mainMenu = false;
-            setWidth(mapBG.getWidth());
-            setHeight(mapBG.getHeight());
-        } // INSERT HERE OTHER BACKGROUNDS
+         else if(select.equalsIgnoreCase("mapScreenBG")) {
+         mapMenu = true;
+         mainMenu = false;
+         setWidth(mapBG.getWidth());
+         setHeight(mapBG.getHeight());
+         } // INSERT HERE OTHER BACKGROUNDS
          */
 
         //setWidth(mainmenuBG.getWidth());
@@ -42,13 +43,13 @@ public class Background extends Actor {
 
     @Override
     public void draw(Batch batch, float alpha) {
-        if(mainMenu) {
+        if (mainMenu) {
             batch.draw(mainmenuBG, getX(), getY(), getWidth(), getHeight());
         }
         /**
-        else if(mapMenu) {
-            batch.draw(mapBG, getX(), getY(), getWidth(), getHeight());
-        }
+         else if(mapMenu) {
+         batch.draw(mapBG, getX(), getY(), getWidth(), getHeight());
+         }
          */
 
     }
@@ -59,13 +60,13 @@ public class Background extends Actor {
     }
 
     public void dispose() {
-        if(mainMenu) {
+        if (mainMenu) {
             mainmenuBG.dispose();
         }
         /**
-        else if(mapMenu) {
-            mapBG.dispose();
-        }
+         else if(mapMenu) {
+         mapBG.dispose();
+         }
          */
     }
 }

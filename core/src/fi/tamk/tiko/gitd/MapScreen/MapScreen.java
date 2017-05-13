@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+
 import fi.tamk.tiko.gitd.FontActor;
 import fi.tamk.tiko.gitd.GameScreen.GameScreen;
 import fi.tamk.tiko.gitd.MainMenuScreen.MainMenuScreen;
@@ -58,8 +59,8 @@ public class MapScreen implements Screen {
                                     host.SCREEN_HEIGHT * 2/8 * 100f);
         */
         back = new FontActor("Back",
-                                    screenWidth  * 1/8,
-                                    screenHeight * 1/8);
+                screenWidth * 1 / 8,
+                screenHeight * 1 / 8);
 
         pointActors = new ArrayList<PointActor>();
 
@@ -93,13 +94,12 @@ public class MapScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
-
         batch.begin();
         batch.draw(backGroundTexture,
-                    0f,
-                    0f,
-                    screenWidth,
-                    screenHeight);
+                0f,
+                0f,
+                screenWidth,
+                screenHeight);
 
         batch.end();
         mapBorderStage.act();
@@ -118,7 +118,7 @@ public class MapScreen implements Screen {
             host.setScreen(new MainMenuScreen(host));
         }
         */
-        if(back.getTouch()) {
+        if (back.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
         } else {
             moveToStage();
@@ -150,7 +150,7 @@ public class MapScreen implements Screen {
         backGroundTexture.dispose();
         //mapScreenBG.dispose();
         //nextStage.dispose();
-        for(int i = 0; i < pointActors.size(); i++) {
+        for (int i = 0; i < pointActors.size(); i++) {
             pointActors.get(i).dispose();
         }
         pointStage.dispose();
@@ -165,30 +165,30 @@ public class MapScreen implements Screen {
     private void setPointActors() {
         switch (host.getUnlockedStages()) {
             case 5:
-                stage5Point = new PointActor(screenWidth  * 6.5f / 12,
-                                             screenHeight * 4.5f / 24, 5);
+                stage5Point = new PointActor(screenWidth * 6.5f / 12,
+                        screenHeight * 4.5f / 24, 5);
                 pointActors.add(stage5Point);
                 pointStage.addActor(stage5Point);
 
             case 4:
-                stage4Point = new PointActor(screenWidth  * 2.5f / 12,
+                stage4Point = new PointActor(screenWidth * 2.5f / 12,
                         screenHeight * 3.5f / 12, 4);
                 pointActors.add(stage4Point);
                 pointStage.addActor(stage4Point);
             case 3:
-                stage3Point = new PointActor(screenWidth * 0.5f / 12 ,
+                stage3Point = new PointActor(screenWidth * 0.5f / 12,
                         screenHeight * 6 / 12, 3);
                 pointActors.add(stage3Point);
                 pointStage.addActor(stage3Point);
                 Gdx.app.log("point3", "added");
             case 2:
-                stage2Point = new PointActor(screenWidth  * 8f / 12,
+                stage2Point = new PointActor(screenWidth * 8f / 12,
                         screenHeight * 6f / 12, 2);
                 pointActors.add(stage2Point);
                 pointStage.addActor(stage2Point);
                 Gdx.app.log("point2", "added");
             case 1:
-                stage1Point = new PointActor(screenWidth * 4.5f / 12 ,
+                stage1Point = new PointActor(screenWidth * 4.5f / 12,
                         screenHeight * 8.5f / 12, 1);
                 pointActors.add(stage1Point);
                 pointStage.addActor(stage1Point);
@@ -214,15 +214,13 @@ public class MapScreen implements Screen {
     }
 
     public void fadeOutAllPointActors() {
-        for(int i = 0; i < pointActors.size(); i++) {
+        for (int i = 0; i < pointActors.size(); i++) {
             pointActors.get(i).addAction(Actions.fadeOut(0f));
         }
     }
 
     /**
      * sets fade in actions for point actors
-     *
-     *
      */
     public void setPointActions(final int pointNumber) {
         pointActors.get(pointNumber - 1).addAction(
@@ -232,7 +230,7 @@ public class MapScreen implements Screen {
                             @Override
                             public void run() {
                                 int nextPointNumber = pointNumber - 1;
-                                if(nextPointNumber > 0) {
+                                if (nextPointNumber > 0) {
                                     setPointActions(nextPointNumber);
                                 }
                             }
@@ -245,31 +243,31 @@ public class MapScreen implements Screen {
     private void moveToStage() {
         switch (host.getUnlockedStages()) {
             case 5:
-                if(stage5Point.getTouch()) {
+                if (stage5Point.getTouch()) {
                     host.setCurrentStage(5);
                     removeOtherPointActors(stage5Point);
                     moveAndZoomAction(stage5Point);
                 }
             case 4:
-                if(stage4Point.getTouch()) {
+                if (stage4Point.getTouch()) {
                     host.setCurrentStage(4);
                     removeOtherPointActors(stage4Point);
                     moveAndZoomAction(stage4Point);
                 }
             case 3:
-                if(stage3Point.getTouch()) {
+                if (stage3Point.getTouch()) {
                     host.setCurrentStage(3);
                     removeOtherPointActors(stage3Point);
                     moveAndZoomAction(stage3Point);
                 }
             case 2:
-                if(stage2Point.getTouch()) {
+                if (stage2Point.getTouch()) {
                     host.setCurrentStage(2);
                     removeOtherPointActors(stage2Point);
                     moveAndZoomAction(stage2Point);
                 }
             case 1:
-                if(stage1Point.getTouch()) {
+                if (stage1Point.getTouch()) {
                     host.setCurrentStage(1);
                     removeOtherPointActors(stage1Point);
                     moveAndZoomAction(stage1Point);
@@ -301,12 +299,13 @@ public class MapScreen implements Screen {
      * @param pointActor pointActor that won't be removed
      */
     private void removeOtherPointActors(PointActor pointActor) {
-        for(int i = 0; i < pointActors.size(); i++) {
-            if(!pointActors.get(i).equals(pointActor)) {
+        for (int i = 0; i < pointActors.size(); i++) {
+            if (!pointActors.get(i).equals(pointActor)) {
                 pointActors.get(i).remove();
             }
         }
     }
+
     // ehkä turha
     private void configStage() {
         if (host.getCurrentStage() == 1) {
@@ -351,6 +350,7 @@ public class MapScreen implements Screen {
 
     /**
      * moves MapBorder texture so that the pointActors place is centralized and zooms in.
+     *
      * @param pointActor point that has been touched
      */
     public void moveAndZoomAction(PointActor pointActor) {
@@ -363,13 +363,13 @@ public class MapScreen implements Screen {
         mapBorderActor.addAction(
                 Actions.sequence(
                         Actions.moveTo(movePointX,
-                                       movePointY,
-                                       1f), // duaration(seconds) of move
-                        Actions.scaleTo( 1.5f, 1.5f, 1f),
+                                movePointY,
+                                1f), // duaration(seconds) of move
+                        Actions.scaleTo(1.5f, 1.5f, 1f),
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
-                                if(host.getCurrentStage() == 1) {
+                                if (host.getCurrentStage() == 1) {
                                     host.setScreen(new TalkScreen(host));
                                 } else {
                                     host.setScreen(new GameScreen(host));

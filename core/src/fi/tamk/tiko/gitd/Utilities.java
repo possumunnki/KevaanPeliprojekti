@@ -30,7 +30,7 @@ public class Utilities {
     }
 
     public static TextureRegion[] transformTo1D(TextureRegion[][] tmp, int frameCols, int frameRows) {
-        TextureRegion [] frames
+        TextureRegion[] frames
                 = new TextureRegion[frameCols * frameRows];
         int index = 0;
         for (int i = 0; i < frameRows; i++) {
@@ -49,7 +49,7 @@ public class Utilities {
         myBodyDef.type = BodyDef.BodyType.DynamicBody;
         // Initial position is centered up
         // This position is the CENTER of the shape!
-        myBodyDef.position.set( MyGdxGame.SCREEN_WIDTH / 2,
+        myBodyDef.position.set(MyGdxGame.SCREEN_WIDTH / 2,
                 MyGdxGame.SCREEN_HEIGHT / 2);
 
         return myBodyDef;
@@ -90,8 +90,8 @@ public class Utilities {
         float width = rect.getWidth();
         float height = rect.getHeight();
 
-        float centerX = width/2 + x;
-        float centerY = height/2 + y;
+        float centerX = width / 2 + x;
+        float centerY = height / 2 + y;
 
         myBodyDef.position.set(centerX, centerY);
 
@@ -102,7 +102,7 @@ public class Utilities {
         PolygonShape groundBox = new PolygonShape();
 
         // Real width and height is 2 X this!
-        groundBox.setAsBox(width / 2 , height / 2 );
+        groundBox.setAsBox(width / 2, height / 2);
 
         wall.createFixture(groundBox, 0.0f);
     }
@@ -116,9 +116,9 @@ public class Utilities {
      */
     private static Rectangle scaleRect(Rectangle r, float scale) {
         Rectangle rectangle = new Rectangle();
-        rectangle.x      = r.x * scale;
-        rectangle.y      = r.y * scale;
-        rectangle.width  = r.width * scale;
+        rectangle.x = r.x * scale;
+        rectangle.y = r.y * scale;
+        rectangle.width = r.width * scale;
         rectangle.height = r.height * scale;
         return rectangle;
     }
@@ -126,13 +126,13 @@ public class Utilities {
     /**
      * Flips animation right left.
      *
-     * @param animation     animimation that must flip.
+     * @param animation animimation that must flip.
      */
     public static void flip(Animation<TextureRegion> animation) {
         TextureRegion[] regions = animation.getKeyFrames();
 
         // flips all frames
-        for(TextureRegion r : regions) {
+        for (TextureRegion r : regions) {
             r.flip(true, false);
         }
     }

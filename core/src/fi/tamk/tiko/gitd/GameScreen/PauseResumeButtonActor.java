@@ -33,33 +33,30 @@ public class PauseResumeButtonActor extends Actor {
         // sets hight of the actor
         setHeight(pauseButtonTexture.getHeight());
         // sets position
-        setPosition(stageWidth * 9/10,  stageHeight * 8/10);
+        setPosition(stageWidth * 9 / 10, stageHeight * 8 / 10);
 
         addListener(new PauseResumeButtonActor.pauseResumeListener());
     }
 
     public void draw(Batch batch, float alpha) {
-        if(status == PAUSE) {
+        if (status == PAUSE) {
             batch.draw(resumeButtonTexture,
                     getX(),
                     getY(),
                     getWidth(),
                     getHeight());
-        } else if(status == RUNNING) {
+        } else if (status == RUNNING) {
             batch.draw(pauseButtonTexture,
                     getX(),
                     getY(),
                     getWidth(),
                     getHeight());
         }
-
-
     }
 
     public void act(float delta) {
         super.act(delta);
     }
-
 
     public boolean getTouch() {
         return touch;
@@ -72,14 +69,12 @@ public class PauseResumeButtonActor extends Actor {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
     public void dispose() {
         pauseButtonTexture.dispose();
         resumeButtonTexture.dispose();
         this.remove();
     }
-
-    //public void setEx
-
 
     class pauseResumeListener extends InputListener {
         public boolean touchDown(InputEvent event,
@@ -88,9 +83,9 @@ public class PauseResumeButtonActor extends Actor {
                                  int pointer,
                                  int button) {
             touch = true;
-            if(status == PAUSE) {
+            if (status == PAUSE) {
                 status = RUNNING;
-            } else if(status == RUNNING) {
+            } else if (status == RUNNING) {
                 status = PAUSE;
             }
             Gdx.app.log("tuch", "detected");

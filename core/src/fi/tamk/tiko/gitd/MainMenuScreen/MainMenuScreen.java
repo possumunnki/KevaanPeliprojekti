@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+
 import fi.tamk.tiko.gitd.FontActor;
 import fi.tamk.tiko.gitd.MapScreen.MapScreen;
 import fi.tamk.tiko.gitd.MyGdxGame;
@@ -66,18 +67,18 @@ public class MainMenuScreen implements Screen {
 
         mainMenuStage = new Stage(new FillViewport(screenWidth, screenHeight), batch);
         // creates "START" text
-        newGame = new FontActor("NEW GAME", screenWidth * 5 / 8, screenHeight * 2/8);
-        continueGame = new FontActor("CONTINUE", screenWidth * 5 / 8, screenHeight * 0.5f/8);
+        newGame = new FontActor("NEW GAME", screenWidth * 5 / 8, screenHeight * 2 / 8);
+        continueGame = new FontActor("CONTINUE", screenWidth * 5 / 8, screenHeight * 0.5f / 8);
         // creates sound effect icon
-        soundEffectActor = new SoundIconActor(screenWidth * 9/10,
-                                                screenHeight * 6.5f/8,
-                                                host.getSoundEffect(),
-                                                SOUND_EFFECT);
+        soundEffectActor = new SoundIconActor(screenWidth * 9 / 10,
+                screenHeight * 6.5f / 8,
+                host.getSoundEffect(),
+                SOUND_EFFECT);
         // creates music icon
-        bgmActor = new SoundIconActor(screenWidth * 9/10,
-                                        screenHeight * 5/8,
-                                        host.getMusic(),
-                                        BGM);
+        bgmActor = new SoundIconActor(screenWidth * 9 / 10,
+                screenHeight * 5 / 8,
+                host.getMusic(),
+                BGM);
         // Creates main menu background
         menuBG = new Background("background");
         mainMenuStage.addActor(menuBG);
@@ -101,13 +102,13 @@ public class MainMenuScreen implements Screen {
 
         configSounds();
 
-        if(host.getMusic() == ON) {
+        if (host.getMusic() == ON) {
             mainMenuBGM.play();
-        } else if(host.getMusic() == OFF) {
+        } else if (host.getMusic() == OFF) {
             mainMenuBGM.pause();
         }
 
-        if(host.getSoundEffect() == ON) {
+        if (host.getSoundEffect() == ON) {
 
         }
 
@@ -117,7 +118,7 @@ public class MainMenuScreen implements Screen {
         if (newGame.getTouch()) {
             host.reset();
             host.setScreen(new TalkScreen(host));
-        } else if(continueGame.getTouch()) {
+        } else if (continueGame.getTouch()) {
             host.setScreen(new MapScreen(host));
         }
     }
@@ -161,10 +162,10 @@ public class MainMenuScreen implements Screen {
      */
     private void configSounds() {
         // when player touches sound effect -icon
-        if(soundEffectActor.getTouch()) {
+        if (soundEffectActor.getTouch()) {
             host.setSoundEffect();
             soundEffectActor.setTouchFalse();
-            if(host.getSoundEffect() ){
+            if (host.getSoundEffect()) {
                 int jumpRandom = (int) Math.floor(Math.random() * 3) + 1;
 
                 switch (jumpRandom) {
@@ -184,7 +185,7 @@ public class MainMenuScreen implements Screen {
         soundEffectActor.setSound(host.getSoundEffect());
 
         // when player touches music -icon
-        if(bgmActor.getTouch()) {
+        if (bgmActor.getTouch()) {
             host.setMusic();
             bgmActor.setTouchFalse();
         }

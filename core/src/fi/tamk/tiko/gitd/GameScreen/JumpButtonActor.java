@@ -24,7 +24,7 @@ public class JumpButtonActor extends Actor {
         this.host = host;
         jumpButtonTexture = new Texture("jumpButton.png");
         // setBounds(X-position,Y-position, width, height)
-        setBounds(stageWidth * 8/10,
+        setBounds(stageWidth * 8 / 10,
                 stageHeight * 0,
                 jumpButtonTexture.getWidth(),
                 jumpButtonTexture.getHeight());
@@ -47,6 +47,7 @@ public class JumpButtonActor extends Actor {
     public boolean getTouch() {
         return touch;
     }
+
     public void setTouch(boolean touch) {
         this.touch = touch;
     }

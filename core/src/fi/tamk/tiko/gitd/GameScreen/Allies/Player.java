@@ -15,11 +15,11 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+
 import fi.tamk.tiko.gitd.Utilities;
 import fi.tamk.tiko.gitd.MyGdxGame;
 
 /**
- * Creates and handles the player object and it's functions.
  * Created by possumunnki on 7.3.2017.
  */
 
@@ -34,12 +34,13 @@ public class Player {
     private Animation<TextureRegion> mummoWalkAnim;
     private TextureRegion mummoWalkCurrentFrame;
 
-    private Sound jumpSound1, jumpSound2, jumpSound3, jumpSound4, jumpSound5, jumpSound6, jumpSound7;
+    private Sound jumpSound1, jumpSound2, jumpSound3, jumpSound4,
+                  jumpSound5, jumpSound6, jumpSound7;
+
     private boolean isWalking = false;
 
     /**
      * Sprite to change players texture direction
-     *
      */
     private Sprite playerSprite;
     private Texture mummoTexture;
@@ -104,19 +105,19 @@ public class Player {
 
 
         // Set player start position according to current level
-        if(host.getCurrentStage() == 1) {
+        if (host.getCurrentStage() == 1) {
             playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2,
                     host.SCREEN_HEIGHT / 2));
-        } else if(host.getCurrentStage() == 2) {
+        } else if (host.getCurrentStage() == 2) {
             playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2 - 4f,
                     host.SCREEN_HEIGHT / 2 + host.SCREEN_HEIGHT * 1.5f));
-        } else if(host.getCurrentStage() == 3) {
+        } else if (host.getCurrentStage() == 3) {
             playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
                     host.SCREEN_HEIGHT / 4 + host.SCREEN_HEIGHT * 1.5f));
-        } else if(host.getCurrentStage() == 4) {
+        } else if (host.getCurrentStage() == 4) {
             playerBody = world.createBody(getDefinitionOfBody(MyGdxGame.SCREEN_WIDTH / 2,
                     (host.SCREEN_HEIGHT / 4 + host.SCREEN_HEIGHT * 2f) + 4));
-        } else if(host.getCurrentStage() == 5) {
+        } else if (host.getCurrentStage() == 5) {
             playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2,
                     host.SCREEN_HEIGHT / 2 + 1));
         }
@@ -140,12 +141,12 @@ public class Player {
         world.createJoint(rDef);
 
         walkTexture = new Texture("mummoWalk.png");
-        mummoWalkAnim = new Animation<TextureRegion>(1/5f,
+        mummoWalkAnim = new Animation<TextureRegion>(1 / 5f,
                 Utilities.transformToFrames(walkTexture, 5, 1));
 
 
         ratRunTexture = new Texture("ratMountAnim.png");
-        ratRunAnim = new Animation<TextureRegion>(1/6f,
+        ratRunAnim = new Animation<TextureRegion>(1 / 6f,
                 Utilities.transformToFrames(ratRunTexture, 6, 1));
 
 
@@ -161,23 +162,23 @@ public class Player {
         /**
          * Mummo walk animation
          */
-        if(isWalking) {
+        if (isWalking) {
 
             // IF player is currently in stage 3 and rat race-part
-            if(host.getGameMode() == host.RAT_RACE &&
+            if (host.getGameMode() == host.RAT_RACE &&
                     host.getCurrentStage() == 3 &&
                     playerBody.getPosition().x > 10) {
                 mummoWalkAnim = ratRunAnim;
                 isMounted = true;
-            // in stage 4, start right away in rat form
-            } else if(host.getGameMode() == host.RAT_RACE &&
+                // in stage 4, start right away in rat form
+            } else if (host.getGameMode() == host.RAT_RACE &&
                     host.getCurrentStage() == 4) {
                 mummoWalkAnim = ratRunAnim;
                 isMounted = true;
             }
 
 
-            if(!isMounted) {
+            if (!isMounted) {
                 sb.draw(mummoWalkCurrentFrame,
                         playerBody.getPosition().x - playerSprite.getWidth() / 2,
                         playerBody.getPosition().y - playerSprite.getHeight() / 2,
@@ -197,7 +198,7 @@ public class Player {
             playerSprite.draw(sb);
         }
 
-        if(host.getGameMode() == host.RAT_RACE && playerBody.getPosition().x > 10 && !isWalking) {
+        if (host.getGameMode() == host.RAT_RACE && playerBody.getPosition().x > 10 && !isWalking) {
             playerSprite = ratMountSprite;
         }
 
@@ -210,7 +211,7 @@ public class Player {
      */
     public void movePlayer(MyGdxGame host) {
 
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             playerBody.applyForceToCenter(new Vector2(MAX_SPEED, 0f), true);
         }
 
@@ -248,9 +249,9 @@ public class Player {
         }*/
 
         // If player falls below screen
-        if(playerBody.getPosition().y < -1) {
+        if (playerBody.getPosition().y < -1) {
             // Clear velocity (dropping of the screen)
-            playerBody.setLinearVelocity(new Vector2(0,0));
+            playerBody.setLinearVelocity(new Vector2(0, 0));
             Gdx.app.log("offscreen", "player Y-position" + playerBody.getPosition().y);
 
             gameOver2 = true;
@@ -266,7 +267,7 @@ public class Player {
      *
      * @param host
      */
-    public void moveMountedPlayer(MyGdxGame host)  {
+    public void moveMountedPlayer(MyGdxGame host) {
         positionReset = false;
         playerBody.setLinearVelocity(MOUNTED_MAX_SPEED, playerBody.getLinearVelocity().y);
         isWalking = true;
@@ -275,20 +276,20 @@ public class Player {
 
         Gdx.app.log("log", "p1 pos x" + playerBody.getPosition().x);
 
-        if(playerBody.getPosition().y < -1) {
+        if (playerBody.getPosition().y < -1) {
             // Clear velocity (dropping of the screen)
-            playerBody.setLinearVelocity(new Vector2(0,0));
+            playerBody.setLinearVelocity(new Vector2(0, 0));
             Gdx.app.log("offscreen", "player Y-position" + playerBody.getPosition().y);
 
             gameOver2 = true;
             /**
-            playerBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
-                    .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
+             playerBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
+             .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
 
-            positionReset = true;
+             positionReset = true;
 
-            footBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
-                    .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
+             footBody.setTransform(new Vector2(MyGdxGame.SCREEN_WIDTH / 2, MyGdxGame
+             .SCREEN_HEIGHT + PLAYER_WIDTH*2), 0);
              */
         }
     }
@@ -301,14 +302,14 @@ public class Player {
      */
     public void setDirectionAndWalk(float knobPercentX) {
         // whenever game on pad is moved to right.
-        if(knobPercentX > 0) {
+        if (knobPercentX > 0) {
             changeDirection(RIGHT);
             isWalking = true;
-        // whenever game on pad is moved to left.
-        } else if(knobPercentX < 0) {
+            // whenever game on pad is moved to left.
+        } else if (knobPercentX < 0) {
             changeDirection(LEFT);
             isWalking = true;
-        // whenever geme on pad is not moved
+            // whenever geme on pad is not moved
         } else {
             isWalking = false;
         }
@@ -316,28 +317,27 @@ public class Player {
 
     /**
      * lets player jump, when ever player touches ground
-     *
      **/
     public void jump(MyGdxGame host) {
         if (onTheGround) {
-            if(host.getGameMode() == host.ADVENTURE) {
+            if (host.getGameMode() == host.ADVENTURE) {
                 playerBody.applyLinearImpulse(new Vector2(0f, JUMP_VELOCITY),
                         playerBody.getWorldCenter(), true);
-            } else if(host.getGameMode() == host.RAT_RACE) {
+            } else if (host.getGameMode() == host.RAT_RACE) {
                 playerBody.applyLinearImpulse(new Vector2(0f, MOUNTED_JUMP_VELOCITY),
                         playerBody.getWorldCenter(), true);
             }
 
-            if(host.getSoundEffect() == true) {
+            if (host.getSoundEffect() == true) {
 
                 //int jumpRandom = (int)Math.random() * 7 + 1;
-                int jumpRandom = (int)Math.floor(Math.random()*7) + 1;
+                int jumpRandom = (int) Math.floor(Math.random() * 7) + 1;
 
                 Gdx.app.log("jumprandom:", "" + jumpRandom);
                 //Gdx.app.log("ontheground:", "" + onTheGround);
 
 
-                switch(jumpRandom){
+                switch (jumpRandom) {
                     case 1:
                         jumpSound1.play(1f);
                         break;
@@ -353,9 +353,11 @@ public class Player {
                     case 5:
                         jumpSound5.play(1f);
                         break;
-                    case 6:jumpSound6.play(1f);
+                    case 6:
+                        jumpSound6.play(1f);
                         break;
-                    case 7:jumpSound7.play(1f);
+                    case 7:
+                        jumpSound7.play(1f);
                         break;
                     default:
                         Gdx.app.log("Error with sounds", "something went wrong with playing the jumpsound");
@@ -371,19 +373,19 @@ public class Player {
      */
     public void setFootBodyPos(MyGdxGame host) {
 
-        if(host.getCurrentStage() == 1) {
+        if (host.getCurrentStage() == 1) {
             footBodyDef.position.set(playerSprite.getX(),
                     playerSprite.getY());
-        } else if(host.getCurrentStage() == 2) {
+        } else if (host.getCurrentStage() == 2) {
             footBodyDef.position.set(playerSprite.getX() -0.6f,
                     playerSprite.getY() + MyGdxGame.SCREEN_HEIGHT); // position of Y must be bit lower than
-        } else if(host.getCurrentStage() == 3) {
+        } else if (host.getCurrentStage() == 3) {
             footBodyDef.position.set(playerSprite.getX(),
                     playerSprite.getY() + MyGdxGame.SCREEN_HEIGHT);// playerBody
-        } else if(host.getCurrentStage() == 4) {
+        } else if (host.getCurrentStage() == 4) {
             footBodyDef.position.set(playerSprite.getX(),
                     playerSprite.getY() + MyGdxGame.SCREEN_HEIGHT + 5f);// playerBody
-        } else if(host.getCurrentStage() == 5) {
+        } else if (host.getCurrentStage() == 5) {
             footBodyDef.position.set(playerSprite.getX(),
                     playerSprite.getY());
         }
@@ -396,7 +398,7 @@ public class Player {
         myBodyDef.type = BodyDef.BodyType.DynamicBody;
         // Initial position is centered up
         // This position is the CENTER of the shape!
-        myBodyDef.position.set( positionX, positionY);
+        myBodyDef.position.set(positionX, positionY);
 
         return myBodyDef;
     }
@@ -427,7 +429,7 @@ public class Player {
 
         PolygonShape playerBox = new PolygonShape();
         //circleshape.setRadius(0.5f);
-        playerBox.setAsBox( PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
+        playerBox.setAsBox(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
 
 
         // Add the shape to the fixture
@@ -449,8 +451,8 @@ public class Player {
         footFixtureDef.friction = 0.0f;
 
         PolygonShape footBox = new PolygonShape();
-        footBox.setAsBox( PLAYER_WIDTH / 2 - 0.1f, // bit smaller width than player
-                            PLAYER_HEIGHT / 10); // height could be pretty small
+        footBox.setAsBox(PLAYER_WIDTH / 2 - 0.1f, // bit smaller width than player
+                PLAYER_HEIGHT / 10); // height could be pretty small
 
 
         // Add the shape to the fixture
@@ -482,10 +484,10 @@ public class Player {
     /**
      * When players moving direction changes, flips players texture.
      *
-     * @param direction     players current direction
+     * @param direction players current direction
      */
     public void changeDirection(boolean direction) {
-        if(direction != playerDirection) {
+        if (direction != playerDirection) {
             playerDirection = direction;
             playerSprite.flip(true, false);
             Utilities.flip(mummoWalkAnim);

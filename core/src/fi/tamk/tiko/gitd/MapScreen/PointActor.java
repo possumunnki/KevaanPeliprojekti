@@ -35,10 +35,9 @@ public class PointActor extends Actor {
     private int stage;
 
     /**
-     *
-     * @param printX    x-position where the pointer will be printed
-     * @param printY    y-position where the pointer will be printed
-     * @param stage     the number of the level that the point corresponds to
+     * @param printX x-position where the pointer will be printed
+     * @param printY y-position where the pointer will be printed
+     * @param stage  the number of the level that the point corresponds to
      */
     public PointActor(float printX, float printY, int stage) {
         this.stage = stage;
@@ -47,8 +46,8 @@ public class PointActor extends Actor {
         setDottedLine();
         setWidth(exitTexture.getWidth());
         setHeight(exitTexture.getHeight());
-        setPosition(printX,printY);
-        setBounds(printX, printY ,getWidth(), getHeight());
+        setPosition(printX, printY);
+        setBounds(printX, printY, getWidth(), getHeight());
         addListener(new PointListener());
     }
 
@@ -56,7 +55,7 @@ public class PointActor extends Actor {
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * alpha);
 
-        if(touchEnter == true || touch == true) {
+        if (touchEnter == true || touch == true) {
             batch.draw(enterTexture,
                     getX(),
                     getY(),
@@ -70,7 +69,7 @@ public class PointActor extends Actor {
                     getHeight());
         }
 
-        if(stage != 1) {
+        if (stage != 1) {
             batch.draw(dottedLine, 0, 0, dottedLine.getWidth(), dottedLine.getHeight());
         }
 
@@ -90,8 +89,9 @@ public class PointActor extends Actor {
     public void setTouch(boolean touch) {
         this.touch = touch;
     }
+
     public void dispose() {
-        if(stage != 1) {
+        if (stage != 1) {
             dottedLine.dispose();
         }
         enterTexture.dispose();
@@ -103,13 +103,13 @@ public class PointActor extends Actor {
      * Sets dotted line texture depending on the number of the level that the point corresponds to.
      */
     private void setDottedLine() {
-        if(stage == 2) {
+        if (stage == 2) {
             dottedLine = new Texture("reitti1-2.png");
-        } else if(stage == 3) {
+        } else if (stage == 3) {
             dottedLine = new Texture("reitti2-3.png");
-        } else if(stage == 4) {
+        } else if (stage == 4) {
             dottedLine = new Texture("reitti3-4.png");
-        } else if(stage == 5) {
+        } else if (stage == 5) {
             dottedLine = new Texture("reitti4-5.png");
         }
     }
@@ -122,7 +122,7 @@ public class PointActor extends Actor {
                                  int button) {
 
             touch = true;
-            Gdx.app.log("touch","down");
+            Gdx.app.log("touch", "down");
             return false;
         }
 
@@ -132,8 +132,9 @@ public class PointActor extends Actor {
                             int pointer,
                             int button) {
             touch = true;
-            Gdx.app.log("touch","up");
+            Gdx.app.log("touch", "up");
         }
+
         public void enter(InputEvent event,
                           float x,
                           float y,
@@ -141,6 +142,7 @@ public class PointActor extends Actor {
                           Actor fromActor) {
             touchEnter = true;
         }
+
         public void exit(InputEvent event,
                          float x,
                          float y,
