@@ -190,7 +190,6 @@ public class LightDoll {
     /**
      * Shoots light doll from the player and comes back.
      */
-
     public void shootLightDoll() {
         if (comingBack) { // light doll comes back
             deltaX = lightDollSprite.getX() - dollDefPosX;
@@ -256,6 +255,9 @@ public class LightDoll {
         return comingBack;
     }
 
+    /**
+     * disposes the light doll texture.
+     */
     public void dispose() {
         lightDollTexture.dispose();
     }
