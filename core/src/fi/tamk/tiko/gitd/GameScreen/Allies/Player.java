@@ -34,6 +34,7 @@ public class Player {
     private Animation<TextureRegion> mummoWalkAnim;
     private TextureRegion mummoWalkCurrentFrame;
 
+
     private Sound jumpSound1, jumpSound2, jumpSound3, jumpSound4,
                   jumpSound5, jumpSound6, jumpSound7;
 
@@ -64,7 +65,7 @@ public class Player {
     private final float PLAYER_HEIGHT = 1f;
     private boolean onTheGround = true;
     // Running speed
-    private final float MAX_SPEED = 5.0f;
+    private final float MAX_SPEED = 3.0f;
     private final float JUMP_VELOCITY = 10.0f;
     // Mounted speed
     private final float MOUNTED_MAX_SPEED = 5.3f;
@@ -95,6 +96,9 @@ public class Player {
         playerSprite.setSize(PLAYER_WIDTH,
                 PLAYER_HEIGHT);
 
+        // Sets the origin to a correct place.
+        // playerSprite.setOrigin(playerSprite.getX()/10f * 4f, playerSprite.getY()/2);
+
         //rat mount
         ratMountTexture = new Texture("ratMount.png");
         ratMountSprite = new Sprite(ratMountTexture);
@@ -106,7 +110,7 @@ public class Player {
 
         // Set player start position according to current level
         if (host.getCurrentStage() == 1) {
-            playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2,
+            playerBody = world.createBody(getDefinitionOfBody(-0.1f,
                     host.SCREEN_HEIGHT / 2));
         } else if (host.getCurrentStage() == 2) {
             playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2 - 4f,
@@ -211,25 +215,23 @@ public class Player {
      */
     public void movePlayer(MyGdxGame host) {
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            playerBody.applyForceToCenter(new Vector2(MAX_SPEED, 0f), true);
+        // enables player to move with WASD.
+
+        float movSpeed = 0.5f;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            movePlayer(-movSpeed,0, host);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            playerBody.applyForceToCenter(new Vector2(-MAX_SPEED, 0f), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            movePlayer(movSpeed,0, host);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            playerBody.setLinearVelocity(0, 10f);
-            Gdx.app.log("log", "p1 pos x" + playerBody.getPosition().x);
-
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             Gdx.app.log("log", "player x/y: " + playerBody.getPosition());
-            jump(host);
+            playerBody.applyLinearImpulse(new Vector2(0f, 10f),
+                    playerBody.getWorldCenter(), true);
         }
-
 
         setPlayerSpritePosition();
         setFootBodyPos(host);

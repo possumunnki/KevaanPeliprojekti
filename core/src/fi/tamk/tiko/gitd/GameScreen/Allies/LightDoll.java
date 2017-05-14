@@ -105,11 +105,11 @@ public class LightDoll {
     private float deltaY;
 
     public void setDollDefPos(Player player) {
-        // sets lightDoll's position
+        // sets lightDoll's default position
         dollDefPosX = player.getPlayerBody().getPosition().x -
-                lightDollSprite.getWidth() - DISTANCE_X;
+                lightDollSprite.getWidth() + DISTANCE_X * 1.2f;
         dollDefPosY = player.getPlayerBody().getPosition().y +
-                lightDollSprite.getHeight() + DISTANCE_Y;
+                lightDollSprite.getHeight() + DISTANCE_Y/2;
 
     }
 
