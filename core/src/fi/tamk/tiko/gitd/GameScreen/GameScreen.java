@@ -258,7 +258,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         // if current game stage is 1.
         if (host.getCurrentStage() == 1) {
-            tiledMap = new TmxMapLoader().load("maps/stage1.tmx");
+            tiledMap = new TmxMapLoader().load("maps/stage1G.tmx");
             // sets tiles amount on the game stage
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
@@ -422,7 +422,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         float slowingFactor = 0.05f;
 
         // We render the tilemap right away and only in this setup method.
-        //tiledMapRenderer.render();
+        tiledMapRenderer.render();
 
         //Gdx.app.log("Current background Position", "backgrounPosX: " + backgroundPosX);
         //Gdx.app.log("Current background Position", "backgrounPosY: " + backgroundPosY);
