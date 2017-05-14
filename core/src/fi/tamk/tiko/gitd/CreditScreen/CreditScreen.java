@@ -38,7 +38,7 @@ public class CreditScreen implements Screen {
         this.host = host;
         batch = host.getSpriteBatch();
 
-        creditBG = new Texture("victoryScreen.png");
+        creditBG = new Texture("victoryScreen2.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
@@ -46,8 +46,8 @@ public class CreditScreen implements Screen {
                 host.SCREEN_HEIGHT);
 
         quit = new FontActor("QUIT",
-                host.SCREEN_WIDTH  * 1/2 * 100f,
-                host.SCREEN_HEIGHT * 10/25 * 100f);
+                host.SCREEN_WIDTH  * 1 / 8 * 100f,
+                host.SCREEN_HEIGHT * 1 / 8 * 100f);
 
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
 

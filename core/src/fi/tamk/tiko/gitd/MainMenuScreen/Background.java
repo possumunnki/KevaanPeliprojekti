@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class Background extends Actor {
 
     private Texture mainmenuBG;
-    //private Texture mapBG;
 
     private boolean mainMenu;
     private boolean mapMenu;

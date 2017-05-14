@@ -62,7 +62,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private boolean pause = OFF;
 
     /**
-     * Debug renderer setting, set false to disable debug render
+     * Debug renderer setting, set OFF to disable debug render
      */
     private boolean isDebugOn = OFF;
 
