@@ -310,8 +310,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // New renderer for the tilemaps.
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1 / 100f);
 
-        tiledMapRenderer.setView(camera);
-
 
         worldWidthPixels = tilesAmountWidth * TILE_WIDTH;
         worldHeightPixels = tilesAmountHeight * TILE_HEIGHT;
@@ -359,19 +357,19 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     public void render(float delta) {
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        //Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         // The GL20 setup.
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glEnable(GL20.GL_ALPHA);
+        //Gdx.gl.glEnable(GL20.GL_BLEND);
+        //Gdx.gl.glEnable(GL20.GL_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(camera.combined);
         //batch.setBlendFunction();
 
-        if (host.getMusic() == ON) {
+        if (host.getMusic() == ON && gameBGM.isPlaying() != true) {
             gameBGM.play();
             if (pause == ON) {
-                gameBGM.setVolume(0.1f);
+
             } else if (pause == OFF) {
                 gameBGM.setVolume(0.4f);
             }
@@ -421,11 +419,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         // We draw and move the background texture behind everything.
 
-
         float slowingFactor = 0.05f;
 
         // We render the tilemap right away and only in this setup method.
-        tiledMapRenderer.render();
+        //tiledMapRenderer.render();
 
         //Gdx.app.log("Current background Position", "backgrounPosX: " + backgroundPosX);
         //Gdx.app.log("Current background Position", "backgrounPosY: " + backgroundPosY);
@@ -449,6 +446,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
             batch.draw(kekkonen, 61.5f, 4.5f, 0.5f, 1f);
         }
+
+        //font.draw(batch,"Cookies: " + cookies,10,Gdx.graphics.getHeight() * 0.98f);
 
         batch.end();
 
@@ -495,6 +494,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
 
 
+
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
@@ -527,7 +527,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             public void postSolve(Contact contact, ContactImpulse impulse) {
                 Body body1 = contact.getFixtureA().getBody();
                 Body body2 = contact.getFixtureB().getBody();
-
 
                 if (body1.getUserData() != null) {
 
@@ -662,12 +661,19 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             doHeavyStuff();
             host.setScreen(new CreditScreen(host));
         }
+    }
 
-        // Draw the UI.
-        batch.begin();
-
-        font.draw(batch,"Cookies: " + cookies,10,Gdx.graphics.getHeight() * 0.98f);
-        batch.end();
+    /**
+     * Triggers pause-mode when player touches pause icon on the screen.
+     * It resumes the game if pause is already activated and player touches resume button.
+     */
+    private void activatePause() {
+        if (pauseResumeButtonActor.getTouch() && pauseResumeButtonActor.getStatus()) {
+            pause = ON;
+            gameBGM.setVolume(0.1f);
+        } else if (pauseResumeButtonActor.getTouch()) {
+            pause = OFF;
+        }
     }
 
 
@@ -679,14 +685,14 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             float touchX = controller1.getTouchpad().getKnobPercentX();
             float touchY = controller1.getTouchpad().getKnobPercentY();
 
-            playerLastXPos = player.getPlayerBody().getPosition().x;
-            playerLastYPos = player.getPlayerBody().getPosition().y;
+            //playerLastXPos = player.getPlayerBody().getPosition().x;
+            //playerLastYPos = player.getPlayerBody().getPosition().y;
 
             // enables player to move with game on pad.
             player.movePlayer(touchX, touchY, host);
 
-            playerMovedX = playerLastXPos - player.getPlayerBody().getPosition().x;
-            playerMovedY = playerLastYPos - player.getPlayerBody().getPosition().y;
+            //playerMovedX = playerLastXPos - player.getPlayerBody().getPosition().x;
+           // playerMovedY = playerLastYPos - player.getPlayerBody().getPosition().y;
 
             // enables player to move with WASD.
             player.movePlayer(host);
@@ -760,18 +766,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
     }
 
-    /**
-     * Triggers pause-mode when player touches pause icon on the screen.
-     * It resumes the game if pause is already activated and player touches resume button.
-     */
-    private void activatePause() {
-        if (pauseResumeButtonActor.getTouch() && pauseResumeButtonActor.getStatus()) {
-            pause = ON;
-        } else if (pauseResumeButtonActor.getTouch()) {
-            pause = OFF;
-        }
-    }
-
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
@@ -789,10 +783,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     }
 
-    @Override
-    public void hide() {
-        this.dispose();
-    }
+
 
     @Override
     public void input(String text) {
@@ -900,10 +891,17 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     }
 
     @Override
+    public void hide() {
+        this.dispose();
+    }
+
+    @Override
     public void dispose() {
 
         // Dispose the background image.
         //currentBGTexture.dispose();
+
+        font.dispose();
 
         if (host.getGameMode() == host.ADVENTURE) {
             controller1.dispose();
