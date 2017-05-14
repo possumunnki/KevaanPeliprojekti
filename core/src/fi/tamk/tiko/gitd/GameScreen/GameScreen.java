@@ -357,10 +357,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     public void render(float delta) {
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
+
+        // The GL20 setup for transparent tiles.
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        // The GL20 setup.
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glEnable(GL20.GL_ALPHA);
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(camera.combined);
