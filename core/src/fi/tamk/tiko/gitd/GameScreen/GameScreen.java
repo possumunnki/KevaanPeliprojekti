@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -102,12 +104,24 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private float deltaTime;
     private float stateTime;
 
+    /**
+     * Used for the background movement.
+     */
     private float playerLastXPos;
     private float playerLastYPos;
     private float playerMovedX;
     private float playerMovedY;
     public float backgroundPosX;
     public float backgroundPosY;
+
+    /**
+     * Health and cookies.
+     */
+    private int health = 100;
+    private int cookies = 0;
+
+    BitmapFont font = new BitmapFont(); //or use alex answer to use custom font
+
 
     /**
      * Controllable characters and its set up.
@@ -334,10 +348,15 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public void render(float delta) {
-        batch.setProjectionMatrix(camera.combined);
 
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glEnable(GL20.GL_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.setProjectionMatrix(camera.combined);
+        //batch.setBlendFunction();
 
         if (host.getMusic() == ON) {
             gameBGM.play();
@@ -393,18 +412,19 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // We draw and move the background texture behind everything.
         batch.begin();
 
-
         float slowingFactor = 0.05f;
 
         Gdx.app.log("Current background Position", "backgrounPosX: " + backgroundPosX);
         Gdx.app.log("Current background Position", "backgrounPosY: " + backgroundPosY);
 
-        batch.draw(currentBGTexture,backgroundPosX * slowingFactor, backgroundPosY * slowingFactor,Gdx.graphics.getWidth()/50, Gdx.graphics.getHeight()/50);
+        batch.draw(currentBGTexture,backgroundPosX * slowingFactor, backgroundPosY * slowingFactor,Gdx.graphics.getWidth()/10, Gdx.graphics.getHeight()/60);
+
 
         batch.end();
 
         // Renders tilemap. Apparently tilemap cannot be rendered inside the batch routine.
         tiledMapRenderer.render();
+
 
         // Starts the batch sequence.
         batch.begin();
@@ -458,8 +478,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             backgroundPosX += playerMovedX;
             backgroundPosY += playerMovedY;
 
-            Gdx.app.log("How much the player has moved since the last frame" ,"PlayerMovedX: " + playerMovedX);
-            Gdx.app.log("How much the player has moved since the last frame" ,"PlayerMovedY: " + playerMovedY);
+            // DEBUG.
+            //Gdx.app.log("How much the player has moved since the last frame" ,"PlayerMovedX: " + playerMovedX);
+            //Gdx.app.log("How much the player has moved since the last frame" ,"PlayerMovedY: " + playerMovedY);
         }
 
 
@@ -630,6 +651,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             doHeavyStuff();
             host.setScreen(new CreditScreen(host));
         }
+
+        // Draw the UI.
+        batch.begin();
+        font.getData().setScale(1.5f,1.5f);
+        font.draw(batch,"Cookies: " + cookies,10,Gdx.graphics.getHeight() * 0.98f);
+        batch.end();
     }
 
 

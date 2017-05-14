@@ -65,7 +65,7 @@ public class Player {
     private final float PLAYER_HEIGHT = 1f;
     private boolean onTheGround = true;
     // Running speed
-    private final float MAX_SPEED = 5.0f;
+    private final float MAX_SPEED = 3.0f;
     private final float JUMP_VELOCITY = 10.0f;
     // Mounted speed
     private final float MOUNTED_MAX_SPEED = 5.3f;
@@ -110,7 +110,7 @@ public class Player {
 
         // Set player start position according to current level
         if (host.getCurrentStage() == 1) {
-            playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2,
+            playerBody = world.createBody(getDefinitionOfBody(-0.1f,
                     host.SCREEN_HEIGHT / 2));
         } else if (host.getCurrentStage() == 2) {
             playerBody = world.createBody(getDefinitionOfBody(host.SCREEN_WIDTH / 2 - 4f,
