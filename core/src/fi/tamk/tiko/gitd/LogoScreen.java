@@ -20,6 +20,8 @@ public class LogoScreen implements Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
 
+    private boolean nextScreen = false;
+
     private float stageWidth;
     private float stageHeight;
 
@@ -27,7 +29,6 @@ public class LogoScreen implements Screen {
 
     private LogoActor logo1Actor;
     private LogoActor logo2Actor;
-
 
     private final int LOGO1 = 1;
     private final int LOGO2 = 2;
@@ -67,7 +68,7 @@ public class LogoScreen implements Screen {
         logoStage.act();
         logoStage.draw();
 
-        if (Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched() || nextScreen) {
             host.setScreen(new MainMenuScreen(host));
         }
     }
@@ -102,16 +103,25 @@ public class LogoScreen implements Screen {
         logo2Actor.addAction(Actions.fadeOut(0f));
         logo1Actor.addAction(
                 Actions.sequence(
-                        Actions.fadeIn(1.0f),
+                        Actions.fadeIn(2.0f),
                         Actions.fadeOut(1.0f),
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
-                                logo2Actor.addAction(
-                                        Actions.sequence(
-                                                Actions.fadeOut(0f),
-                                                Actions.fadeIn(1.0f)
-                                        ));
+                                addFadeActionAndSetNextScreen();
+                            }
+                        })));
+    }
+
+    private void addFadeActionAndSetNextScreen(){
+        logo2Actor.addAction(
+                Actions.sequence(
+                        Actions.fadeIn(3f),
+                        Actions.fadeOut(1f),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                nextScreen = true;
                             }
                         })));
     }

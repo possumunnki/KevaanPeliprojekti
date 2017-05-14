@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.Locale;
+
 public class MyGdxGame extends Game {
     SpriteBatch batch;
 
@@ -27,6 +29,13 @@ public class MyGdxGame extends Game {
     public static final int STOP = 0;
     public static final int RIGHT = 1;
     public static final int LEFT = 2;
+
+    /**
+     * Locale settings.
+     */
+    public static final int ENGLISH = 1;
+    public static final int FINNISH = 2;
+    public static int locale;
 
 
     /**
@@ -67,6 +76,7 @@ public class MyGdxGame extends Game {
         availableStage = new boolean[]{AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE, NOT_AVAILABLE};
         prefs = Gdx.app.getPreferences("GameData");
         restoreGameData();
+        setLocale();
         if (unlockAllStages) {
             setUnlockedStages(5);
         }
@@ -86,6 +96,15 @@ public class MyGdxGame extends Game {
         save();
         batch.dispose();
         Gdx.app.log("MyGdxGame", "disposed");
+    }
+
+    public void setLocale() {
+        String defaultLocale = Locale.getDefault().toString();
+        if(defaultLocale.equals("fi_FI")) {
+            this.locale = FINNISH;
+        } else {
+            this.locale = ENGLISH;
+        }
     }
 
     /**

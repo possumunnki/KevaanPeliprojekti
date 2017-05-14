@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
+import fi.tamk.tiko.gitd.MyGdxGame;
+
 /**
  * Created by possumunnki on 21.4.2017.
  */
@@ -25,8 +27,15 @@ public class SkipActor extends Actor {
     private Sprite skipSprite;
 
     public SkipActor(float printX,
-                     float printY) {
-        skipTexture = new Texture("skip.png");
+                     float printY, MyGdxGame host) {
+        if(host.locale == host.ENGLISH) {
+            skipTexture = new Texture("skip.png");
+
+        } else if(host.locale == host.FINNISH) {
+            skipTexture = new Texture("ohita.png");
+        }
+
+
         skipSprite = new Sprite(skipTexture);
 
         setX(printX);

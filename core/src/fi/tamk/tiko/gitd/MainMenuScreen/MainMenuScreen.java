@@ -40,11 +40,16 @@ public class MainMenuScreen implements Screen {
 
     private SpriteBatch batch;
     private OrthographicCamera camera;
+    private String newGameString;
+    private String continueString;
     private Stage mainMenuStage;
     private FontActor newGame;
     private FontActor continueGame;
     private SoundIconActor soundEffectActor;
     private SoundIconActor bgmActor;
+    private LanguageIconActor finnishActor;
+    private LanguageIconActor englishActor;
+
     private Background menuBG;
     private Music mainMenuBGM;
     private Sound jumpSound1, jumpSound2, jumpSound3;
@@ -66,19 +71,41 @@ public class MainMenuScreen implements Screen {
         jumpSound3 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_003.wav"));
 
         mainMenuStage = new Stage(new FillViewport(screenWidth, screenHeight), batch);
-        // creates "START" text
-        newGame = new FontActor("NEW GAME", screenWidth * 5 / 8, screenHeight * 2 / 8);
-        continueGame = new FontActor("CONTINUE", screenWidth * 5 / 8, screenHeight * 0.5f / 8);
+
+        // sets strings depending on locale
+        setStrings();
+        // creates "START" text button
+        newGame = new FontActor(newGameString,
+                screenWidth * 5 / 8,
+                screenHeight * 2 / 8);
+
+        // creates "CONTINUE" text button
+        continueGame = new FontActor(continueString,
+                screenWidth * 5 / 8,
+                screenHeight * 0.5f / 8);
+
         // creates sound effect icon
         soundEffectActor = new SoundIconActor(screenWidth * 9 / 10,
                 screenHeight * 6.5f / 8,
                 host.getSoundEffect(),
                 SOUND_EFFECT);
+
         // creates music icon
         bgmActor = new SoundIconActor(screenWidth * 9 / 10,
                 screenHeight * 5 / 8,
                 host.getMusic(),
                 BGM);
+
+        finnishActor = new LanguageIconActor(host,
+                screenWidth * 0,
+                screenHeight * 4/5,
+                host.FINNISH);
+
+        englishActor = new LanguageIconActor(host,
+                screenWidth * 0,
+                screenHeight * 3 / 5,
+                host.ENGLISH);
+
         // Creates main menu background
         menuBG = new Background("background");
         mainMenuStage.addActor(menuBG);
@@ -86,6 +113,8 @@ public class MainMenuScreen implements Screen {
         mainMenuStage.addActor(continueGame);
         mainMenuStage.addActor(soundEffectActor);
         mainMenuStage.addActor(bgmActor);
+        mainMenuStage.addActor(finnishActor);
+        mainMenuStage.addActor(englishActor);
 
         Gdx.input.setInputProcessor(mainMenuStage);
     }
@@ -108,10 +137,6 @@ public class MainMenuScreen implements Screen {
             mainMenuBGM.pause();
         }
 
-        if (host.getSoundEffect() == ON) {
-
-        }
-
         mainMenuStage.act(Gdx.graphics.getDeltaTime());
         mainMenuStage.draw();
 
@@ -121,6 +146,11 @@ public class MainMenuScreen implements Screen {
         } else if (continueGame.getTouch()) {
             host.setScreen(new MapScreen(host));
         }
+
+        setStrings();
+        newGame.setFontString(newGameString);
+        continueGame.setFontString(continueString);
+
     }
 
     @Override
@@ -156,6 +186,20 @@ public class MainMenuScreen implements Screen {
         soundEffectActor.dispose();
         mainMenuStage.dispose();
     }
+
+    /**
+     * Sets Strings to print different text buttons depending on language.
+     */
+    private void setStrings() {
+        if (host.locale == host.ENGLISH) {
+            newGameString = "NEW GAME";
+            continueString = "CONTINUE";
+        } else if (host.locale == host.FINNISH) {
+            newGameString = "UUSI PELI";
+            continueString = "JATKA";
+        }
+    }
+
 
     /**
      * Sets BGM and sound effect on/ off

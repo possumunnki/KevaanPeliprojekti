@@ -46,7 +46,7 @@ public class TalkScreen implements Screen {
         skipStage = new Stage(new FillViewport(screenWidth,
                                                screenHeight),
                                                batch);
-        skip = new SkipActor(0, 0);
+        skip = new SkipActor(screenWidth * 8 / 10, screenHeight * 0, host);
 
         skipStage.addActor(skip);
         Gdx.input.setInputProcessor(skipStage);

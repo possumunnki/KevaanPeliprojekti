@@ -42,8 +42,6 @@ public class FontActor extends Actor {
     }
 
     public void draw(Batch batch, float alpha) {
-        /*font.draw(batch, fontString, printX - getWidth() / 2,
-                printY + getHeight());*/
 
         if (touchEnter == true) {
             blackFont.draw(batch, fontString, printX - getWidth() / 2,
@@ -72,9 +70,11 @@ public class FontActor extends Actor {
         this.touch = touch;
     }
 
-    public void setFontScale(float scale) {
-        blackFont.getData().setScale(scale);
-        fontLayout.setText(blackFont, fontString); // not working
+    public void setFontString(String fontString){
+        this.fontString = fontString;
+        fontLayout = new GlyphLayout(blackFont, fontString);
+        setWidth(fontLayout.width);
+        setHeight(fontLayout.height);
         setBounds(printX - getWidth() / 2, printY, getWidth(), getHeight());
     }
 
@@ -114,7 +114,6 @@ public class FontActor extends Actor {
                          Actor toActor) {
             touchEnter = false;
         }
-
 
     }
 }
