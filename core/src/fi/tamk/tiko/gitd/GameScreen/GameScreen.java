@@ -655,7 +655,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             }
         }
         if (goal) {
-            // sets progression so that talk screen shows right texts
             host.levelProgression = host.END;
             Gdx.app.log("Current Stage", "" + host.getCurrentStage());
             doHeavyStuff();

@@ -100,8 +100,6 @@ public class MapScreen implements Screen {
         mapBorderStage.draw();
         pointStage.act(Gdx.graphics.getDeltaTime());
         pointStage.draw();
-        // configStage();
-
 
         if (back.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
@@ -271,26 +269,7 @@ public class MapScreen implements Screen {
                     removeOtherPointActors(stage1Point);
                     moveAndZoomAction(stage1Point);
                 }
-        }
-        /*
-        if(stage1Point.getTouch()) {
-            host.setCurrentStage(1);
-            removeOtherPointActors(stage1Point);
-            moveAndZoomAction(stage1Point);
-        } else if(stage2Point.getTouch()) {
-            host.setCurrentStage(2);
-            removeOtherPointActors(stage2Point);
-            moveAndZoomAction(stage2Point);
-        } else if(stage3Point.getTouch()) {
-            host.setCurrentStage(3);
-            removeOtherPointActors(stage3Point);
-            moveAndZoomAction(stage3Point);
-        }  else if(stage4Point.getTouch()) {
-            host.setCurrentStage(4);
-            removeOtherPointActors(stage4Point);
-            moveAndZoomAction(stage4Point);
-        }*/
-    }
+        }}
 
     /**
      * Removes all pointActors from the screen except one pointActor.
@@ -327,9 +306,7 @@ public class MapScreen implements Screen {
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
-                                host.levelProgression = host.BEGINNING;
                                 host.setScreen(new TalkScreen(host));
-
                             }
                         })));
     }

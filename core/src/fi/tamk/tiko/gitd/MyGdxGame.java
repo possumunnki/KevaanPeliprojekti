@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Locale;
 
+import static fi.tamk.tiko.gitd.MyGdxGame.levelProgression;
+import static fi.tamk.tiko.gitd.MyGdxGame.levelProgression;
+import static fi.tamk.tiko.gitd.MyGdxGame.levelProgression;
+
 public class MyGdxGame extends Game {
     SpriteBatch batch;
 
@@ -37,15 +41,14 @@ public class MyGdxGame extends Game {
     public static final int FINNISH = 2;
     public static int locale;
 
-
+    public static final int BEGINNING = 1;
+    public static final int END = 2;
+    public static int levelProgression = BEGINNING;
     /**
      * stage that player is currently playing
      */
     private int currentStage;
 
-    public static final boolean BEGINNING = true;
-    public static final boolean END = false;
-    public static boolean levelProgression = BEGINNING;
     /**
      * list of available stages
      */

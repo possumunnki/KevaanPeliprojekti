@@ -49,14 +49,15 @@ public class TalkScreen implements Screen {
         skipStage = new Stage(new FillViewport(screenWidth,
                 screenHeight),
                 batch);
+        // creates skip button
         skip = new SkipActor(screenWidth * 8 / 10, screenHeight * 0, host);
 
         skipStage.addActor(skip);
         Gdx.input.setInputProcessor(skipStage);
         speeches = new ArrayList<Speech>();
-        if(host.locale == host.FINNISH) {
+        if (host.locale == host.FINNISH) {
             addTalkFin();
-        } else if(host.locale == host.ENGLISH) {
+        } else if (host.locale == host.ENGLISH) {
             addTalkEng();
         }
 
@@ -91,14 +92,12 @@ public class TalkScreen implements Screen {
 
         if (currentSpeech == speeches.size() || skip.getTouch()) {
             if (host.levelProgression == host.END) {
-                // unlocks next stage
                 host.unlockStage(host.getCurrentStage());
-                // sets next stage as a current stage
                 host.setCurrentStage(host.getCurrentStage() + 1);
-                // saves cleared stages
                 host.saveUnlockedStages(host.getCurrentStage());
-                // sets unlocked stages
                 host.setUnlockedStages(host.getUnlockedStages());
+                host.levelProgression = host.BEGINNING;
+
                 host.setScreen(new MapScreen(host));
             } else if (host.levelProgression == host.BEGINNING) {
                 host.setScreen(new GameScreen(host));
@@ -137,9 +136,10 @@ public class TalkScreen implements Screen {
         Gdx.app.log("TalkScreen", "disposed");
     }
 
+
     private void addTalkFin() {
         if (host.getCurrentStage() == 1) {
-            if(host.levelProgression == host.BEGINNING) {
+            if (host.levelProgression == host.BEGINNING) {
                 text = "Herran pieksut!\nMitä ihmettä tapahtui?\nMiksi kaikki on niin valtavaa?";
                 speeches.add(new Speech(GRANDMA, text));
 
@@ -165,7 +165,7 @@ public class TalkScreen implements Screen {
                 text = "Eiköhän lähdetä\n kiireen vilkkaa pois täältä.";
                 speeches.add(new Speech(GRANDMA, text));
 
-            } else if(host.levelProgression == host.END) {
+            } else if (host.levelProgression == host.END) {
                 text = "Herranjestas,\n eikö tämä huone pääty koskaan?";
                 speeches.add(new Speech(GRANDMA, text));
 
@@ -185,23 +185,25 @@ public class TalkScreen implements Screen {
                 speeches.add(new Speech(LIGHT_DOLL, text));
             }
         } else if (host.getCurrentStage() == 2) {
-            if(host.levelProgression == host.BEGINNING) {
+
+            if (host.levelProgression == host.BEGINNING) {
                 text = "Mitä juuri tapahtui?\n Olo on kuin mankeloidulla";
                 speeches.add(new Speech(GRANDMA, text));
 
                 text = "Missähän me nyt mahdamme \nluurata?";
                 speeches.add(new Speech(GRANDMA, text));
 
-                text = "Kaikki näyttää pimeässä ja\n rotan kokoisena ihan \nsamalta.";
+                text = "Kaikki näyttää pimeässä ja\nrotan kokoisena ihan\nsamalta.";
                 speeches.add(new Speech(GRANDMA, text));
 
-                text = "Hum—";
+                text = "Hum--";
                 speeches.add(new Speech(LIGHT_DOLL, text));
 
-                text = "Hys nyt mumiseva paperipaino!\n Kuuletko tuon myhäilyn?";
+                text = "Hys nyt mumiseva paperipaino!\nKuuletko tuon myhäilyn?";
                 speeches.add(new Speech(GRANDMA, text));
 
-                text = "Leijuvia auringonjumalia, \nvihaisia voodoo-nukkeja, \nepämääräistä käkätystä...";
+                text = "Leijuvia auringonjumalia,\nvihaisia voodoo-nukkeja,\n" +
+                        " epämääräistä käkätystä... ";
                 speeches.add(new Speech(GRANDMA, text));
 
                 text = "Miksi minä edes tulin tänne?";
@@ -212,52 +214,57 @@ public class TalkScreen implements Screen {
 
                 text = "Ai niin...";
                 speeches.add(new Speech(GRANDMA, text));
-            } else if(host.levelProgression == host.END) {
-                text = "...mainiota";
+
+            } else if (host.levelProgression == host.END) {
+
+                text = "...mainiota.";
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "HA-HA-HA-HAAMU!";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Hei! Olisit sinäkin hieman\nkalpea jos olisit ollut\n jumissa kirotussa ja ";
+                text = "Hei! Olisit sinäkin hieman\nkalpea jos olisit ollut\njumissa kirotussa";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "ikuisesti pimeässä kartanossa\n monta kymmentä vuotta!";
+                text = "ja ikuisesti pimeässä kartanossa\n monta kymmentä vuotta!";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "Olet siis oikeasti \nUrho Kekkonen?\n Etkä ole haamu?";
+                text = "Olet siis oikeasti\nUrho Kekkonen?\nEtkä ole haamu?";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Ainut ja oikea.Tai oikeastaan\nolen vain nukke, johon tämä\nkartano on puhaltanut elämän.";
+                text = "Ainut ja oikea.\nTai oikeastaan olen vain nukke,";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "Ehkä on parempi\netten kyseenalaista tuota.";
+                text = "johon tämä kartano on\n puhaltanut elämän.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Ehkä on parempi etten\nkyseenalaista tuota.";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Mainiota.\nAsiasta seuraavaan, oletan\nettä haluat pois täältä.";
+                text = "Mainiota. Asiasta seuraavaan,\noletan että haluat pois täältä.";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "Voin auttaa tietä pakenemaan,\nmutta teidän täytyy\nluottaa minuun.";
+                text = "Voin auttaa tietä pakenemaan,\nmutta teidän täytyy luottaa\nminuun.";
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "Mitä tarkoitat?";
-                speeches.add(new Speech(GRANDMA2,text));
+                speeches.add(new Speech(GRANDMA2, text));
 
                 text = "Nopein reitti eteiseen on\nhypätä näiden portaalien läpi.";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "Uskoisin-- Öhöm...tai siis,\n olen täysin varma, että" +
-                        "\ntämä tässä vie meidät perille.";
+                text = "Uskoisin-- Öhöm... tai siis,\nolen täysin varma, että tämä\n" +
+                        "tässä vie meidät perille.";
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "Ei kuulosta kauhean\nvakuuttavalta...";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = " Luota vain minuun!";
+                text = "Luota vain minuun!";
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "...";
-                speeches.add(new Speech(BOTH,text));
+                speeches.add(new Speech(BOTH, text));
 
                 text = "Ei kai tässä muukaan auta.";
                 speeches.add(new Speech(GRANDMA2, text));
@@ -265,31 +272,32 @@ public class TalkScreen implements Screen {
                 text = "Mainiota.";
                 speeches.add(new Speech(KEKKONEN, text));
             }
-        } else if(host.getCurrentStage() == 3) {
-            if(host.levelProgression == host.BEGINNING) {
+        } else if (host.getCurrentStage() == 3) {
+
+            if (host.levelProgression == host.BEGINNING) {
+
                 text = "Hetkinen, tämä ei näytä\nollenkaan eteiseltä...";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Hupsista—Tai siis, mainiota..";
+                text = "Hupsista—Tai siis, mainiota...";
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "Mitä tapahtui? Missä olemme?";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Hum—";
+                text = "Hum--";
                 speeches.add(new Speech(LIGHT_DOLL, text));
 
-                text = "Päädyimme juuri sinne\n mihin oli tarkoituskin:\n keittiöön!";
+                text = "Päädyimme juuri sinne mihin\noli tarkoituskin: keittiöön!";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "Eikös meidän pitänyt hankkia\n itsemme ulos täältä,\n" +
-                        " ei vielä enemmän eksyksiin?";
-                speeches.add(new Speech(GRANDMA2,text));
+                text = "Eikös meidän pitänyt hankkia\nitsemme ulos täältä, ei vielä\nenemmän eksyksiin?";
+                speeches.add(new Speech(GRANDMA2, text));
 
                 text = "Muistinkin tarvitsevani\njotakin tämän keittiön\nviereisestä varastosta!";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = " Niin, kyllä, jotakin\n mainiota, mikä auttaa\n meitä tehtävässämme.";
+                text = "Niin, kyllä, jotakin\nmainiota, mikä auttaa meitä\ntehtävässämme.";
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "...";
@@ -298,13 +306,14 @@ public class TalkScreen implements Screen {
                 text = "Mikset sitten vienyt\nmeitä suoraan varastoon?";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Kaikki aikanaan! \nTätä aluetta kartanoa vartioi\n hyvin julma peto";
+                text = "Kaikki aikanaan!\nTätä aluetta kartanoa vartioi\nhyvin julma peto";
                 speeches.add(new Speech(KEKKONEN, text));
+
 
                 text = "ja tarvitsemme kulkuvälineen,\njotta voimme paeta siltä.";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "Mistä me tähän hätään—";
+                text = "Mistä me tähän hätään--";
                 speeches.add(new Speech(GRANDMA2, text));
 
                 text = "HOI ELMERI!";
@@ -313,45 +322,50 @@ public class TalkScreen implements Screen {
                 text = "Anteeksi mitä?";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Tämä tässä on Elmeri.\nHän on luotettavin, ja myös\n" +
-                        " ainoa ratsu tässä kartanossa.";
+                text = "Tämä tässä on Elmeri. Hän on\nluotettavin, ja myös ainoa,\n" +
+                        " ratsu tässä kartanossa.";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "Hypätkää kyytiin niin\nlähdemme heti! Voin jo kuulla\n" +
-                        "sen karmivan elukan tepastelun.";
+                text = "Hypätkää kyytiin niin lähdemme\nheti! Voin jo kuulla sen\n" +
+                        "karmivan elukan tepastelun.";
                 speeches.add(new Speech(KEKKONEN, text));
 
-            } else if(host.levelProgression == host.END) {
+            } else if (host.levelProgression == host.END) {
                 text = "Herran pieksut!\nOnnistuimmeko kadottamaan\nsen?";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Hetkeksi ainakin.\nSentään pääsimme varastolle\n asti yhtenä kappaleena.";
+                text = "Hetkeksi ainakin. Sentään\npääsimme varastolle asti\nyhtenä kappaleena.";
                 speeches.add(new Speech(KEKKONEN, text));
             }
-        } else if(host.getCurrentStage() == 4){
-            if(host.levelProgression == host.BEGINNING) {
-                text = "Noniin, eiköhän koluta\ntämä varasto läpi.";
+        } else if (host.getCurrentStage() == 4) {
+            if (host.levelProgression == host.BEGINNING) {
+
+
+                text = "Noniin, eiköhän koluta tämä\nvarasto läpi.";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "Etkö vieläkään suostu\n kertomaan mikä siellä\n on niin tärkeää,";
+                text = "Etkö vieläkään suostu kertomaan\nmikä siellä on niin tärkeää,\n" +
+                        "että pitää varta vasten tulla";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "että pitää varta vasten\n tulla kissan syötäväksi?";
+                text = "kissan syötäväksi?";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Sanoinhan, että sinun tulee\n vain luottaa minuun!";
+                text = "Sanoinhan, että sinun\ntulee vain luottaa minuun!";
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "Olenko koskaan aiemmin\npettänyt luottamustasi?";
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "Humin--";
+                text = "Hum--";
                 speeches.add(new Speech(LIGHT_DOLL, text));
 
-                text = "Sieltä se pirun mirri\n taas tulee!\nVipinää kinttuihin Elmeri!";
+                text = "Sieltä se pirun mirri taas\ntulee! Vipinää kinttuihin\nElmeri!";
                 speeches.add(new Speech(KEKKONEN, text));
-            } else if(host.levelProgression == host.END) {
-                text = "kääk!\nEiköh tämä koskaan pääty?";
+
+            } else if (host.levelProgression == host.END) {
+
+                text = "KääK! Eiköh tämä koskaan\npääty?";
                 speeches.add(new Speech(GRANDMA2, text));
 
                 text = "Mainiota! Löysin sen!";
@@ -360,25 +374,29 @@ public class TalkScreen implements Screen {
                 text = "Joko nyt kertoisit...";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Ei aikaa!\nHypätkää tähän portaaliin!";
+                text = "Ei aikaa! Hypätkää tähän\nportaaliin!";
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "Tällä...kin kertaa olen\nvarma, että se vie meidät\n" +
-                        "juuri sinne minne pitääkin!";
+                        "juuri sinne, minne pitääkin!";
                 speeches.add(new Speech(KEKKONEN, text));
             }
-        } else if(host.getCurrentStage() == 5) {
-            if(host.levelProgression == host.BEGINNING) {
-                text = "Hei! Sehän onnistui!\nMainiota...";
+        } else if (host.getCurrentStage() == 5) {
+            if (host.levelProgression == host.BEGINNING) {
+
+                text = " Hei! Sehän onnistui!\nMainiota...";
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "Tämä näyttääkin jo melko\ntutulta.";
                 speeches.add(new Speech(GRANDMA2, text));
 
+                text = "";
+                speeches.add(new Speech(BOTH, text));
+
                 text = "Mikä tuo ääni oli?";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Kartanon riivanneet henget\neivät taida pitää siitä, että\n" +
+                text = " Kartanon riivanneet henget\neivät taida pitää siitä, että\n" +
                         "olemme näin lähellä ulko-ovea.";
                 speeches.add(new Speech(LIGHT_DOLL, text));
 
@@ -386,22 +404,26 @@ public class TalkScreen implements Screen {
                 speeches.add(new Speech(GRANDMA2, text));
                 speeches.add(new Speech(KEKKONEN, text));
 
-                text = "Mikset kertonut,\n että osaat puhua?";
+                text = "Mikset kertonut, että osaat\npuhua?";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "(Epämääräinen karjaisu \nkaukaisuudesta)";
-                speeches.add(new Speech(BOTH,text));
+                text = "Yritin kyllä, mutta ette\nvaivautuneet kuuntelemaan.";
+                speeches.add(new Speech(LIGHT_DOLL, text));
 
-                text = "Voimme puhua tästä\n myöhemmin, nyt on aika\n juosta!";
+                text = "(Epämääräinen karjaisu\nkaukaisuudesta)";
+                speeches.add(new Speech(BOTH, text));
+
+                text = "Voimme puhua tästä\nmyöhemmin, nyt on aika\njuosta!";
                 speeches.add(new Speech(KEKKONEN, text));
             }
         }
     }
 
+
     private void addTalkEng() {
         if (host.getCurrentStage() == 1) {
 
-            if(host.levelProgression == host.BEGINNING) {
+            if (host.levelProgression == host.BEGINNING) {
                 text = "Oh my lord! What in the\n world just happened?\nWhy is everything so huge?";
                 speeches.add(new Speech(GRANDMA, text));
 
@@ -427,7 +449,7 @@ public class TalkScreen implements Screen {
                 text = "Let’s get out of here.";
                 speeches.add(new Speech(GRANDMA, text));
 
-            } else if(host.levelProgression == host.END) {
+            } else if (host.levelProgression == host.END) {
 
                 text = "Dear me,\nwill this room never end?";
                 speeches.add(new Speech(GRANDMA, text));
@@ -449,7 +471,7 @@ public class TalkScreen implements Screen {
             }
         } else if (host.getCurrentStage() == 2) {
 
-            if(host.levelProgression == host.BEGINNING) {
+            if (host.levelProgression == host.BEGINNING) {
                 text = "What just happened?\nI’m feeling all mangled up.";
                 speeches.add(new Speech(GRANDMA, text));
 
@@ -477,7 +499,7 @@ public class TalkScreen implements Screen {
                 text = "Oh... Right...";
                 speeches.add(new Speech(GRANDMA, text));
 
-            } else if(host.levelProgression == host.END) {
+            } else if (host.levelProgression == host.END) {
 
                 text = "…excellent.";
                 speeches.add(new Speech(KEKKONEN, text));
@@ -511,7 +533,7 @@ public class TalkScreen implements Screen {
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "What do you mean?";
-                speeches.add(new Speech(GRANDMA2,text));
+                speeches.add(new Speech(GRANDMA2, text));
 
                 text = "The fastest way to the\nfront door is through these\nportals.";
                 speeches.add(new Speech(KEKKONEN, text));
@@ -526,7 +548,7 @@ public class TalkScreen implements Screen {
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "...";
-                speeches.add(new Speech(BOTH,text));
+                speeches.add(new Speech(BOTH, text));
 
                 text = "I guess I don’t have a choice.";
                 speeches.add(new Speech(GRANDMA2, text));
@@ -534,10 +556,10 @@ public class TalkScreen implements Screen {
                 text = "Excellent.";
                 speeches.add(new Speech(KEKKONEN, text));
             }
-        } else if(host.getCurrentStage() == 3) {
+        } else if (host.getCurrentStage() == 3) {
 
-            if(host.levelProgression == host.BEGINNING) {
-                text = " Wait a second, this doesn’t\nlook anything like the\nentrance…";
+            if (host.levelProgression == host.BEGINNING) {
+                text = " Wait a second, this doesn’t\nlook anything like the\nentrance...";
                 speeches.add(new Speech(GRANDMA2, text));
 
                 text = "Oopsie—I mean, excellent...";
@@ -554,7 +576,7 @@ public class TalkScreen implements Screen {
 
                 text = "Weren’t we supposed to get\n ourselves out of here instead\n" +
                         " of being even more lost?";
-                speeches.add(new Speech(GRANDMA2,text));
+                speeches.add(new Speech(GRANDMA2, text));
 
                 text = "I remembered I needed\n something from the storage\n" +
                         " room next to this kitchen!";
@@ -596,7 +618,7 @@ public class TalkScreen implements Screen {
                         "the the foul creature’s footsteps.";
                 speeches.add(new Speech(KEKKONEN, text));
 
-            } else if(host.levelProgression == host.END) {
+            } else if (host.levelProgression == host.END) {
 
                 text = "Holy moly!\n Did we manage to lose it??";
                 speeches.add(new Speech(GRANDMA2, text));
@@ -604,8 +626,8 @@ public class TalkScreen implements Screen {
                 text = "For now. At least we made it\nto the storage room in one\npiece.";
                 speeches.add(new Speech(KEKKONEN, text));
             }
-        } else if(host.getCurrentStage() == 4){
-            if(host.levelProgression == host.BEGINNING) {
+        } else if (host.getCurrentStage() == 4) {
+            if (host.levelProgression == host.BEGINNING) {
 
 
                 text = "Okay, let us turn this room\nupside down, shall we?";
@@ -627,7 +649,7 @@ public class TalkScreen implements Screen {
                 text = "There’s that damned puss again!\nGiddy up Elmeri!";
                 speeches.add(new Speech(KEKKONEN, text));
 
-            } else if(host.levelProgression == host.END) {
+            } else if (host.levelProgression == host.END) {
 
                 text = "AAH!\nWill this never end?";
                 speeches.add(new Speech(GRANDMA2, text));
@@ -645,8 +667,8 @@ public class TalkScreen implements Screen {
                         "where it is supposed to!";
                 speeches.add(new Speech(KEKKONEN, text));
             }
-        } else if(host.getCurrentStage() == 5) {
-            if(host.levelProgression == host.BEGINNING) {
+        } else if (host.getCurrentStage() == 5) {
+            if (host.levelProgression == host.BEGINNING) {
 
                 text = "Hey! It worked! Excellent...";
                 speeches.add(new Speech(KEKKONEN, text));
@@ -672,10 +694,10 @@ public class TalkScreen implements Screen {
                 speeches.add(new Speech(GRANDMA2, text));
 
                 text = "I did try to, but you never\nbothered to listen.";
-                speeches.add(new Speech(LIGHT_DOLL,text));
+                speeches.add(new Speech(LIGHT_DOLL, text));
 
                 text = "(Odd roar from the distance)";
-                speeches.add(new Speech(BOTH,text));
+                speeches.add(new Speech(BOTH, text));
 
                 text = "We can talk about this later,\nit is time to run!";
                 speeches.add(new Speech(KEKKONEN, text));
