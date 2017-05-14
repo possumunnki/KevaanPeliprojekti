@@ -108,16 +108,7 @@ public class MapScreen implements Screen {
         pointStage.draw();
         // configStage();
 
-        /*if (nextStage.getTouch()) {
-            if(host.getCurrentStage() == 1) {
-                host.setScreen(new TalkScreen(host));
-            } else {
-                host.setScreen(new GameScreen(host));
-            }
-        } else if(returnToMainMenu.getTouch()) {
-            host.setScreen(new MainMenuScreen(host));
-        }
-        */
+
         if (back.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
         } else {
@@ -306,47 +297,6 @@ public class MapScreen implements Screen {
         }
     }
 
-    // ehkä turha
-    private void configStage() {
-        if (host.getCurrentStage() == 1) {
-            if (stage2Point.getTouch() && host.getStageAvailability(2)) {
-                host.setCurrentStage(2);
-                stage1Point.setTouch(false);
-            } else if (stage3Point.getTouch() && host.getStageAvailability(3)) {
-                host.setCurrentStage(3);
-                stage1Point.setTouch(false);
-            } else {
-                stage1Point.setTouch(true);
-                stage2Point.setTouch(false);
-                stage3Point.setTouch(false);
-            }
-
-        } else if (host.getCurrentStage() == 2) {
-            if (stage1Point.getTouch() && host.getStageAvailability(1)) {
-                host.setCurrentStage(1);
-                stage2Point.setTouch(false);
-            } else if (stage3Point.getTouch() && host.getStageAvailability(3)) {
-                host.setCurrentStage(3);
-                stage2Point.setTouch(false);
-            } else {
-                stage1Point.setTouch(false);
-                stage2Point.setTouch(true);
-                stage3Point.setTouch(false);
-            }
-        } else if (host.getCurrentStage() == 3) {
-            if (stage1Point.getTouch() && host.getStageAvailability(1)) {
-                host.setCurrentStage(1);
-                stage3Point.setTouch(false);
-            } else if (stage2Point.getTouch() && host.getStageAvailability(2)) {
-                host.setCurrentStage(2);
-                stage3Point.setTouch(false);
-            } else {
-                stage1Point.setTouch(false);
-                stage2Point.setTouch(false);
-                stage3Point.setTouch(true);
-            }
-        }
-    }
 
     /**
      * moves MapBorder texture so that the pointActors place is centralized and zooms in.
@@ -369,11 +319,9 @@ public class MapScreen implements Screen {
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
-                                if (host.getCurrentStage() == 1) {
-                                    host.setScreen(new TalkScreen(host));
-                                } else {
-                                    host.setScreen(new GameScreen(host));
-                                }
+                                host.levelProgression = host.BEGINNING;
+                                host.setScreen(new TalkScreen(host));
+
                             }
                         })));
     }

@@ -17,6 +17,8 @@ public class Speech {
     private final int BOTH = 0;
     private final int GRANDMA = 1;
     private final int LIGHT_DOLL = 2;
+    private final int KEKKONEN = 3;
+    private final int GRANDMA2 = 4;
     private final float SCALE = 0.5f;
     private BitmapFont font;
     private GlyphLayout bounds;
@@ -35,6 +37,10 @@ public class Speech {
             speakingTexture = new Texture("chatbox2.png");
         } else if(speaker == LIGHT_DOLL) {
             speakingTexture = new Texture("chatbox1.png");
+        } else if(speaker == KEKKONEN) {
+            speakingTexture = new Texture("chatbox4.png");
+        } else if(speaker == GRANDMA2) {
+            speakingTexture = new Texture("chatbox5.png");
         }
 
 
