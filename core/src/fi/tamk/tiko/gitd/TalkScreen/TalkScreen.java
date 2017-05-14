@@ -54,7 +54,12 @@ public class TalkScreen implements Screen {
         skipStage.addActor(skip);
         Gdx.input.setInputProcessor(skipStage);
         speeches = new ArrayList<Speech>();
-        addTalk();
+        if(host.locale == host.FINNISH) {
+            addTalkFin();
+        } else if(host.locale == host.ENGLISH) {
+            addTalkEng();
+        }
+
     }
 
     @Override
@@ -132,20 +137,20 @@ public class TalkScreen implements Screen {
         Gdx.app.log("TalkScreen", "disposed");
     }
 
-    private void addTalk() {
+    private void addTalkFin() {
         if (host.getCurrentStage() == 1) {
             if(host.levelProgression == host.BEGINNING) {
                 text = "Herran pieksut!\nMitä ihmettä tapahtui?\nMiksi kaikki on niin valtavaa?";
                 speeches.add(new Speech(GRANDMA, text));
 
-                text = "Huminaa muminaa";
+                text = "(Huminaa muminaa)";
                 speeches.add(new Speech(LIGHT_DOLL, text));
 
                 text = "Kääk! Hetkinen,etkös sinä \n ole se minkä takia minä\n " +
                         "tähän kartanoon murtauduin?";
                 speeches.add(new Speech(GRANDMA, text));
 
-                text = "Hums mums";
+                text = "(Hums mums)";
                 speeches.add(new Speech(LIGHT_DOLL, text));
 
                 text = "Sinähän leijut! Ja puhut!\nTai mumiset.. ";
@@ -164,7 +169,7 @@ public class TalkScreen implements Screen {
                 text = "Herranjestas,\n eikö tämä huone pääty koskaan?";
                 speeches.add(new Speech(GRANDMA, text));
 
-                text = "Muminaa.";
+                text = "(Muminaa)";
                 speeches.add(new Speech(LIGHT_DOLL, text));
 
                 text = "...";
@@ -176,7 +181,7 @@ public class TalkScreen implements Screen {
                 text = "Hei hei hei mehän\n imeydymme sitä kohti!\n kääääääääääk!";
                 speeches.add(new Speech(GRANDMA, text));
 
-                text = "Aggressiivista muminaa.";
+                text = "(Aggressiivista muminaa)";
                 speeches.add(new Speech(LIGHT_DOLL, text));
             }
         } else if (host.getCurrentStage() == 2) {
@@ -388,6 +393,291 @@ public class TalkScreen implements Screen {
                 speeches.add(new Speech(BOTH,text));
 
                 text = "Voimme puhua tästä\n myöhemmin, nyt on aika\n juosta!";
+                speeches.add(new Speech(KEKKONEN, text));
+            }
+        }
+    }
+
+    private void addTalkEng() {
+        if (host.getCurrentStage() == 1) {
+
+            if(host.levelProgression == host.BEGINNING) {
+                text = "Oh my lord! What in the\n world just happened?\nWhy is everything so huge?";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "(Humming and mumbling)";
+                speeches.add(new Speech(LIGHT_DOLL, text));
+
+                text = "AAH! Wait a second, aren’t\nyou the reason why I broke into\n" +
+                        "this mansion in the first place?";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "(Humble mumble)";
+                speeches.add(new Speech(LIGHT_DOLL, text));
+
+                text = "You’re floating!\nAnd talking! Or mumbling\nrather... ";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "Either this mansion is\n cursed or I did forget\n to take my medicine.";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "...";
+                speeches.add(new Speech(BOTH, text));
+
+                text = "Let’s get out of here.";
+                speeches.add(new Speech(GRANDMA, text));
+
+            } else if(host.levelProgression == host.END) {
+
+                text = "Dear me,\nwill this room never end?";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "(Humming)";
+                speeches.add(new Speech(LIGHT_DOLL, text));
+
+                text = "...";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "Are my glasses deceiving me\nor was that suspicious fog\nthere before?";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "Hey! We’re being\nsucked towards it!\nAAAAAAAAAAH!";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "(Aggressive humming)";
+                speeches.add(new Speech(LIGHT_DOLL, text));
+            }
+        } else if (host.getCurrentStage() == 2) {
+
+            if(host.levelProgression == host.BEGINNING) {
+                text = "What just happened?\nI’m feeling all mangled up.";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "And where might we be now??\nEverything looks exactly";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "the same when you’re in the dark\n and the size of a rat.";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "Hum--";
+                speeches.add(new Speech(LIGHT_DOLL, text));
+
+                text = "Quiet now you mumbling\n paperweight! Can you\nhear that cackling??";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "Floating sun gods,\nangry voodoo dolls,\n peculiar chuckling...";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "Why did I even come here?";
+                speeches.add(new Speech(GRANDMA, text));
+
+                text = "...";
+                speeches.add(new Speech(LIGHT_DOLL, text));
+
+                text = "Oh... Right...";
+                speeches.add(new Speech(GRANDMA, text));
+
+            } else if(host.levelProgression == host.END) {
+
+                text = "…excellent.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "G-G-G-GHOST!";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "Hey! You would be slightly\npale as well if you had\nbeen stuck in a cursed";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "and eternally dark\nmansion for several decades!";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "So you’re actually\nPresident Urho Kekkonen?\nAnd you’re not a ghost?";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "The one and only.\nOr rather, I’m but a doll";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = " who has had life\n blown into him by\nthis mansion.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = " Maybe it’s best\n I don’t question that.";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "Excellent. Moving along,\n I expect you are looking\n" +
+                        " for a way out of here.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "I can help you escape,\nbut you have to trust me.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "What do you mean?";
+                speeches.add(new Speech(GRANDMA2,text));
+
+                text = "The fastest way to the\nfront door is through these\nportals.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "I believe—Ahem… I mean,\nI am absolutely positive that this\n one right here will take us there.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "That doesn’t sound\n too convincing...";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "Just put your faith\n in me!";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "...";
+                speeches.add(new Speech(BOTH,text));
+
+                text = "I guess I don’t have a choice.";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "Excellent.";
+                speeches.add(new Speech(KEKKONEN, text));
+            }
+        } else if(host.getCurrentStage() == 3) {
+
+            if(host.levelProgression == host.BEGINNING) {
+                text = " Wait a second, this doesn’t\nlook anything like the\nentrance…";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "Oopsie—I mean, excellent...";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "What happened? Where are we?";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "Hum--";
+                speeches.add(new Speech(LIGHT_DOLL, text));
+
+                text = "We ended up exactly where\n we were supposed to:\n the kitchen!";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Weren’t we supposed to get\n ourselves out of here instead\n" +
+                        " of being even more lost?";
+                speeches.add(new Speech(GRANDMA2,text));
+
+                text = "I remembered I needed\n something from the storage\n" +
+                        " room next to this kitchen!";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = " Oh yes,\nsomething excellent, that\nwill help us in our mission.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "...";
+                speeches.add(new Speech(LIGHT_DOLL, text));
+
+                text = "why didn’t you take us\n straight to the storage room?";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "All in good time! This\npart of the mansion is guarded\n" +
+                        "by an extremely savage beast";
+                speeches.add(new Speech(KEKKONEN, text));
+
+
+                text = "and we need a ride in order to\nescape it.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Where on earth do we--";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "OI! ELMERI!";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Excuse me?";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "This right here is Elmeri.\nHe is the most reliable,\n and also the only,";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = " steed this mansion has to\n offer.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Jump right on and we will leave\nimmediately! I can already hear\n" +
+                        "the the foul creature’s footsteps.";
+                speeches.add(new Speech(KEKKONEN, text));
+
+            } else if(host.levelProgression == host.END) {
+
+                text = "Holy moly!\n Did we manage to lose it??";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "For now. At least we made it\nto the storage room in one\npiece.";
+                speeches.add(new Speech(KEKKONEN, text));
+            }
+        } else if(host.getCurrentStage() == 4){
+            if(host.levelProgression == host.BEGINNING) {
+
+
+                text = "Okay, let us turn this room\nupside down, shall we?";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Are you still unwilling to\n tell us what’s important enough\n" +
+                        "to get all of us eaten by a cat?";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "I told you you just needed\n to have faith in me!";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Have I ever let you down?";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Hum--";
+                speeches.add(new Speech(LIGHT_DOLL, text));
+
+                text = "There’s that damned puss again!\nGiddy up Elmeri!";
+                speeches.add(new Speech(KEKKONEN, text));
+
+            } else if(host.levelProgression == host.END) {
+
+                text = "AAH!\nWill this never end?";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "Excellent! I found it!";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Will you now tell us...";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "There is no time!\nJump into this portal!";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "I’m positive that this time...\ntoo it will take us exactly\n" +
+                        "where it is supposed to!";
+                speeches.add(new Speech(KEKKONEN, text));
+            }
+        } else if(host.getCurrentStage() == 5) {
+            if(host.levelProgression == host.BEGINNING) {
+
+                text = "Hey! It worked! Excellent...";
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Well this looks rather familiar.";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "";
+                speeches.add(new Speech(BOTH, text));
+
+                text = "What was that sound?";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "The spirits which have cursed\nthismansion must not like us\n" +
+                        "getting this close to the front door.";
+                speeches.add(new Speech(LIGHT_DOLL, text));
+
+                text = "...";
+                speeches.add(new Speech(GRANDMA2, text));
+                speeches.add(new Speech(KEKKONEN, text));
+
+                text = "Why didn’t you tell us you can\nspeak?";
+                speeches.add(new Speech(GRANDMA2, text));
+
+                text = "I did try to, but you never\nbothered to listen.";
+                speeches.add(new Speech(LIGHT_DOLL,text));
+
+                text = "(Odd roar from the distance)";
+                speeches.add(new Speech(BOTH,text));
+
+                text = "We can talk about this later,\nit is time to run!";
                 speeches.add(new Speech(KEKKONEN, text));
             }
         }

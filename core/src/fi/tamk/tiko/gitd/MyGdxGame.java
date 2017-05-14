@@ -102,12 +102,18 @@ public class MyGdxGame extends Game {
     }
 
     public void setLocale() {
-        String defaultLocale = Locale.getDefault().toString();
-        if(defaultLocale.equals("fi_FI")) {
-            this.locale = FINNISH;
+        int locale = prefs.getInteger("locale", 0);
+        if(locale == 0) {
+            String defaultLocale = Locale.getDefault().toString();
+            if(defaultLocale.equals("fi_FI")) {
+                this.locale = FINNISH;
+            } else {
+                this.locale = ENGLISH;
+            }
         } else {
-            this.locale = ENGLISH;
+            this.locale = locale;
         }
+
     }
 
     /**
@@ -207,6 +213,7 @@ public class MyGdxGame extends Game {
     public void save() {
         saveUnlockedStages(unlockedStages);
         saveSoundSettings();
+        saveLocaleSetting();
     }
 
     /**
@@ -225,6 +232,10 @@ public class MyGdxGame extends Game {
         prefs.flush();
     }
 
+    public void saveLocaleSetting() {
+        prefs.putInteger("locale", locale);
+        prefs.flush();
+    }
     /**
      * Resets game data.
      */

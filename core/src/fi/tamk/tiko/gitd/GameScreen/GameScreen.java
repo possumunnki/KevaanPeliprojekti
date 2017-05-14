@@ -319,11 +319,24 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
      * Creates actors and stage for pause menu
      */
     private void createPauseMenu() {
+        String resumeString = "";
+        String restartString = "";
+        String backToMapString = "";
+
+        if(host.locale == host.FINNISH){
+            resumeString = "JATKA";
+            restartString = "YRITä UUDELLEEN";
+            backToMapString = "TAKAISIN KARTTAAN";
+        } else if(host.locale == host.ENGLISH) {
+            resumeString = "RESUME";
+            restartString = "RESTART";
+            backToMapString = "BACK TO MAP";
+        }
         pauseStage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
 
-        resume = new FontActor("RESUME", stageWidth * 1 / 2, stageHeight * 4 / 8);
-        restart = new FontActor("RESTART", stageWidth * 1 / 2, stageHeight * 3 / 8);
-        backToMap = new FontActor("BACK TO MAP", stageWidth * 1 / 2, stageHeight * 2 / 8);
+        resume = new FontActor(resumeString, stageWidth * 1 / 2, stageHeight * 4 / 8);
+        restart = new FontActor(restartString, stageWidth * 1 / 2, stageHeight * 3 / 8);
+        backToMap = new FontActor(backToMapString, stageWidth * 1 / 2, stageHeight * 2 / 8);
 
         pauseStage.addActor(resume);
         pauseStage.addActor(restart);
@@ -618,15 +631,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             bodyHandler.clearBodies(world, lightDoll);
 
         }
-        if (exclamationMarkActor.getTouch()) {
-            if (host.getCurrentStage() == 2 && exclamationButton) {
-                exclamationMarkActor.remove();
 
-                host.setScreen(new TalkScreen(host));
-            } else {
-                exclamationMarkActor.setTouch(false);
-            }
-        }
 
         // play boss shout sound effect at stage 5 start
         if (host.getCurrentStage() == 5 && host.getSoundEffect() == ON && (player.getPlayerBody()
@@ -639,7 +644,14 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
 
         detectPauseMenuButtons();
-
+        if (exclamationMarkActor.getTouch()) {
+            if (host.getCurrentStage() == 2 && exclamationButton) {
+                exclamationMarkActor.remove();
+                goal = true;
+            } else {
+                exclamationMarkActor.setTouch(false);
+            }
+        }
         if (goal) {
             // sets progression so that talk screen shows right texts
             host.levelProgression = host.END;

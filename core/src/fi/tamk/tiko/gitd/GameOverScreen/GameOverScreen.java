@@ -41,12 +41,7 @@ public class GameOverScreen implements Screen {
         camera.setToOrtho(false,
                 host.SCREEN_WIDTH,
                 host.SCREEN_HEIGHT);
-        retry = new FontActor("RETRY",
-                host.SCREEN_WIDTH * 1 / 2 * 100f,
-                host.SCREEN_HEIGHT * 2 / 4 * 100f);
-        quit = new FontActor("QUIT",
-                host.SCREEN_WIDTH * 1 / 2 * 100f,
-                host.SCREEN_HEIGHT * 1 / 4 * 100f);
+        createActors();
 
         stage = new Stage(new FillViewport(host.SCREEN_WIDTH * 100f, host.SCREEN_HEIGHT * 100f), batch);
 
@@ -114,5 +109,25 @@ public class GameOverScreen implements Screen {
         retry.dispose();
         quit.dispose();
         stage.dispose();
+    }
+
+    public void createActors() {
+        String retryString = "";
+        String quitString = "";
+
+        if(host.locale == host.FINNISH) {
+            retryString = "YRITä UUDESTAAN";
+            quitString = "POISTU";
+        } else if(host.locale == host.ENGLISH) {
+            retryString = "RETRY";
+            quitString = "QUIT";
+        }
+
+        retry = new FontActor(retryString,
+                host.SCREEN_WIDTH * 1 / 2 * 100f,
+                host.SCREEN_HEIGHT * 2 / 4 * 100f);
+        quit = new FontActor(quitString,
+                host.SCREEN_WIDTH * 1 / 2 * 100f,
+                host.SCREEN_HEIGHT * 1 / 4 * 100f);
     }
 }

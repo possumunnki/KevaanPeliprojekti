@@ -54,13 +54,7 @@ public class MapScreen implements Screen {
         camera.setToOrtho(false,
                 screenWidth,
                 screenHeight);
-        /*nextStage = new FontActor("Next Stage",
-                                    host.SCREEN_WIDTH * 6/8 * 100f,
-                                    host.SCREEN_HEIGHT * 2/8 * 100f);
-        */
-        back = new FontActor("Back",
-                screenWidth * 1 / 8,
-                screenHeight * 1 / 8);
+        createBack();
 
         pointActors = new ArrayList<PointActor>();
 
@@ -149,6 +143,20 @@ public class MapScreen implements Screen {
         mapBorderStage.dispose();
     }
 
+    /**
+     * Creates back-button on screen. Text changes depending on localization.
+     */
+    private void createBack() {
+        String backString = "";
+        if(host.locale == host.FINNISH) {
+            backString = "TAKAISIN";
+        } else if(host.locale == host.ENGLISH) {
+            backString = "BACK";
+        }
+        back = new FontActor(backString,
+                screenWidth * 1 / 8,
+                screenHeight * 1 / 8);
+    }
     /**
      * Creates point actors as many as stages are unlocked.
      * Point actors will be added to array list to implement fade in effect in order.
