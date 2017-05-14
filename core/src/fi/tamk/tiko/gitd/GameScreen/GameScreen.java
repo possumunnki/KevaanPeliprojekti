@@ -643,14 +643,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         detectPauseMenuButtons();
 
         if (goal) {
-            host.unlockStage(host.getCurrentStage());
-            host.setCurrentStage(host.getCurrentStage() + 1);
-            host.saveUnlockedStages(host.getCurrentStage());
-            host.setUnlockedStages(host.getUnlockedStages());
-
+            // sets progression so that talk screen shows right texts
+            host.levelProgression = host.END;
             Gdx.app.log("Current Stage", "" + host.getCurrentStage());
             doHeavyStuff();
-            host.setScreen(new MapScreen(host));
+            host.setScreen(new TalkScreen(host));
         } else if (gameOver) {
             if (host.getSoundEffect() == ON) {
                 deathSound.play(0.5f);

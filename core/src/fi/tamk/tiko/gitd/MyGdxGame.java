@@ -43,6 +43,9 @@ public class MyGdxGame extends Game {
      */
     private int currentStage;
 
+    public static final boolean BEGINNING = true;
+    public static final boolean END = false;
+    public static boolean levelProgression = BEGINNING;
     /**
      * list of available stages
      */
