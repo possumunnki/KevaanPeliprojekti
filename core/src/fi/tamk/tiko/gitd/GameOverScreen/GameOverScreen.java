@@ -16,7 +16,7 @@ import fi.tamk.tiko.gitd.GameScreen.GameScreen;
 import fi.tamk.tiko.gitd.MainMenuScreen.MainMenuScreen;
 
 /**
- * Created by possumunnki on 28.3.2017.
+ *
  *
  * @author
  */
