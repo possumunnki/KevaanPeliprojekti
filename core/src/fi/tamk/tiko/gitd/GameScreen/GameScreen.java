@@ -181,6 +181,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     public GameScreen(MyGdxGame host) {
 
+        // Font setup.
+        font.getData().setScale(1.5f,1.5f);
+
+
+
         this.host = host;
         batch = host.getSpriteBatch();
 
@@ -249,7 +254,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private void setGameStage() {
 
         // TODO: We create a background or settings for it for every screen.
-        currentBGTexture = new Texture(Gdx.files.internal("backgrounds/mockup1.png"));
+        //currentBGTexture = new Texture(Gdx.files.internal("backgrounds/mockup1.png"));
 
         // if current game stage is 1.
         if (host.getCurrentStage() == 1) {
@@ -302,7 +307,11 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
         }
 
+        // New renderer for the tilemaps.
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1 / 100f);
+
+        tiledMapRenderer.setView(camera);
+
 
         worldWidthPixels = tilesAmountWidth * TILE_WIDTH;
         worldHeightPixels = tilesAmountHeight * TILE_HEIGHT;
@@ -349,8 +358,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     @Override
     public void render(float delta) {
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        // The GL20 setup.
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glEnable(GL20.GL_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -410,20 +420,17 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         cat.moveCat(host, player, world);
 
         // We draw and move the background texture behind everything.
-        batch.begin();
+
 
         float slowingFactor = 0.05f;
 
-        Gdx.app.log("Current background Position", "backgrounPosX: " + backgroundPosX);
-        Gdx.app.log("Current background Position", "backgrounPosY: " + backgroundPosY);
-
-        batch.draw(currentBGTexture,backgroundPosX * slowingFactor, backgroundPosY * slowingFactor,Gdx.graphics.getWidth()/10, Gdx.graphics.getHeight()/60);
-
-
-        batch.end();
-
-        // Renders tilemap. Apparently tilemap cannot be rendered inside the batch routine.
+        // We render the tilemap right away and only in this setup method.
         tiledMapRenderer.render();
+
+        //Gdx.app.log("Current background Position", "backgrounPosX: " + backgroundPosX);
+        //Gdx.app.log("Current background Position", "backgrounPosY: " + backgroundPosY);
+
+        //batch.draw(currentBGTexture,backgroundPosX * slowingFactor, backgroundPosY * slowingFactor,Gdx.graphics.getWidth()/10, Gdx.graphics.getHeight()/60);
 
 
         // Starts the batch sequence.
@@ -445,12 +452,16 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         batch.end();
 
+
         // Render lights
         lightSetup.render(camera);
 
         pauseResumeStage.act();
         pauseResumeStage.draw();
+
+        // Configures pausemenu.
         if (pause == ON) {
+            // Draws the pausemenu.
             pauseStage.act();
             pauseStage.draw();
         } else if (pause == OFF) {
@@ -471,12 +482,12 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             doPhysicsStep(deltaTime);
 
             // We take the movement of the player from these two positions.
-            playerMovedX = playerLastXPos - player.getPlayerBody().getPosition().x;
-            playerMovedY = playerLastYPos - player.getPlayerBody().getPosition().y;
+            //playerMovedX = playerLastXPos - player.getPlayerBody().getPosition().x;
+            //playerMovedY = playerLastYPos - player.getPlayerBody().getPosition().y;
 
             // And add it to the background.
-            backgroundPosX += playerMovedX;
-            backgroundPosY += playerMovedY;
+            //backgroundPosX += playerMovedX;
+            //backgroundPosY += playerMovedY;
 
             // DEBUG.
             //Gdx.app.log("How much the player has moved since the last frame" ,"PlayerMovedX: " + playerMovedX);
@@ -654,7 +665,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         // Draw the UI.
         batch.begin();
-        font.getData().setScale(1.5f,1.5f);
+
         font.draw(batch,"Cookies: " + cookies,10,Gdx.graphics.getHeight() * 0.98f);
         batch.end();
     }
@@ -892,7 +903,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     public void dispose() {
 
         // Dispose the background image.
-        currentBGTexture.dispose();
+        //currentBGTexture.dispose();
 
         if (host.getGameMode() == host.ADVENTURE) {
             controller1.dispose();
