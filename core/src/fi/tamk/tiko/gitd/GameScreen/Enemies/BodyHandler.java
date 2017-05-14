@@ -230,13 +230,13 @@ public class BodyHandler {
 
                     // Check when the light doll is near enemy body
                     if (lightDoll.getLightDollBody().getPosition().x >
-                            (body.getPosition().x - 0.5f) &&
+                            (body.getPosition().x - 0.4f) &&
                             lightDoll.getLightDollBody().getPosition().x <
-                                    (body.getPosition().x + 0.3f) &&
+                                    (body.getPosition().x + 0.45f) &&
                             lightDoll.getLightDollBody().getPosition().y >
                                     (body.getPosition().y - 0.3f) &&
                             lightDoll.getLightDollBody().getPosition().y <
-                                    (body.getPosition().y + 0.4f)) {
+                                    (body.getPosition().y + 0.25f)) {
 
                         if (body.getUserData().equals(voodoo.getVdObject())) {
                             // Add the specific body to bodiesToBeDestroyed-list
