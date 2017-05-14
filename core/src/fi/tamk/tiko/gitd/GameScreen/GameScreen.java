@@ -102,6 +102,13 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private float deltaTime;
     private float stateTime;
 
+    private float playerLastXPos;
+    private float playerLastYPos;
+    private float playerMovedX;
+    private float playerMovedY;
+    public float backgroundPosX;
+    public float backgroundPosY;
+
     /**
      * Controllable characters and its set up.
      */
@@ -124,6 +131,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Sound bossCallSound;
     private boolean playBossSoundOnce = false;
 
+    private Texture currentBGTexture;
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
 
@@ -225,6 +233,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
      * Also transforms tile maps rectangles to bodies and sets gameMode.
      */
     private void setGameStage() {
+
+        // TODO: We create a background or settings for it for every screen.
+        currentBGTexture = new Texture(Gdx.files.internal("backgrounds/mockup1.png"));
+
         // if current game stage is 1.
         if (host.getCurrentStage() == 1) {
             tiledMap = new TmxMapLoader().load("maps/stage1.tmx");
@@ -326,7 +338,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        tiledMapRenderer.render();
+
         if (host.getMusic() == ON) {
             gameBGM.play();
             if (pause == ON) {
@@ -378,7 +390,25 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         activatePause();
         cat.moveCat(host, player, world);
 
+        // We draw and move the background texture behind everything.
         batch.begin();
+
+
+        float slowingFactor = 0.05f;
+
+        Gdx.app.log("Current background Position", "backgrounPosX: " + backgroundPosX);
+        Gdx.app.log("Current background Position", "backgrounPosY: " + backgroundPosY);
+
+        batch.draw(currentBGTexture,backgroundPosX * slowingFactor, backgroundPosY * slowingFactor,Gdx.graphics.getWidth()/50, Gdx.graphics.getHeight()/50);
+
+        batch.end();
+
+        // Renders tilemap. Apparently tilemap cannot be rendered inside the batch routine.
+        tiledMapRenderer.render();
+
+        // Starts the batch sequence.
+        batch.begin();
+
         player.draw(batch, stateTime, host);
         lightDoll.draw(batch);
         bodyHandler.drawAllBodies(batch, stateTime, player);
@@ -416,7 +446,20 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
             controllerStage.act(Gdx.graphics.getDeltaTime());
             controllerStage.draw();
+
+            // Physics step.
             doPhysicsStep(deltaTime);
+
+            // We take the movement of the player from these two positions.
+            playerMovedX = playerLastXPos - player.getPlayerBody().getPosition().x;
+            playerMovedY = playerLastYPos - player.getPlayerBody().getPosition().y;
+
+            // And add it to the background.
+            backgroundPosX += playerMovedX;
+            backgroundPosY += playerMovedY;
+
+            Gdx.app.log("How much the player has moved since the last frame" ,"PlayerMovedX: " + playerMovedX);
+            Gdx.app.log("How much the player has moved since the last frame" ,"PlayerMovedY: " + playerMovedY);
         }
 
 
@@ -592,11 +635,22 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     private void controlCharacter() {
         if (host.getGameMode() == host.ADVENTURE) {
+
             controller1.moveTouchPad();
-            // enables player to move with game on pad
-            player.movePlayer(controller1.getTouchpad().getKnobPercentX(),
-                    controller1.getTouchpad().getKnobPercentY(), host);
-            // enables player to move with arrow key
+
+            float touchX = controller1.getTouchpad().getKnobPercentX();
+            float touchY = controller1.getTouchpad().getKnobPercentY();
+
+            playerLastXPos = player.getPlayerBody().getPosition().x;
+            playerLastYPos = player.getPlayerBody().getPosition().y;
+
+            // enables player to move with game on pad.
+            player.movePlayer(touchX, touchY, host);
+
+            playerMovedX = playerLastXPos - player.getPlayerBody().getPosition().x;
+            playerMovedY = playerLastYPos - player.getPlayerBody().getPosition().y;
+
+            // enables player to move with WASD.
             player.movePlayer(host);
         } else if (host.getGameMode() == host.RAT_RACE) {
             // enables player to move automatically
@@ -809,6 +863,10 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public void dispose() {
+
+        // Dispose the background image.
+        currentBGTexture.dispose();
+
         if (host.getGameMode() == host.ADVENTURE) {
             controller1.dispose();
         }
