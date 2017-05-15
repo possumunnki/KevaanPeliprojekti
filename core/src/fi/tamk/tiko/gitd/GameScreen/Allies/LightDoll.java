@@ -13,16 +13,25 @@ import com.badlogic.gdx.physics.box2d.World;
 import fi.tamk.tiko.gitd.Utilities;
 
 /**
- * Created by possumunnki on 14.3.2017.
+ * Provides Light doll on the game.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-14
  */
-
-
-//
 public class LightDoll {
     private Texture lightDollTexture;
     private Sprite lightDollSprite;
+
+    /**
+     * Distance from the player.
+     */
     private final float DISTANCE_X = 0.5f;
     private final float DISTANCE_Y = 0.5f;
+
+    /**
+     *
+     */
     private final float FLOATING_SPEED = 0.002f;
     private final boolean UP = true;
     private final boolean DOWN = false;

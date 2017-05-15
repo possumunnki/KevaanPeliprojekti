@@ -15,7 +15,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Created by possumunnki on 7.3.2017.
+ * This class contains several methods that is used in other classes.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-14
  */
 
 public class Utilities {
@@ -42,6 +46,10 @@ public class Utilities {
         return frames;
     }
 
+    /**
+     * Creates body definition and sets its position.
+     * @return body definition
+     */
     public static BodyDef getDefinitionOfBody() {
         // Body Definition
         BodyDef myBodyDef = new BodyDef();
@@ -55,6 +63,13 @@ public class Utilities {
         return myBodyDef;
     }
 
+    /**
+     * Transforms tile map rectangles into phys2D bodies.
+     * @param layer name of tilemap layer
+     * @param userData name of body that identifies bodies
+     * @param tiledMap tilemap
+     * @param world     world of game stage
+     */
     public static void transformWallsToBodies(String layer,
                                               String userData,
                                               TiledMap tiledMap,
@@ -79,6 +94,13 @@ public class Utilities {
         }
     }
 
+    /**
+     * Creates static body by using rectangles.
+     *
+     * @param rect rectangle that should use
+     * @param userData name of body that identifies bodies
+     * @param world world of game stage
+     */
     public static void createStaticBody(Rectangle rect,
                                         String userData,
                                         World world) {
@@ -110,9 +132,9 @@ public class Utilities {
     /**
      * Scales rectangle size.
      *
-     * @param r
-     * @param scale
-     * @return
+     * @param r     rectangle
+     * @param scale scale
+     * @return      scaled rectangle
      */
     private static Rectangle scaleRect(Rectangle r, float scale) {
         Rectangle rectangle = new Rectangle();

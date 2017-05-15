@@ -18,9 +18,12 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
 import fi.tamk.tiko.gitd.Utilities;
 import fi.tamk.tiko.gitd.MyGdxGame;
-
 /**
- * Created by possumunnki on 7.3.2017.
+ *
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-14
  */
 
 public class Player {
@@ -152,10 +155,7 @@ public class Player {
         ratRunTexture = new Texture("ratMountAnim.png");
         ratRunAnim = new Animation<TextureRegion>(1 / 6f,
                 Utilities.transformToFrames(ratRunTexture, 6, 1));
-
-
     }
-
 
     public void draw(SpriteBatch sb, float stateTime, MyGdxGame host) {
 

@@ -14,7 +14,11 @@ import fi.tamk.tiko.gitd.GameScreen.Allies.Player;
 import fi.tamk.tiko.gitd.MyGdxGame;
 
 /**
- * Created by possumunnki on 31.3.2017.
+ * Provides exclamation mark button.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-14
  */
 
 public class ExclamationMarkActor extends Actor {
@@ -27,6 +31,9 @@ public class ExclamationMarkActor extends Actor {
     private float printY;
     private Sprite exclamationSprite;
 
+    /**
+     * Creates exclamation-mark actor.
+     */
     public ExclamationMarkActor() {
         exclamationTexture = new Texture("exclamation_mark.png");
         exclamationSprite = new Sprite(exclamationTexture);

@@ -7,28 +7,33 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
- * Created by possumunnki on 25.4.2017.
+ * Implements borders of map. This class is used only in map screen.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-12
  */
 
 public class MapBorderActor extends Actor {
     private Texture mapBorderTexture;
+    // Sprite is needed to make it possible to use zoom actions
     private Sprite mapBorderSprite;
 
     public MapBorderActor() {
         mapBorderTexture = new Texture("mapBorder.png");
         mapBorderSprite = new Sprite(mapBorderTexture);
 
+        // sets size of the actor
         setWidth(mapBorderTexture.getWidth());
         setHeight(mapBorderTexture.getHeight());
         setScale(1, 1);
-        // setOrigin(getWidth()/2, getHeight()/2);
-        //fadeInAction();
     }
 
     public void draw(Batch batch, float alpha) {
-
+        // allows to use fade in/ out actions
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * alpha);
+
         batch.draw(mapBorderSprite,
                 getX(),
                 getY(),

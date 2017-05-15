@@ -10,7 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import fi.tamk.tiko.gitd.MyGdxGame;
 
 /**
- * Created by possumunnki on 9.4.2017.
+ * Provides puse / resume button as actor.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-14
  */
 
 public class PauseResumeButtonActor extends Actor {
@@ -24,6 +28,11 @@ public class PauseResumeButtonActor extends Actor {
     private final boolean RUNNING = false;
     private boolean status;
 
+    /**
+     * Creates pause/resume button.
+     *
+     * @param host Needed to get screen sizes.
+     */
     public PauseResumeButtonActor(MyGdxGame host) {
         this.host = host;
         pauseButtonTexture = new Texture("pauseButton.png");
@@ -75,7 +84,7 @@ public class PauseResumeButtonActor extends Actor {
         resumeButtonTexture.dispose();
         this.remove();
     }
-
+    // detects touches
     class pauseResumeListener extends InputListener {
         public boolean touchDown(InputEvent event,
                                  float x,

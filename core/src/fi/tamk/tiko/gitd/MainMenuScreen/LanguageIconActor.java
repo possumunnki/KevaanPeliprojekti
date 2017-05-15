@@ -20,16 +20,24 @@ import fi.tamk.tiko.gitd.MyGdxGame;
 public class LanguageIconActor extends Actor {
     private MyGdxGame host;
     private Texture languageTexture;
-    private Texture offTexture;
     /**
      * Type of icon.
      */
     private int type;
+    /**
+     * Whether the icon is touched or not.
+     */
     private boolean touch = false;
 
 
-
-
+    /**
+     * Creates language icon.
+     *
+     * @param host      To get locale settings.
+     * @param printX    The X coordinate where the button will be printed.
+     * @param printY    The X coordinate where the button will be printed.
+     * @param type      Type of button.
+     */
     public LanguageIconActor(MyGdxGame host,
                              float printX,
                              float printY,
@@ -37,14 +45,17 @@ public class LanguageIconActor extends Actor {
         this.host = host;
         this.type = type;
 
+        //sets textures depending on icon type
         if (type == host.ENGLISH) {
             languageTexture = new Texture("english.png");
         } else if (type == host.FINNISH) {
             languageTexture = new Texture("finnish.png");
         }
 
+        // sets positions where the texture will be printed
         setX(printX);
         setY(printY);
+        // sets size of Actor that will be also size of texture
         setWidth(languageTexture.getWidth());
         setHeight(languageTexture.getHeight());
         addListener(new LanguageIconActor.LanguageIconListener());
@@ -71,15 +82,10 @@ public class LanguageIconActor extends Actor {
 
     public void dispose() {
         languageTexture.dispose();
-        offTexture.dispose();
         this.remove();
     }
 
-
-    public void setTouchFalse() {
-        touch = false;
-    }
-
+    // Detects touches
     class LanguageIconListener extends InputListener {
         public boolean touchDown(InputEvent event,
                                  float x,
@@ -88,7 +94,6 @@ public class LanguageIconActor extends Actor {
                                  int button) {
             host.locale = type;
             touch = true;
-            Gdx.app.log("tuch", "detected");
             return false;
         }
 

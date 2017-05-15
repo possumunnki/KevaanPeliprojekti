@@ -6,7 +6,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
- * Created by possumunnki on 10.5.2017.
+ * Provides Actors that has texture of logo.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-14
  */
 
 public class LogoActor extends Actor {
@@ -17,7 +21,13 @@ public class LogoActor extends Actor {
     private final int LOGO1 = 1;
     private final int LOGO2 = 2;
 
-
+    /**
+     * Creates logoactor.
+     *
+     * @param logoType type of logo
+     * @param posX  X position where the actor will be printed
+     * @param posY  Y position where the actor will be printed
+     */
     public LogoActor(int logoType, float posX, float posY) {
         this.logoType = logoType;
         setPosition(posX, posY);
@@ -28,10 +38,15 @@ public class LogoActor extends Actor {
 
     }
 
+    /**
+     * Sets texture depending on type.
+     */
     public void setLogoTexture() {
         if (logoType == LOGO1) {
+            // this texture includes Njaa games -logo
             logoTexture = new Texture("logo/logo1.png");
         } else if (logoType == LOGO2) {
+            // this texture includes tamk, tiko and vapriikko -logos.
             logoTexture = new Texture("logo/logo2.png");
         }
     }
@@ -41,9 +56,11 @@ public class LogoActor extends Actor {
     }
 
     public void draw(Batch batch, float alpha) {
+        // this allows actors to use fade in/ out actions
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * alpha);
 
+        // draws texture
         batch.draw(logoTexture,
                 getX(),
                 getY(),

@@ -7,43 +7,49 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Locale;
 
-import static fi.tamk.tiko.gitd.MyGdxGame.levelProgression;
-import static fi.tamk.tiko.gitd.MyGdxGame.levelProgression;
-import static fi.tamk.tiko.gitd.MyGdxGame.levelProgression;
-
+/**
+ * Implements this game and stashes global settings.
+ * This is the start point of this game.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-12
+ */
 public class MyGdxGame extends Game {
     SpriteBatch batch;
 
     private final boolean ON = true;
     private final boolean OFF = false;
 
-    private boolean unlockAllStages = ON;
+    private boolean unlockAllStages = OFF;
+    /**
+     * Whether sound is on or not.
+     */
     private boolean music;
     private boolean soundEffect;
+
     /**
-     * Screen width in meters
+     * Screen size in meters
      */
     public static final float SCREEN_WIDTH = 8.0f;
-
-    /**
-     * Screen height in meters
-     */
     public static final float SCREEN_HEIGHT = 4.8f;
-
-    public static final int STOP = 0;
-    public static final int RIGHT = 1;
-    public static final int LEFT = 2;
 
     /**
      * Locale settings.
+     * It changes game's language.
      */
     public static final int ENGLISH = 1;
     public static final int FINNISH = 2;
     public static int locale;
 
+    /**
+     * Progression of game.
+     * This game have talking screen at the beginning of the game stage and end.
+     */
     public static final int BEGINNING = 1;
     public static final int END = 2;
     public static int levelProgression = BEGINNING;
+
     /**
      * stage that player is currently playing
      */
@@ -60,6 +66,7 @@ public class MyGdxGame extends Game {
      * amount of unlocked stage
      */
     private int unlockedStages;
+
     /**
      * Game modes to change game mechanics depending on current stage.
      */
@@ -76,16 +83,21 @@ public class MyGdxGame extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-        currentStage = 1; // Korjaa, kun tehdään muisti osio!
+        currentStage = 1;
         soundEffect = ON;
-        // !! LEVEL 3 SET TO AVAILABLE FOR TESTING !!
+
         availableStage = new boolean[]{AVAILABLE, AVAILABLE, AVAILABLE, AVAILABLE, NOT_AVAILABLE};
         prefs = Gdx.app.getPreferences("GameData");
+        // restores saved game data
         restoreGameData();
+
         setLocale();
+
+        // developer mode that unlocks all stages
         if (unlockAllStages) {
             setUnlockedStages(5);
         }
+
         logoScreen = new LogoScreen(this);
         // moves to logo screen
         setScreen(logoScreen);
@@ -194,6 +206,10 @@ public class MyGdxGame extends Game {
         this.unlockedStages = unLockedStages;
     }
 
+    /**
+     * Checks saved data and new unlocked stage.
+     * It avoids to save override unlocked stages if player plays already cleared stages.
+     */
     public void setUnlockedStages(int newUnlockedStage) {
         int unLockedStages = prefs.getInteger("unLockedStage", 1);
 
@@ -205,6 +221,9 @@ public class MyGdxGame extends Game {
 
     }
 
+    /**
+     * Loads saved game data and restores sound configs.
+     */
     public void setSoundConfig() {
         boolean soundEffect = prefs.getBoolean("soundEffect", true);
         boolean music = prefs.getBoolean("music", true);
@@ -213,6 +232,9 @@ public class MyGdxGame extends Game {
         this.music = music;
     }
 
+    /**
+     * Saves unlocked stages and other settings.
+     */
     public void save() {
         saveUnlockedStages(unlockedStages);
         saveSoundSettings();
@@ -229,16 +251,23 @@ public class MyGdxGame extends Game {
         prefs.flush();
     }
 
+    /**
+     * Saves sound settings.
+     */
     public void saveSoundSettings() {
         prefs.putBoolean("music", music);
         prefs.putBoolean("soundEffect", soundEffect);
         prefs.flush();
     }
 
+    /**
+     * Saves locale settings.
+     */
     public void saveLocaleSetting() {
         prefs.putInteger("locale", locale);
         prefs.flush();
     }
+
     /**
      * Resets game data.
      */

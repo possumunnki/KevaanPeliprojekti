@@ -18,62 +18,99 @@ import fi.tamk.tiko.gitd.TalkScreen.TalkScreen;
 
 import java.util.ArrayList;
 
+
 /**
- * Created by possumunnki on 25.3.2017.
+ * Implements map screen. First maps border fades in and then pointers fades in.
+ * Player can choose the level by touching pointers or go back to
+ * main screen. If player touches pointer screen moves to talk screen.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-12
  */
 
 public class MapScreen implements Screen {
     private MyGdxGame host;
+    /**
+     * Size of the screen in pixels.
+     */
     private float screenWidth;
     private float screenHeight;
 
     private SpriteBatch batch;
     private OrthographicCamera camera;
 
+    /**
+     * Back button.
+     */
     private FontActor back;
+
+    /**
+     * Stage for point actors
+     */
+    private Stage pointStage;
+
+    /**
+     * Pointers that player must touch when player wants to play level.
+     */
     private PointActor stage1Point;
     private PointActor stage2Point;
     private PointActor stage3Point;
     private PointActor stage4Point;
     private PointActor stage5Point;
-    private Stage pointStage;
+    ArrayList<PointActor> pointActors;
+
+    /**
+     * Back ground texture on this screen
+     */
     private Texture backGroundTexture;
+
+    /**
+     * Stage for map borders
+     */
     private Stage mapBorderStage;
     private MapBorderActor mapBorderActor;
 
-    ArrayList<PointActor> pointActors;
 
+    /**
+     * Creates map screen.
+     * @param host  Needed to use sprite batch and some values in this class.
+     */
     public MapScreen(MyGdxGame host) {
         this.host = host;
         batch = host.getSpriteBatch();
+        // sets screen size in pixels
         screenWidth = host.SCREEN_WIDTH * 100f;
         screenHeight = host.SCREEN_HEIGHT * 100f;
         backGroundTexture = new Texture("mapBG.png");
 
+        // sets camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
                 screenWidth,
                 screenHeight);
         createBack();
 
+        // sets array list to make actors do fade in actions in order
         pointActors = new ArrayList<PointActor>();
 
 
-        mapBorderActor = new MapBorderActor();
         mapBorderStage = new Stage(new FillViewport(screenWidth, screenHeight), batch);
+        mapBorderActor = new MapBorderActor();
         mapBorderStage.addActor(mapBorderActor);
 
         pointStage = new Stage(new FillViewport(screenWidth, screenHeight), batch);
 
+        // builds point actors. The amount depends on unlocked levels
         setPointActors();
+        // sets actions to actors
         fadeInActions();
         //mapScreenBG = new Background("mapScreenBG");
 
-        //stage.addActor(mapScreenBG);
-        //pointStage.addActor(nextStage);
+        // adds back -button on stage
         pointStage.addActor(back);
 
-
+        // makes actors detect touches
         Gdx.input.setInputProcessor(pointStage);
     }
 
@@ -89,6 +126,7 @@ public class MapScreen implements Screen {
 
 
         batch.begin();
+        // prints back ground
         batch.draw(backGroundTexture,
                 0f,
                 0f,
@@ -96,11 +134,13 @@ public class MapScreen implements Screen {
                 screenHeight);
 
         batch.end();
+
         mapBorderStage.act();
         mapBorderStage.draw();
         pointStage.act(Gdx.graphics.getDeltaTime());
         pointStage.draw();
 
+        // whenever player touches back button
         if (back.getTouch()) {
             host.setScreen(new MainMenuScreen(host));
         } else {
@@ -131,8 +171,7 @@ public class MapScreen implements Screen {
     @Override
     public void dispose() {
         backGroundTexture.dispose();
-        //mapScreenBG.dispose();
-        //nextStage.dispose();
+
         for (int i = 0; i < pointActors.size(); i++) {
             pointActors.get(i).dispose();
         }
@@ -161,6 +200,7 @@ public class MapScreen implements Screen {
      */
     private void setPointActors() {
         switch (host.getUnlockedStages()) {
+            // cases is not break to add unlocked stage and everything lower level than that
             case 5:
                 stage5Point = new PointActor(screenWidth * 6.5f / 12,
                         screenHeight * 4.5f / 24, 5);
@@ -177,23 +217,24 @@ public class MapScreen implements Screen {
                         screenHeight * 6 / 12, 3);
                 pointActors.add(stage3Point);
                 pointStage.addActor(stage3Point);
-                Gdx.app.log("point3", "added");
             case 2:
                 stage2Point = new PointActor(screenWidth * 8f / 12,
                         screenHeight * 6f / 12, 2);
                 pointActors.add(stage2Point);
                 pointStage.addActor(stage2Point);
-                Gdx.app.log("point2", "added");
             case 1:
                 stage1Point = new PointActor(screenWidth * 4.5f / 12,
                         screenHeight * 8.5f / 12, 1);
                 pointActors.add(stage1Point);
                 pointStage.addActor(stage1Point);
-                Gdx.app.log("point1", "added");
         }
 
     }
 
+    /**
+     * Adds fade in actions to map border actor.
+     * After map border actor had done fade in action pointers actions will be added.
+     */
     private void fadeInActions() {
         // fade outs all point actors
         fadeOutAllPointActors();
@@ -205,6 +246,7 @@ public class MapScreen implements Screen {
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
+                                // adds actions to point actor
                                 setPointActions(host.getUnlockedStages());
                             }
                         })));
@@ -227,6 +269,7 @@ public class MapScreen implements Screen {
                             @Override
                             public void run() {
                                 int nextPointNumber = pointNumber - 1;
+                                // adds all actions to all point actors with same method
                                 if (nextPointNumber > 0) {
                                     setPointActions(nextPointNumber);
                                 }
@@ -238,36 +281,42 @@ public class MapScreen implements Screen {
      * Whenever pointActor is touched, game moves from Map screen to talk screen or game screen.
      */
     private void moveToStage() {
+
         switch (host.getUnlockedStages()) {
             case 5:
                 if (stage5Point.getTouch()) {
                     host.setCurrentStage(5);
                     removeOtherPointActors(stage5Point);
                     moveAndZoomAction(stage5Point);
+                    break;
                 }
             case 4:
                 if (stage4Point.getTouch()) {
                     host.setCurrentStage(4);
                     removeOtherPointActors(stage4Point);
                     moveAndZoomAction(stage4Point);
+                    break;
                 }
             case 3:
                 if (stage3Point.getTouch()) {
                     host.setCurrentStage(3);
                     removeOtherPointActors(stage3Point);
                     moveAndZoomAction(stage3Point);
+                    break;
                 }
             case 2:
                 if (stage2Point.getTouch()) {
                     host.setCurrentStage(2);
                     removeOtherPointActors(stage2Point);
                     moveAndZoomAction(stage2Point);
+                    break;
                 }
             case 1:
                 if (stage1Point.getTouch()) {
                     host.setCurrentStage(1);
                     removeOtherPointActors(stage1Point);
                     moveAndZoomAction(stage1Point);
+                    break;
                 }
         }}
 
@@ -295,9 +344,11 @@ public class MapScreen implements Screen {
         // coordinates where map should move
         float movePointX = screenWidth / 2 - pointActor.getX() - pointActor.getWidth();
         float movePointY = screenHeight / 2 - pointActor.getY() - pointActor.getHeight();
+        // sets origin where the zoom effect is centralized
         mapBorderActor.setOrigin(pointActor.getX() + pointActor.getWidth(), pointActor.getY() + pointActor.getHeight());
-
+        // adds actions
         mapBorderActor.addAction(
+                // sequence allows actors do actions in order
                 Actions.sequence(
                         Actions.moveTo(movePointX,
                                 movePointY,

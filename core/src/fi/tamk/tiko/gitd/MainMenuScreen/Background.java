@@ -27,17 +27,6 @@ public class Background extends Actor {
             setWidth(mainmenuBG.getWidth());
             setHeight(mainmenuBG.getHeight());
         }
-        /**
-         else if(select.equalsIgnoreCase("mapScreenBG")) {
-         mapMenu = true;
-         mainMenu = false;
-         setWidth(mapBG.getWidth());
-         setHeight(mapBG.getHeight());
-         } // INSERT HERE OTHER BACKGROUNDS
-         */
-
-        //setWidth(mainmenuBG.getWidth());
-        //setHeight(mainmenuBG.getHeight());
     }
 
     @Override
@@ -45,11 +34,6 @@ public class Background extends Actor {
         if (mainMenu) {
             batch.draw(mainmenuBG, getX(), getY(), getWidth(), getHeight());
         }
-        /**
-         else if(mapMenu) {
-         batch.draw(mapBG, getX(), getY(), getWidth(), getHeight());
-         }
-         */
 
     }
 
@@ -62,10 +46,5 @@ public class Background extends Actor {
         if (mainMenu) {
             mainmenuBG.dispose();
         }
-        /**
-         else if(mapMenu) {
-         mapBG.dispose();
-         }
-         */
     }
 }

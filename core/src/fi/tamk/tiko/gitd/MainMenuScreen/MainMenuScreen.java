@@ -19,7 +19,13 @@ import fi.tamk.tiko.gitd.MyGdxGame;
 import fi.tamk.tiko.gitd.TalkScreen.TalkScreen;
 
 /**
- * Created by possumunnki on 7.3.2017.
+ * Implements main screen, where player can config settings of language or sounds.
+ * Player can also decide whether start the game at the same point than last time or
+ * begin the new game.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-12
  */
 
 public class MainMenuScreen implements Screen {
@@ -33,25 +39,47 @@ public class MainMenuScreen implements Screen {
     private final boolean OFF = false;
 
     /**
-     * Screen's size in pixel
+     * Screen's size in pixel.
      */
     private float screenWidth = host.SCREEN_WIDTH * 100f;
     private float screenHeight = host.SCREEN_HEIGHT * 100f;
 
     private SpriteBatch batch;
     private OrthographicCamera camera;
+    /**
+     * Need to make text buttons.
+     */
     private String newGameString;
     private String continueString;
     private Stage mainMenuStage;
     private FontActor newGame;
     private FontActor continueGame;
+
+    /**
+     * Icons to config sounds.
+     */
     private SoundIconActor soundEffectActor;
     private SoundIconActor bgmActor;
+
+    /**
+     * Icons to config languages.
+     */
     private LanguageIconActor finnishActor;
     private LanguageIconActor englishActor;
 
+    /**
+     * Background texture.
+     */
     private Background menuBG;
+
+    /**
+     * Back ground music of main menu.
+     */
     private Music mainMenuBGM;
+
+    /**
+     * Sounds to test SFX setting.
+     */
     private Sound jumpSound1, jumpSound2, jumpSound3;
 
     public MainMenuScreen(MyGdxGame host) {
@@ -59,17 +87,21 @@ public class MainMenuScreen implements Screen {
         this.host = host;
         batch = host.getSpriteBatch();
 
+        // sets camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
                 screenWidth,
                 screenHeight);
+        // imports background music
         mainMenuBGM = Gdx.audio.newMusic(Gdx.files.internal("bgm1.mp3"));
         mainMenuBGM.setVolume(0.4f);
 
+        // imports some SFX
         jumpSound1 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_001.wav"));
         jumpSound2 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_002.wav"));
         jumpSound3 = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_hop_003.wav"));
 
+        // creates to stage to make possible to actors act.
         mainMenuStage = new Stage(new FillViewport(screenWidth, screenHeight), batch);
 
         // sets strings depending on locale
@@ -95,12 +127,13 @@ public class MainMenuScreen implements Screen {
                 screenHeight * 5 / 8,
                 host.getMusic(),
                 BGM);
-
+        // creates finnish -icon
         finnishActor = new LanguageIconActor(host,
                 screenWidth * 0,
                 screenHeight * 4/5,
                 host.FINNISH);
 
+        // creates english -icon
         englishActor = new LanguageIconActor(host,
                 screenWidth * 0,
                 screenHeight * 3 / 5,
@@ -108,6 +141,8 @@ public class MainMenuScreen implements Screen {
 
         // Creates main menu background
         menuBG = new Background("background");
+
+        // adds actors on stage
         mainMenuStage.addActor(menuBG);
         mainMenuStage.addActor(newGame);
         mainMenuStage.addActor(continueGame);
@@ -116,6 +151,7 @@ public class MainMenuScreen implements Screen {
         mainMenuStage.addActor(finnishActor);
         mainMenuStage.addActor(englishActor);
 
+        // activates actors that works as buttons
         Gdx.input.setInputProcessor(mainMenuStage);
     }
 
@@ -131,8 +167,10 @@ public class MainMenuScreen implements Screen {
 
         configSounds();
 
+        // if music is on, then it plays music
         if (host.getMusic() == ON) {
             mainMenuBGM.play();
+        // pauses music if music is off
         } else if (host.getMusic() == OFF) {
             mainMenuBGM.pause();
         }
@@ -140,13 +178,18 @@ public class MainMenuScreen implements Screen {
         mainMenuStage.act(Gdx.graphics.getDeltaTime());
         mainMenuStage.draw();
 
+        // whenever player touches new game the game starts at the beginning
         if (newGame.getTouch()) {
+            // resets unlocked stages
             host.reset();
+            // moves to talk screen
             host.setScreen(new TalkScreen(host));
         } else if (continueGame.getTouch()) {
+            // moves to map screen
             host.setScreen(new MapScreen(host));
         }
 
+        // sets text buttons so that it changes texts when player changes language setting
         setStrings();
         newGame.setFontString(newGameString);
         continueGame.setFontString(continueString);
@@ -210,8 +253,8 @@ public class MainMenuScreen implements Screen {
             host.setSoundEffect();
             soundEffectActor.setTouchFalse();
             if (host.getSoundEffect()) {
+                // plays one sound randomly from 3 sounds.
                 int jumpRandom = (int) Math.floor(Math.random() * 3) + 1;
-
                 switch (jumpRandom) {
                     case 1:
                         jumpSound1.play(1f);
@@ -225,7 +268,8 @@ public class MainMenuScreen implements Screen {
                 }
             }
         }
-
+        // Sets whether sound effect is on or off. Then draw-method
+        // prints different textures depending on it.
         soundEffectActor.setSound(host.getSoundEffect());
 
         // when player touches music -icon
@@ -234,6 +278,8 @@ public class MainMenuScreen implements Screen {
             bgmActor.setTouchFalse();
         }
 
+        // Sets whether music is on or off. Then draw-method
+        // prints different textures depending on it.
         bgmActor.setSound(host.getMusic());
     }
 }
