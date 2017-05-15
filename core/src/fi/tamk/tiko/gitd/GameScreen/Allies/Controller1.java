@@ -10,13 +10,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import fi.tamk.tiko.gitd.MyGdxGame;
 
 /**
- * Created by possumunnki on 11.3.2017.
+ * Provides game on pad.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-14
  */
 
 public class Controller1 extends Actor {
 
-    private int direction;
     private MyGdxGame host;
+
+    /**
+     * size of touch pad
+     */
     private final float DIAMETER = (host.SCREEN_WIDTH / 4) * 100f;
 
     private Touchpad touchpad;
@@ -28,7 +35,13 @@ public class Controller1 extends Actor {
 
     private Texture touchKnobTexture;
 
-
+    /**
+     * Creates game on touch pad.
+     *
+     * @param host      needed to get screen size
+     * @param positionX x coordinate of touch pad
+     * @param positionY y coordinate of touch pad
+     */
     public Controller1(MyGdxGame host, float positionX, float positionY) {
         this.host = host;
         touchKnobTexture = new Texture("touchKnob.png");
@@ -54,7 +67,7 @@ public class Controller1 extends Actor {
         //Create new TouchPad with the created style
 
         // creates touch pad(deadzoneRadius, style)
-        // deadzoneRadius - The distance in pixels from the center of the touchpad.
+        // deadzoneRadius - The distance in pixels from the center of the touch pad.
         touchpad = new Touchpad(20 / 100f, touchpadStyle);
 
         touchpad.setBounds(positionX, positionY, DIAMETER, DIAMETER);
@@ -76,29 +89,6 @@ public class Controller1 extends Actor {
     public void act(float delta) {
         super.act(delta);
     }
-
-
-    public void moveTouchPad() {
-
-        if (touchpad.getKnobPercentX() > 0) {
-            direction = MyGdxGame.RIGHT;
-        }
-
-        if (touchpad.getKnobPercentX() < 0) {
-            direction = MyGdxGame.LEFT;
-        }
-
-
-        if (touchpad.getKnobPercentX() == 0) {
-            direction = MyGdxGame.STOP;
-        }
-
-    }
-
-    public int getDirection() {
-        return direction;
-    }
-
 
     public Touchpad getTouchpad() {
         return touchpad;

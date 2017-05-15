@@ -9,7 +9,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -25,7 +24,6 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -46,9 +44,12 @@ import fi.tamk.tiko.gitd.TalkScreen.TalkScreen;
 import fi.tamk.tiko.gitd.Utilities;
 
 /**
- * Created by possumunnki on 7.3.2017.
+ * Implements Game screen, where player could play the game.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-14
  */
-
 public class GameScreen implements Screen, Input.TextInputListener, GestureDetector.GestureListener {
 
     private MyGdxGame host;
@@ -120,7 +121,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private int health = 100;
     private int cookies = 0;
 
-    BitmapFont font = new BitmapFont(); //or use alex answer to use custom font
 
 
     /**
@@ -145,7 +145,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Sound bossCallSound;
     private boolean playBossSoundOnce = false;
 
-    private Texture currentBGTexture;
     private TiledMapRenderer tiledMapRenderer;
     private TiledMap tiledMap;
 
@@ -176,15 +175,17 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
      */
     private Stage pauseResumeStage;
     private PauseResumeButtonActor pauseResumeButtonActor;
-
+    /**
+     * Allows to add multiple inpulistner
+     */
     private InputMultiplexer inputMultiplexer;
 
+    /**
+     * Creates game screen and all the game objects need into the game.
+     *
+     * @param host Needed to pull global settings and sprite batch.
+     */
     public GameScreen(MyGdxGame host) {
-
-        // Font setup.
-        font.getData().setScale(1.5f,1.5f);
-
-
 
         this.host = host;
         batch = host.getSpriteBatch();
@@ -194,6 +195,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                 host.SCREEN_WIDTH,
                 host.SCREEN_HEIGHT);
         viewport = new FitViewport(host.SCREEN_WIDTH, host.SCREEN_HEIGHT, camera);
+
 
         if (host.getMusic() == ON) {
             gameBGM = Gdx.audio.newMusic(Gdx.files.internal("bgm2.mp3"));
@@ -254,7 +256,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private void setGameStage() {
 
         // TODO: We create a background or settings for it for every screen.
-        //currentBGTexture = new Texture(Gdx.files.internal("backgrounds/mockup1.png"));
 
         // if current game stage is 1.
         if (host.getCurrentStage() == 1) {
@@ -343,6 +344,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         pauseStage.addActor(backToMap);
     }
 
+    /**
+     * Sets game controller depending on game mode
+     */
     public void setGameController() {
         if (host.getGameMode() == host.ADVENTURE) {
             // adds game on pad in the game
@@ -354,6 +358,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             controllerStage.addActor(jumpButtonActor);
         } else if (host.getGameMode() == host.RAT_RACE) {
             jumpButtonActor = new JumpButtonActor(host);
+            controllerStage.addActor(jumpButtonActor);
         }
     }
 
@@ -461,8 +466,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
             batch.draw(kekkonen, 61.5f, 4.5f, 0.5f, 1f);
         }
-
-        //font.draw(batch,"Cookies: " + cookies,10,Gdx.graphics.getHeight() * 0.98f);
 
         batch.end();
 
@@ -691,8 +694,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private void controlCharacter() {
         if (host.getGameMode() == host.ADVENTURE) {
 
-            controller1.moveTouchPad();
-
             float touchX = controller1.getTouchpad().getKnobPercentX();
             float touchY = controller1.getTouchpad().getKnobPercentY();
 
@@ -769,6 +770,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         }
     }
 
+    /**
+     * Freezes the game for few sec.
+     */
     public void doHeavyStuff() {
         try {
             Thread.sleep(1000);
@@ -852,9 +856,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
-        if (host.getGameMode() == host.RAT_RACE) {
-            player.jump(host);
-        }
         return false;
     }
 
@@ -908,12 +909,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
     @Override
     public void dispose() {
-
-        // Dispose the background image.
-        //currentBGTexture.dispose();
-
-        font.dispose();
-
         if (host.getGameMode() == host.ADVENTURE) {
             controller1.dispose();
         }

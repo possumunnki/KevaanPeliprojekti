@@ -15,17 +15,30 @@ import fi.tamk.tiko.gitd.MyGdxGame;
 import java.util.ArrayList;
 
 /**
- * Created by possumunnki on 17.4.2017.
+ * Implements talk screen. In this screen characters talks.
+ * After this screen moves to game screen.
+ *
+ * When player touches the screen, it shows next speech.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-12
  */
-
 public class TalkScreen implements Screen {
     private MyGdxGame host;
     private SpriteBatch batch;
     private OrthographicCamera camera;
+
     ArrayList<Speech> speeches;
+    /**
+     * Screen size in pixel.
+     */
     private float screenWidth;
     private float screenHeight;
 
+    /**
+     * Values for speech class.
+     */
     private final int BOTH = 0;
     private final int GRANDMA = 1;
     private final int LIGHT_DOLL = 2;
@@ -37,15 +50,24 @@ public class TalkScreen implements Screen {
     private int currentSpeech = 0;
     private Stage skipStage;
 
+    /**
+     * Crates talk screen. Talks are defferent depending on current stage, level progression and
+     * language.
+     *
+     * @param host
+     */
     public TalkScreen(MyGdxGame host) {
         this.host = host;
+        // sets size of screen
         screenWidth = host.SCREEN_WIDTH * 100f;
         screenHeight = host.SCREEN_HEIGHT * 100f;
+        // sets camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
                 screenWidth,
                 screenHeight);
         this.batch = host.getSpriteBatch();
+        // creates stage for skip button
         skipStage = new Stage(new FillViewport(screenWidth,
                 screenHeight),
                 batch);
@@ -55,6 +77,8 @@ public class TalkScreen implements Screen {
         skipStage.addActor(skip);
         Gdx.input.setInputProcessor(skipStage);
         speeches = new ArrayList<Speech>();
+
+        // adds apeeches to array list
         if (host.locale == host.FINNISH) {
             addTalkFin();
         } else if (host.locale == host.ENGLISH) {
@@ -74,7 +98,6 @@ public class TalkScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        // add stage to add skip button
         try {
             speeches.get(currentSpeech).draw(batch, screenWidth, screenHeight);
         } catch (Exception e) {
@@ -82,6 +105,8 @@ public class TalkScreen implements Screen {
             speeches.get(speeches.size() - 1).draw(batch, screenWidth, screenHeight);
         }
         batch.end();
+
+        // add stage to add skip button
         skipStage.act();
         skipStage.draw();
 
@@ -90,8 +115,12 @@ public class TalkScreen implements Screen {
             currentSpeech++;
         }
 
+        // whenever talk is end or player presses skip button
         if (currentSpeech == speeches.size() || skip.getTouch()) {
-            if (host.levelProgression == host.END) {
+
+            if (host.levelProgression == host.BEGINNING) {
+                host.setScreen(new GameScreen(host));
+            } else if (host.levelProgression == host.END) {
                 host.unlockStage(host.getCurrentStage());
                 host.setCurrentStage(host.getCurrentStage() + 1);
                 host.saveUnlockedStages(host.getCurrentStage());
@@ -99,8 +128,6 @@ public class TalkScreen implements Screen {
                 host.levelProgression = host.BEGINNING;
 
                 host.setScreen(new MapScreen(host));
-            } else if (host.levelProgression == host.BEGINNING) {
-                host.setScreen(new GameScreen(host));
             }
 
         }
@@ -136,7 +163,10 @@ public class TalkScreen implements Screen {
         Gdx.app.log("TalkScreen", "disposed");
     }
 
-
+    /**
+     * Adds talks by creating speech class on array list.
+     * This is Finnish version.
+     */
     private void addTalkFin() {
         if (host.getCurrentStage() == 1) {
             if (host.levelProgression == host.BEGINNING) {
@@ -419,7 +449,10 @@ public class TalkScreen implements Screen {
         }
     }
 
-
+    /**
+     * Adds talks by creating speech class on array list.
+     * This is English version.
+     */
     private void addTalkEng() {
         if (host.getCurrentStage() == 1) {
 

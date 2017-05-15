@@ -16,9 +16,11 @@ import fi.tamk.tiko.gitd.GameScreen.GameScreen;
 import fi.tamk.tiko.gitd.MainMenuScreen.MainMenuScreen;
 
 /**
+ * Implements game over screen when player dies.
  *
- *
- * @author
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-14
  */
 
 public class GameOverScreen implements Screen {
@@ -31,6 +33,10 @@ public class GameOverScreen implements Screen {
     private Stage stage;
     private Texture gameOverTexture;
 
+    /**
+     * Creates game over screen.
+     * @param host
+     */
     public GameOverScreen(MyGdxGame host) {
         this.host = host;
         batch = host.getSpriteBatch();

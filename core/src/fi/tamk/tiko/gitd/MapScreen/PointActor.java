@@ -12,10 +12,18 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 /**
- * Created by possumunnki on 26.3.2017.
+ * Creates pointers as actor. This class is used only in map screen.
+ * This actor can detect players touches.
+ *
+ * @author Akio Ide
+ * @version 1.0
+ * @since 2017-05-12
  */
-
 public class PointActor extends Actor {
+    /**
+     * whether player touches the actor or not.
+     * Sets true if player touches.
+     */
     private boolean touch = false;
     private boolean touchEnter = false;
     /**
@@ -35,26 +43,41 @@ public class PointActor extends Actor {
     private int stage;
 
     /**
+     * Creates point actor.
+     *
      * @param printX x-position where the pointer will be printed
      * @param printY y-position where the pointer will be printed
      * @param stage  the number of the level that the point corresponds to
      */
     public PointActor(float printX, float printY, int stage) {
         this.stage = stage;
+        // sets textures
         exitTexture = new Texture("cross_black.png");
         enterTexture = new Texture("cross_red.png");
+
+        // sets dotted line depending on stage
         setDottedLine();
+
+        //sets size of texture
         setWidth(exitTexture.getWidth());
         setHeight(exitTexture.getHeight());
+
+        // sets position where the texture is printed
         setPosition(printX, printY);
+
+        // sets touch area
         setBounds(printX, printY, getWidth(), getHeight());
+
+        // adds listener to detect touches
         addListener(new PointListener());
     }
 
     public void draw(Batch batch, float alpha) {
+        // this makes possible to use fade in/ out actions
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * alpha);
 
+        // draws different textures if player touches the actor
         if (touchEnter == true || touch == true) {
             batch.draw(enterTexture,
                     getX(),
@@ -69,6 +92,7 @@ public class PointActor extends Actor {
                     getHeight());
         }
 
+        // draws dotted line
         if (stage != 1) {
             batch.draw(dottedLine, 0, 0, dottedLine.getWidth(), dottedLine.getHeight());
         }

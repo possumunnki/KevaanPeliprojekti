@@ -1,8 +1,7 @@
 package fi.tamk.tiko.gitd;
 
 /**
- * The HelloWorld program implements an application that
- * simply displays "Hello World!" to the standard output.
+ * This class is not used.
  *
  * @author Akio Ide
  * @version 1.0
