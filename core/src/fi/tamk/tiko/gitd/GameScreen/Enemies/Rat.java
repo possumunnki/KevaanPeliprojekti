@@ -17,13 +17,17 @@ import fi.tamk.tiko.gitd.MyGdxGame;
 
 public class Rat {
 
-    private ObjectData ratObject;
+    private ObjectData ratObject1;
+    private ObjectData ratObject2;
+
     private Texture ratTex;
+    private Texture ratTexFlip;
 
-    private Body ratTemplate;
-    boolean ratRight = false;
-
+    private Body ratBody1;
     private Body ratBody2;
+
+    private boolean ratRight1 = false;
+    private boolean ratRight2 = false;
 
     /**
      * Constructs the rat enemy object.
@@ -33,18 +37,26 @@ public class Rat {
      */
     public Rat(World world, MyGdxGame host) {
 
-        ratTex = new Texture(Gdx.files.internal("rat256.png"));
+        ratTex = new Texture(Gdx.files.internal("rat256Flip.png"));
+        ratTexFlip = new Texture(Gdx.files.internal("rat256.png"));
 
-        ratObject = new ObjectData(ratTex, 1.2f, 0.5f, ObjectData.GameObjectType.RAT);
+        ratObject1 = new ObjectData(ratTex, 1.2f, 0.5f, ObjectData.GameObjectType.RAT);
+        ratObject2 = new ObjectData(ratTex, 1.2f, 0.5f, ObjectData.GameObjectType.RAT);
 
-
-        if (host.getCurrentStage() == 1 || host.getCurrentStage() == 2) {
+        if (host.getCurrentStage() == 1) {
             // Rat bodies
-            ratTemplate = createBody(12.9f, 3, ratObject.width, ratObject.height, world);
-            ratTemplate.setUserData(ratObject);
+            ratBody1 = createBody(12.9f, 3, ratObject1.width, ratObject1.height, world);
+            ratBody1.setUserData(ratObject1);
 
-            ratBody2 = createBody(30, 3, ratObject.width, ratObject.height, world);
-            ratBody2.setUserData(ratObject);
+            ratBody2 = createBody(38, 1.5f, ratObject2.width, ratObject2.height, world);
+            ratBody2.setUserData(ratObject2);
+        } else if(host.getCurrentStage() == 2) {
+            // Rat bodies
+            ratBody1 = createBody(21f, 1.5f, ratObject1.width, ratObject1.height, world);
+            ratBody1.setUserData(ratObject1);
+
+            ratBody2 = createBody(48, 1.5f, ratObject2.width, ratObject2.height, world);
+            ratBody2.setUserData(ratObject2);
         }
     }
 
@@ -117,56 +129,97 @@ public class Rat {
     /**
      * Moves the rats in specified x positions, so that the rat turns when reached certain x-pos.
      */
-    public void ratWalk() {
+    public void ratWalk(MyGdxGame host) {
+        // STAGE 1 RAT MOVEMENT
+        if(host.getCurrentStage() == 1) {
+            if (ratBody1.getLinearVelocity().y == 0) {
 
+                if (!ratRight1) {
+                    ratBody1.setLinearVelocity(2f, 0);
+                    //Gdx.app.log("log", "rat1 x " + ratBody1.getPosition().x);
+                    if (ratBody1.getPosition().x > 20.5f) {
+                        ratBody1.setLinearVelocity(0, 0);
+                        ratRight1 = true;
+                        ratObject1.objectTexture = ratTexFlip;
+                    }
+                } else if (ratRight1) {
+                    ratBody1.setLinearVelocity(-2f, 0);
+                    //Gdx.app.log("log", "rat1 x " + ratBody1.getPosition().x);
 
-        if (ratTemplate.getLinearVelocity().y == 0) {
-
-            if (!ratRight) {
-                ratTemplate.setLinearVelocity(2f, 0);
-                //Gdx.app.log("log", "rat1 x " + ratTemplate.getPosition().x);
-
-                if (ratTemplate.getPosition().x > 20.5f) {
-                    ratTemplate.setLinearVelocity(0, 0);
-                    ratRight = true;
-                }
-            } else if (ratRight) {
-                ratTemplate.setLinearVelocity(-2f, 0);
-                //Gdx.app.log("log", "rat1 x " + ratTemplate.getPosition().x);
-
-                if (ratTemplate.getPosition().x < 15.0f) {
-                    ratRight = false;
+                    if (ratBody1.getPosition().x < 15.0f) {
+                        ratRight1 = false;
+                        ratObject1.objectTexture = ratTex;
+                    }
                 }
             }
-        }
+            if (ratBody2.getLinearVelocity().y == 0) {
 
-        if (ratBody2.getLinearVelocity().y == 0) {
-
-            if (!ratRight) {
-                ratBody2.setLinearVelocity(2f, 0);
-                //Gdx.app.log("log", "rat2 x " + ratBody2.getPosition().x);
-
-                if (ratBody2.getPosition().x > 40.5f) {
-                    ratBody2.setLinearVelocity(0, 0);
-                    ratRight = true;
+                if (!ratRight2) {
+                    ratBody2.setLinearVelocity(2f, 0);
+                    //Gdx.app.log("log", "rat2 x " + ratBody2.getPosition().x);
+                    if (ratBody2.getPosition().x > 43.5f) {
+                        ratBody2.setLinearVelocity(0, 0);
+                        ratRight2 = true;
+                        ratObject2.objectTexture = ratTexFlip;
+                    }
+                } else if (ratRight2) {
+                    ratBody2.setLinearVelocity(-2f, 0);
+                    //Gdx.app.log("log", "rat2 x " + ratBody2.getPosition().x);
+                    if (ratBody2.getPosition().x < 35.5f) {
+                        ratRight2 = false;
+                        ratObject2.objectTexture = ratTex;
+                    }
                 }
-            } else if (ratRight) {
-                ratBody2.setLinearVelocity(-2f, 0);
-                //Gdx.app.log("log", "rat2 x " + ratBody2.getPosition().x);
+            }
+            //STAGE 2 RAT MOVEMENT
+        } else if(host.getCurrentStage() == 2) {
+            if (ratBody1.getLinearVelocity().y == 0) {
 
-                if (ratBody2.getPosition().x < 35.0f) {
-                    ratRight = false;
+                if (!ratRight1) {
+                    ratBody1.setLinearVelocity(2f, 0);
+                    //Gdx.app.log("log", "rat1 x " + ratBody1.getPosition().x);
+                    if (ratBody1.getPosition().x > 24.5f) {
+                        ratBody1.setLinearVelocity(0, 0);
+                        ratRight1 = true;
+                        ratObject1.objectTexture = ratTexFlip;
+                    }
+                } else if (ratRight1) {
+                    ratBody1.setLinearVelocity(-2f, 0);
+                    //Gdx.app.log("log", "rat1 x " + ratBody1.getPosition().x);
+
+                    if (ratBody1.getPosition().x < 20.0f) {
+                        ratRight1 = false;
+                        ratObject1.objectTexture = ratTex;
+                    }
+                }
+            }
+            if (ratBody2.getLinearVelocity().y == 0) {
+
+                if (!ratRight2) {
+                    ratBody2.setLinearVelocity(2f, 0);
+                    //Gdx.app.log("log", "rat2 x " + ratBody2.getPosition().x);
+                    if (ratBody2.getPosition().x > 53.5f) {
+                        ratBody2.setLinearVelocity(0, 0);
+                        ratRight2 = true;
+                        ratObject2.objectTexture = ratTexFlip;
+                    }
+                } else if (ratRight2) {
+                    ratBody2.setLinearVelocity(-2f, 0);
+                    //Gdx.app.log("log", "rat2 x " + ratBody2.getPosition().x);
+                    if (ratBody2.getPosition().x < 47.5f) {
+                        ratRight2 = false;
+                        ratObject2.objectTexture = ratTex;
+                    }
                 }
             }
         }
     }
 
-    public ObjectData getRatObject() {
-        return ratObject;
+    public ObjectData getRatObject1() {
+        return ratObject1;
     }
-
-    public Body getRatBody2() {
-        return ratBody2;
+    public ObjectData getRatObject2() {
+        return ratObject2;
     }
 
     /**

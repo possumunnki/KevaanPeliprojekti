@@ -93,7 +93,7 @@ public class BodyHandler {
         for (Body body : bodies) {
 
             // Draw all bodies with  voodoo doll user data (ground is not drawn)
-            if(body.getUserData().equals(voodoo.getVdObject())) {   // > voodoo getter!
+            if (body.getUserData().equals(voodoo.getVdObject())) {   // > voodoo getter!
 
                 body.setFixedRotation(true);
 
@@ -120,33 +120,33 @@ public class BodyHandler {
 
 
                 /**
-                if(voodoo.getLeftTurn()) {
+                 if(voodoo.getLeftTurn()) {
 
-                    if(!turnOnce) {
-                        Utilities.flip(voodooWalkAnim);
-                        turnOnce = false;
-                    }
-                } else if(!voodoo.getLeftTurn()) {
-                    if(turnOnce) {
-                        Utilities.flip(voodooWalkAnim);
-                        turnOnce = true;
-                    }
-                }
+                 if(!turnOnce) {
+                 Utilities.flip(voodooWalkAnim);
+                 turnOnce = false;
+                 }
+                 } else if(!voodoo.getLeftTurn()) {
+                 if(turnOnce) {
+                 Utilities.flip(voodooWalkAnim);
+                 turnOnce = true;
+                 }
+                 }
 
-                batch.draw(voodooWalkCurrentFrame,
-                        body.getPosition().x - voodooData.width,
-                        body.getPosition().y - voodooData.width,
-                        voodooData.width,                   // originX
-                        voodooData.height - 0.15f,          // originY
-                        0.5f,
-                        0.5f,
-                        0.75f,                          // scaleX
-                        0.8f,                           // scaleY
-                        0f);
+                 batch.draw(voodooWalkCurrentFrame,
+                 body.getPosition().x - voodooData.width,
+                 body.getPosition().y - voodooData.width,
+                 voodooData.width,                   // originX
+                 voodooData.height - 0.15f,          // originY
+                 0.5f,
+                 0.5f,
+                 0.75f,                          // scaleX
+                 0.8f,                           // scaleY
+                 0f);
                  */
 
 
-            } else if (body.getUserData().equals(rat.getRatObject())) { //  >rat getter!
+            } else if (body.getUserData().equals(rat.getRatObject1())) { //  >rat getter!
                 ObjectData rat = (ObjectData) body.getUserData();
 
                 batch.draw(rat.objectTexture,
@@ -166,7 +166,28 @@ public class BodyHandler {
                         false,                         // flipX
                         false);                        // flipY
 
-            } else if(body.getUserData().equals(boss.getBossObject())) {
+            } else if (body.getUserData().equals(rat.getRatObject2())) { //  >rat getter!
+                ObjectData rat = (ObjectData) body.getUserData();
+
+                batch.draw(rat.objectTexture,
+                        body.getPosition().x - rat.width,
+                        body.getPosition().y - rat.height,
+                        rat.width,                   // originX
+                        rat.height,                   // originY
+                        rat.width * 2,               // windowWidth
+                        rat.height * 2,               // windowHeight
+                        1.0f,                          // scaleX
+                        1.0f,                          // scaleY
+                        body.getTransform().getRotation() * MathUtils.radiansToDegrees,
+                        0,                             // Start drawing from x = 0
+                        0,                             // Start drawing from y = 0
+                        rat.objectTexture.getWidth(),       // End drawing x
+                        rat.objectTexture.getHeight(),      // End drawing y
+                        false,                         // flipX
+                        false);                        // flipY
+
+
+            } else if (body.getUserData().equals(boss.getBossObject())) {
                 ObjectData boss = (ObjectData) body.getUserData();
 
                 batch.draw(boss.objectTexture,
@@ -344,7 +365,7 @@ public class BodyHandler {
 
         if(host.getCurrentStage() == 1 ||
                 host.getCurrentStage() == 2) {
-            rat.ratWalk();
+            rat.ratWalk(host);
         }
     }
 
@@ -367,8 +388,12 @@ public class BodyHandler {
         return voodoo.getVdObject();
     }
 
-    public ObjectData callRatGetter() {
-        return rat.getRatObject();
+    public ObjectData callRatGetter1() {
+        return rat.getRatObject1();
+    }
+
+    public ObjectData callRatGetter2() {
+        return rat.getRatObject2();
     }
 
     public ObjectData callBossGetter() {

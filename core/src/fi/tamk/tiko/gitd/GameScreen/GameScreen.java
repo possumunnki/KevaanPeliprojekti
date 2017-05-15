@@ -557,7 +557,8 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
                     if (immortality == !ON) {
                         // when player touches an enemy
                         if (body1.getUserData().equals(bodyHandler.callVoodooGetter()) ||
-                                body1.getUserData().equals(bodyHandler.callRatGetter()) ||
+                                body1.getUserData().equals(bodyHandler.callRatGetter1()) ||
+                                body1.getUserData().equals(bodyHandler.callRatGetter2()) ||
                                 body1.getUserData().equals(bodyHandler.callBossGetter())) {
                             if (body2.getUserData().equals("player")) {
                                 //switch to game over screen
