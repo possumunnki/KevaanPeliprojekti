@@ -595,7 +595,7 @@ public class TalkScreen implements Screen {
                 text = " Wait a second, this doesn’t\nlook anything like the\nentrance...";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "Oopsie—I mean, excellent...";
+                text = "Oopsie - I mean, excellent...";
                 speeches.add(new Speech(KEKKONEN, text));
 
                 text = "What happened? Where are we?";
@@ -715,7 +715,7 @@ public class TalkScreen implements Screen {
                 text = "What was that sound?";
                 speeches.add(new Speech(GRANDMA2, text));
 
-                text = "The spirits which have cursed\nthismansion must not like us\n" +
+                text = "The spirits which have cursed\nthis mansion must not like us\n" +
                         "getting this close to the front door.";
                 speeches.add(new Speech(LIGHT_DOLL, text));
 
