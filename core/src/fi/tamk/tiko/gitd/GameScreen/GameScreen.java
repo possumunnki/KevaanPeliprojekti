@@ -143,6 +143,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Music gameBGM;
     private Sound deathSound;
     private Sound bossCallSound;
+    private Sound introSpeech;
     private boolean playBossSoundOnce = false;
 
     private TiledMapRenderer tiledMapRenderer;
@@ -217,7 +218,6 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         createPauseMenu();
         setGameStage();
-
         controllerStage = new Stage(new FillViewport(stageWidth, stageHeight), batch);
         setGameController();
 
@@ -264,12 +264,14 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
+            introSpeech = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_tuumaus_001.wav"));
 
         } else if (host.getCurrentStage() == 2) {
             tiledMap = new TmxMapLoader().load("maps/stage2.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
+            introSpeech = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_tuumaus_002.wav"));
 
         } else if (host.getCurrentStage() == 3) {
             tiledMap = new TmxMapLoader().load("maps/stage3.tmx");
@@ -277,21 +279,23 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             tilesAmountHeight = 30;
             // turns rat race on, it changes game control
             host.setGameMode(host.RAT_RACE);
-
+            introSpeech = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_tuumaus_003.wav"));
         } else if (host.getCurrentStage() == 4) {
             tiledMap = new TmxMapLoader().load("maps/stage4.tmx");
             tilesAmountWidth = 440;
             tilesAmountHeight = 50;
             // turns rat race on, it changes game control
             host.setGameMode(host.RAT_RACE);
+            introSpeech = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_tuumaus_004.wav"));
 
         } else if (host.getCurrentStage() == 5) {
             tiledMap = new TmxMapLoader().load("maps/stage5.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
+            introSpeech = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_tuumaus_005.wav"));
         }
-
+        introSpeech.play();
         /**
          * Adds spike bodies to maps which contain spikes
          */
@@ -385,6 +389,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         batch.setProjectionMatrix(camera.combined);
         //batch.setBlendFunction();
+
 
         if (host.getMusic() == ON && gameBGM.isPlaying() != true) {
             gameBGM.play();
@@ -916,6 +921,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         controllerStage.dispose();
         lightDoll.dispose();
         bodyHandler.dispose();
+
+        // Dispose the sound.
+        introSpeech.dispose();
 
         /**
          * BOX2D LIGHTS
