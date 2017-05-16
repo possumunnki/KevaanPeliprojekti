@@ -146,8 +146,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
     private Sound introSpeech;
     private boolean playBossSoundOnce = false;
 
-    private TiledMapRenderer tiledMapRenderer;
+    private TiledMapRenderer tiledMapRenderer, tiledMapRenderer2;
     private TiledMap tiledMap;
+    private TiledMap tiledMapBG;
 
     /**
      * Stage and actors of buttons / controllers.
@@ -260,6 +261,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // if current game stage is 1.
         if (host.getCurrentStage() == 1) {
             tiledMap = new TmxMapLoader().load("maps/stage1G.tmx");
+            tiledMapBG = new TmxMapLoader().load("maps/stage1GBG.tmx");
             // sets tiles amount on the game stage
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
@@ -268,6 +270,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         } else if (host.getCurrentStage() == 2) {
             tiledMap = new TmxMapLoader().load("maps/stage2G.tmx");
+            tiledMapBG = new TmxMapLoader().load("maps/stage1GBG.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
@@ -275,6 +278,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         } else if (host.getCurrentStage() == 3) {
             tiledMap = new TmxMapLoader().load("maps/stage3G.tmx");
+            tiledMapBG = new TmxMapLoader().load("maps/stage3GBG.tmx");
             tilesAmountWidth = 400;
             tilesAmountHeight = 30;
             // turns rat race on, it changes game control
@@ -282,6 +286,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             introSpeech = Gdx.audio.newSound(Gdx.files.internal("sfx/Granny_tuumaus_003.wav"));
         } else if (host.getCurrentStage() == 4) {
             tiledMap = new TmxMapLoader().load("maps/stage4G.tmx");
+            tiledMapBG = new TmxMapLoader().load("maps/stage4GBG.tmx");
             tilesAmountWidth = 440;
             tilesAmountHeight = 50;
             // turns rat race on, it changes game control
@@ -290,6 +295,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
         } else if (host.getCurrentStage() == 5) {
             tiledMap = new TmxMapLoader().load("maps/stage5G.tmx");
+            tiledMapBG = new TmxMapLoader().load("maps/stage1GBG.tmx");
             tilesAmountWidth = 200;
             tilesAmountHeight = 30;
             host.setGameMode(host.ADVENTURE);
@@ -311,6 +317,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         if (host.getCurrentStage() != 5) {
             Utilities.transformWallsToBodies("goal-rectangle", "goal", tiledMap, world);
         }
+
+        // New renderer for the tilemaps.
+        tiledMapRenderer2 = new OrthoCachedTiledMapRenderer(tiledMapBG, 1 / 100f);
 
         // New renderer for the tilemaps.
         tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap, 1 / 100f);
@@ -420,6 +429,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
             stateTime += deltaTime;
             lightDoll.setDollDefPos(player);
             tiledMapRenderer.setView(camera);
+            tiledMapRenderer2.setView(camera);
             moveCamera();
             camera.update();
 
@@ -445,6 +455,9 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
         // We draw and move the background texture behind everything.
 
         float slowingFactor = 0.05f;
+
+        // We render the tilemap right away and only in this setup method.
+        tiledMapRenderer2.render();
 
         // We render the tilemap right away and only in this setup method.
         tiledMapRenderer.render();
@@ -946,6 +959,7 @@ public class GameScreen implements Screen, Input.TextInputListener, GestureDetec
 
 
         tiledMap.dispose();
+        tiledMapBG.dispose();
         jumpButtonActor.dispose();
 
         exclamationMarkActor.dispose();

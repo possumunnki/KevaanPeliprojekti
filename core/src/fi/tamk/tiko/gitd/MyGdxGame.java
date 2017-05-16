@@ -21,7 +21,7 @@ public class MyGdxGame extends Game {
     private final boolean ON = true;
     private final boolean OFF = false;
 
-    private boolean unlockAllStages = OFF;
+    private boolean unlockAllStages = ON;
     /**
      * Whether sound is on or not.
      */
